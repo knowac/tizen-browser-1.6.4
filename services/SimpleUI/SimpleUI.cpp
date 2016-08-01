@@ -298,13 +298,15 @@ void SimpleUI::connectUISignals()
     m_webPageUI->backPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
     m_webPageUI->backPage.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::back, m_webEngine.get()));
     m_webPageUI->showTabUI.connect(boost::bind(&SimpleUI::showTabUI, this));
-    m_webPageUI->showBookmarksUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,m_favoriteService->getRoot()));
+    m_webPageUI->showBookmarksUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
+        m_favoriteService->getRoot(), BookmarkManagerState::Default));
     m_webPageUI->forwardPage.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::forward, m_webEngine.get()));
     m_webPageUI->showQuickAccess.connect(boost::bind(&SimpleUI::showQuickAccess, this));
     m_webPageUI->hideQuickAccess.connect(boost::bind(&QuickAccess::hideUI, m_quickAccess));
     m_webPageUI->focusWebView.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::setFocus, m_webEngine.get()));
     m_webPageUI->unfocusWebView.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::clearFocus, m_webEngine.get()));
-    m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this, m_favoriteService->getRoot()));
+    m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
+        m_favoriteService->getRoot(), BookmarkManagerState::Default));
     m_webPageUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_webPageUI->isBookmark.connect(boost::bind(&SimpleUI::checkBookmark, this));
     m_webPageUI->deleteBookmark.connect(boost::bind(&SimpleUI::deleteBookmark, this));
@@ -332,7 +334,8 @@ void SimpleUI::connectUISignals()
     m_quickAccess->mostVisitedTileClicked.connect(boost::bind(&SimpleUI::onMostVisitedTileClicked, this, _1, _2));
     m_quickAccess->getMostVisitedItems.connect(boost::bind(&SimpleUI::onMostVisitedClicked, this));
     m_quickAccess->getBookmarksItems.connect(boost::bind(&SimpleUI::onBookmarkButtonClicked, this));
-    m_quickAccess->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this, m_favoriteService->getRoot()));
+    m_quickAccess->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
+        m_favoriteService->getRoot(), BookmarkManagerState::Default));
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
 #if PROFILE_MOBILE
     m_quickAccess->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
@@ -367,6 +370,8 @@ void SimpleUI::connectUISignals()
     m_bookmarkFlowUI->closeBookmarkFlowClicked.connect(boost::bind(&SimpleUI::closeBookmarkFlowUI, this));
     m_bookmarkFlowUI->saveBookmark.connect(boost::bind(&SimpleUI::addBookmark, this, _1));
     m_bookmarkFlowUI->editBookmark.connect(boost::bind(&SimpleUI::editBookmark, this, _1));
+    m_bookmarkFlowUI->showSelectFolderUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
+        _1, BookmarkManagerState::SelectFolder));
 
     M_ASSERT(m_findOnPageUI.get());
     m_findOnPageUI->closeFindOnPageUIClicked.connect(boost::bind(&SimpleUI::closeFindOnPageUI, this));
@@ -375,14 +380,15 @@ void SimpleUI::connectUISignals()
     M_ASSERT(m_bookmarkManagerUI.get());
     m_bookmarkManagerUI->showHistory.connect(boost::bind(&SimpleUI::showHistoryUI, this));
     m_bookmarkManagerUI->closeBookmarkManagerClicked.connect(boost::bind(&SimpleUI::closeBookmarkManagerUI, this));
+    m_bookmarkManagerUI->folderSelected.connect(boost::bind(&BookmarkFlowUI::setFolder, m_bookmarkFlowUI.get(), _1));
     m_bookmarkManagerUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_bookmarkManagerUI->bookmarkItemClicked.connect(boost::bind(&SimpleUI::onBookmarkClicked, this, _1));
     m_bookmarkManagerUI->bookmarkItemEdit.connect(boost::bind(&SimpleUI::onBookmarkEdit, this, _1));
     m_bookmarkManagerUI->bookmarkItemOrderEdited.connect(boost::bind(&SimpleUI::onBookmarkOrderEdited, this, _1));
     m_bookmarkManagerUI->bookmarkItemDeleted.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
-#if PROFILE_MOBILE
     m_bookmarkManagerUI->newFolderItemClicked.connect(boost::bind(&SimpleUI::onNewFolderClicked, this, _1));
     m_bookmarkManagerUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
+#if PROFILE_MOBILE
     m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
 #else
     M_ASSERT(m_zoomUI.get());
@@ -1552,12 +1558,14 @@ void SimpleUI::closeBookmarkFlowUI()
         m_viewManager.popTheStack();
 }
 
-void SimpleUI::showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent)
+void SimpleUI::showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
+    BookmarkManagerState state)
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
+    m_bookmarkManagerUI->setState(state);
     m_viewManager.pushViewToStack(m_bookmarkManagerUI.get());
-    m_bookmarkManagerUI->addBookmarkItems(parent, m_favoriteService->getAllBookmarkItems());
-    m_bookmarkManagerUI->showUI();
+    m_bookmarkManagerUI->addBookmarkItems(parent,
+        m_favoriteService->getAllBookmarkItems(parent->getId()));
 }
 
 void SimpleUI::redirectedWebPage(const std::string& oldUrl, const std::string& newUrl)

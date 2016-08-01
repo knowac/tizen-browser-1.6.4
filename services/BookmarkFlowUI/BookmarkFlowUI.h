@@ -75,6 +75,7 @@ public:
     boost::signals2::signal<void ()> closeBookmarkFlowClicked;
     boost::signals2::signal<void (BookmarkUpdate)> saveBookmark;
     boost::signals2::signal<void (BookmarkUpdate)> editBookmark;
+    boost::signals2::signal<void (services::SharedBookmarkItem)> showSelectFolderUI;
 
 private:
     struct FolderData {

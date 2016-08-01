@@ -264,12 +264,12 @@ private:
     std::string requestSettingsCurrentPage();
 
     void showBookmarkFlowUI();
+    void closeBookmarkFlowUI();
     void showFindOnPageUI(const std::string& str);
 #if PROFILE_MOBILE
     void showCertificatePopup();
     void showCertificatePopup(const std::string& host, const std::string& pem, services::CertificateContents::HOST_TYPE type);
     void showUnsecureConnectionPopup();
-    void closeBookmarkFlowUI();
 
     void findWord(const struct FindData& fdata);
     void closeFindOnPageUI();
@@ -285,7 +285,8 @@ private:
 #endif
     Evas_Object* getMainWindow();
     void closeBookmarkManagerUI();
-    void showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent);
+    void showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
+                               BookmarkManagerState state);
     void redirectedWebPage(const std::string& oldUrl, const std::string& newUrl);
 
     void showPopup(interfaces::AbstractPopup* popup);
@@ -323,8 +324,9 @@ private:
     std::shared_ptr<interfaces::AbstractFavoriteService> m_favoriteService;
     std::shared_ptr<services::HistoryService> m_historyService;
     services::TabServicePtr m_tabService;
-#if PROFILE_MOBILE
+
     std::shared_ptr<BookmarkFlowUI> m_bookmarkFlowUI;
+#if PROFILE_MOBILE
     std::shared_ptr<FindOnPageUI> m_findOnPageUI;
 #else
     std::shared_ptr<tizen_browser::base_ui::ZoomUI> m_zoomUI;

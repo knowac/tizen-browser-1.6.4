@@ -35,6 +35,7 @@ namespace base_ui{
 
 enum class BookmarkManagerState {
     Default,
+    SelectFolder,
     Edit,
     Delete,
     Reorder
@@ -59,6 +60,7 @@ public:
 
     void orientationChanged() {};
     void onBackPressed();
+    void setState(BookmarkManagerState state) { m_state = state; }
 
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
@@ -68,6 +70,7 @@ public:
 
     boost::signals2::signal<void ()> showHistory;
     boost::signals2::signal<void ()> closeBookmarkManagerClicked;
+    boost::signals2::signal<void (services::SharedBookmarkItem)> folderSelected;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemClicked;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemEdit;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemOrderEdited;
@@ -99,7 +102,6 @@ private:
     void addBookmarkItem(BookmarkData* item);
 
     void changeState(BookmarkManagerState state);
-    void updateGenlistItems();
     void reoderBookmarkItems();
     void updateNoBookmarkText();
     void updateDeleteClick(int id);
@@ -110,7 +112,7 @@ private:
     static void _modules_history_clicked(void* data, Evas_Object* obj, void* event_info);
     static void _bookmarkItemClicked(void* data, Evas_Object*, void*);
     static void _cancel_clicked(void *data, Evas_Object *, void *);
-    static void _delete_clicked(void *data, Evas_Object *, void *);
+    static void _accept_clicked(void *data, Evas_Object *, void *);
     static void _prev_clicked(void *data, Evas_Object *, void *);
     static void _check_state_changed(void *data, Evas_Object *, void *);
     static void _genlist_bookmark_moved(void *data, Evas_Object *, void *);
@@ -130,7 +132,7 @@ private:
     Evas_Object *b_mm_layout;
     Evas_Object *m_content;
     Evas_Object *m_cancel_button;
-    Evas_Object *m_delete_button;
+    Evas_Object *m_accept_button;
     Evas_Object *m_prev_button;
     Evas_Object *m_modulesToolbar;
     Evas_Object *m_navigatorToolbar;

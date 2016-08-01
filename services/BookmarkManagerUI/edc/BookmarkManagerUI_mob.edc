@@ -78,6 +78,10 @@ collections {
                     inherit: "default";
                     visible: 0;
                 }
+                description {
+                    state: "hidden_modules_toolbar" 0.0;
+                    inherit: "hidden_toolbar";
+                }
             }
             part {
                 name: "navigator_toolbar";
@@ -95,6 +99,14 @@ collections {
                         to: "modules_toolbar";
                     }
                     rel2.relative: 1.0 1.0;
+                }
+                description {
+                    state: "hidden_modules_toolbar" 0.0;
+                    inherit: "default";
+                    rel1 {
+                        relative: 0.0 0.0;
+                        to: "bg";
+                    }
                 }
                 description {
                     state: "hidden_toolbar" 0.0;
@@ -168,6 +180,14 @@ collections {
                 source: "ui";
                 action: STATE_SET "default" 0.0;
                 target: "elm.swallow.content_overlay";
+            }
+            program {
+                name: "hide_modules_toolbar";
+                signal: "hide_modules_toolbar";
+                source: "ui";
+                action: STATE_SET "hidden_modules_toolbar" 0.0;
+                target: "modules_toolbar";
+                target: "navigator_toolbar";
             }
             program {
                 name: "hide_toolbars";

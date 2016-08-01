@@ -269,7 +269,7 @@ void BookmarkFlowUI::fillGenlist()
 
     //Add folder picker
     elm_genlist_item_append(m_genlist, m_folder_item_class, folderData, nullptr, ELM_GENLIST_ITEM_NONE,
-        _folder_selector_clicked, folderData);
+        _folder_selector_clicked, this);
 
     //Add QuickAccess checkbox
     elm_genlist_item_append(m_genlist, m_add_to_qa_item_class, this, nullptr, ELM_GENLIST_ITEM_NONE,
@@ -510,8 +510,8 @@ void BookmarkFlowUI::_folder_selector_clicked(void *data, Evas_Object *, void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
-        //BookmarkFlowUI* bookmarkFlowUI = static_cast<BookmarkFlowUI*>(data);
-        //TODO: Add location selector functionality
+        BookmarkFlowUI* bookmarkFlowUI = static_cast<BookmarkFlowUI*>(data);
+        bookmarkFlowUI->showSelectFolderUI(bookmarkFlowUI->m_bookmarkItem);
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
