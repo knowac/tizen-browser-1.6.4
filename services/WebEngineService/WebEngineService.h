@@ -33,6 +33,7 @@
 #include "SnapshotType.h"
 #include "BrowserImage.h"
 #include "DownloadControl/DownloadControl.h"
+#include "WebView.h"
 
 namespace tizen_browser {
 namespace basic_webengine {
@@ -266,6 +267,7 @@ private:
     void connectSignals(WebViewPtr);
 
     int createTabId();
+    void initializeDownloadControl(Ewk_Context* context = ewk_context_default_get());
 
 private:
     struct StateStruct {
@@ -290,7 +292,7 @@ private:
     int m_tabIdSecret;
 
     std::map<WebEngineSettings, bool>  m_settings;
-    DownloadControl *m_downloadControl;
+    std::shared_ptr<DownloadControl> m_downloadControl;
 };
 
 } /* end of webengine_service */

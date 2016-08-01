@@ -26,7 +26,6 @@
 #include "BrowserAssert.h"
 #include "BrowserLogger.h"
 #include "Config/Config.h"
-#include "WebView.h"
 
 namespace tizen_browser {
 namespace basic_webengine {
@@ -44,7 +43,6 @@ WebEngineService::WebEngineService()
     , m_currentWebView(nullptr)
     , m_stateStruct(&m_normalStateStruct)
     , m_tabIdCreated(-1)
-    , m_tabIdSecret(0)
     , m_downloadControl(nullptr)
 {
     m_stateStruct->mostRecentTab.clear();
@@ -65,9 +63,6 @@ WebEngineService::WebEngineService()
 WebEngineService::~WebEngineService()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    #if PROFILE_MOBILE
-        delete m_downloadControl;
-    #endif
 }
 
 void WebEngineService::destroyTabs()
@@ -107,12 +102,12 @@ void WebEngineService::init(Evas_Object* guiParent)
         m_guiParent = guiParent;
         m_initialised = true;
     }
+}
 
-#if PROFILE_MOBILE
-    Ewk_Context *context = ewk_context_default_get();
+void WebEngineService::initializeDownloadControl(Ewk_Context* context)
+{
     ewk_context_did_start_download_callback_set(context , _download_request_cb, this);
-    m_downloadControl = new DownloadControl();
-#endif
+    m_downloadControl = std::make_shared<DownloadControl>();
 }
 
 void WebEngineService::preinitializeWebViewCache()
@@ -121,7 +116,11 @@ void WebEngineService::preinitializeWebViewCache()
     if (!m_webViewCacheInitialized) {
         m_webViewCacheInitialized = true;
         Ewk_Context* context = ewk_context_default_get();
-        Evas_Object* ewk_view = ewk_view_add_with_context(m_guiParent, context);
+
+        initializeDownloadControl(context);
+
+        Evas_Object* ewk_view = ewk_view_add_with_context(evas_object_evas_get(
+                reinterpret_cast<Evas_Object *>(m_guiParent)), context);
         ewk_context_cache_model_set(context, EWK_CACHE_MODEL_PRIMARY_WEBBROWSER);
         ewk_view_orientation_send(ewk_view, 0);
         evas_object_del(ewk_view);
@@ -510,7 +509,10 @@ TabId WebEngineService::addTab(const std::string & uri, const boost::optional<in
         newTabId = TabId(m_tabIdSecret);
     }
 
-    m_webViewCacheInitialized = true;
+    if (!m_webViewCacheInitialized) {
+        initializeDownloadControl();
+        m_webViewCacheInitialized = true;
+    }
     WebViewPtr p = std::make_shared<WebView>(m_guiParent, newTabId, title, m_state == State::SECRET);
     p->init(desktopMode, origin);
 
