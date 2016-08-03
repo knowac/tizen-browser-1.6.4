@@ -64,15 +64,18 @@ Evas_Object* RadioPopup::createItem(Evas_Object* parent, RadioButtons button)
     evas_object_size_hint_weight_set(item, EVAS_HINT_EXPAND, EVAS_HINT_FILL);
     evas_object_size_hint_align_set(item, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
-    static int val = static_cast<int>(RadioButtons::NONE);
+    static int val = static_cast<int>(RadioButtons::GOOGLE);
 
+    if (!m_radioGroup) {
+        m_radioGroup = elm_radio_add(item);
+        elm_radio_state_value_set(m_radioGroup, -1);
+    }
     auto radio = elm_radio_add(item);
-    if (!m_radioGroup)
-        m_radioGroup = radio;
-    else
-        elm_radio_group_add(radio, m_radioGroup);
+    elm_radio_group_add(radio, m_radioGroup);
     elm_radio_state_value_set(radio, static_cast<int>(button));
     elm_radio_value_pointer_set(radio, &val);
+    elm_access_object_unregister(radio);
+
     elm_object_part_content_set(item, "elm.swallow.end", radio);
     evas_object_propagate_events_set(radio, EINA_FALSE);
     evas_object_smart_callback_add(radio, "changed", _response_cb, this);

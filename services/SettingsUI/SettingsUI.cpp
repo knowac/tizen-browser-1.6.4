@@ -235,17 +235,8 @@ Evas_Object* SettingsUI::_gengrid_item_content_radio_get(void* data, Evas_Object
         return nullptr;
     }
     if (strcmp(part, "elm.swallow.end") == 0) {
-        Evas_Object* radio = nullptr;
         auto itd = static_cast<ItemData*>(data);
-        if (itd->sui->m_radio == nullptr) {
-            radio = itd->sui->m_radio = elm_radio_add(itd->sui->m_genlist);
-            elm_radio_value_set(itd->sui->m_radio, itd->id);
-            elm_radio_state_value_set(itd->sui->m_radio, itd->id);
-            elm_radio_group_add(radio, itd->sui->m_radio);
-        } else
-            radio = elm_radio_add(obj);
-
-        return radio;
+        return itd->sui->createRadioButton(obj, itd);
     }
     return nullptr;
 }
@@ -271,6 +262,8 @@ Evas_Object* SettingsUI::createSettingsMobilePage(Evas_Object* settings_layout)
     elm_object_focus_set(elm_object_part_content_get(m_actionBar, "close_click"), EINA_TRUE);
 
     m_genlist = elm_genlist_add(layout);
+    m_radio = elm_radio_add(m_genlist);
+    elm_radio_state_value_set(m_radio, -1);
 
     if (populateList(m_genlist)) {
         elm_genlist_homogeneous_set(m_genlist, EINA_FALSE);

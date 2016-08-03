@@ -54,6 +54,7 @@ public:
     virtual void disconnectSignals(){};
     virtual Evas_Object* createOnOffCheckBox(Evas_Object* obj, ItemData*);
     virtual Evas_Object* createNormalCheckBox(Evas_Object* obj, ItemData*);
+    virtual Evas_Object* createRadioButton(Evas_Object*, ItemData*) { return nullptr; }
 
     void init(Evas_Object* parent);
     Evas_Object* getContent();
@@ -78,7 +79,7 @@ public:
     std::map<SettingsDelPersDataOptions, Evas_Object*> getCheckboxes() { return m_checkboxes; }
     void setOption(const SettingsDelPersDataOptions& option, bool value) { m_option[option] = value; }
     void setCheckboxes(const SettingsDelPersDataOptions& option, Evas_Object* check) { m_checkboxes[option] = check; }
-
+    Evas_Object* getRadioGroup() { return m_radio; }
 private:
     Evas_Object* createSettingsUILayout(Evas_Object* parent);
     static void close_clicked_cb(void* data, Evas_Object* obj, void* event_info);

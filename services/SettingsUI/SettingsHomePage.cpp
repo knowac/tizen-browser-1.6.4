@@ -98,6 +98,35 @@ bool SettingsHomePage::populateList(Evas_Object* genlist)
     return true;
 }
 
+Evas_Object* SettingsHomePage::createRadioButton(Evas_Object* obj, ItemData* itd)
+{
+    auto radio_button = elm_radio_add(obj);
+    if (radio_button) {
+        elm_radio_state_value_set(radio_button, itd->id);
+        elm_radio_group_add(radio_button, getRadioGroup());
+        evas_object_propagate_events_set(radio_button, EINA_FALSE);
+        switch (itd->id) {
+            case SettingsHomePageOptions::DEFAULT:
+                evas_object_smart_callback_add(radio_button, "changed", _default_cb, this);
+                break;
+            case SettingsHomePageOptions::CURRENT:
+                evas_object_smart_callback_add(radio_button, "changed", _current_cb, this);
+                break;
+            case SettingsHomePageOptions::QUICK_ACCESS:
+                evas_object_smart_callback_add(radio_button, "changed", _quick_cb, this);
+                break;
+            case SettingsHomePageOptions::MOST_VIS:
+                evas_object_smart_callback_add(radio_button, "changed", _most_visited_cb, this);
+                break;
+            case SettingsHomePageOptions::OTHER:
+                evas_object_smart_callback_add(radio_button, "changed", _other_cb, this);
+                break;
+        }
+        elm_access_object_unregister(radio_button);
+    }
+    return radio_button;
+}
+
 void SettingsHomePage::_default_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);

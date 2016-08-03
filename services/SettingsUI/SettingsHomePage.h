@@ -51,6 +51,7 @@ public:
     virtual void updateButtonMap();
     virtual void connectSignals(){};
     virtual void disconnectSignals(){};
+    virtual Evas_Object* createRadioButton(Evas_Object* obj, ItemData*);
     static void _default_cb(void *data, Evas_Object*obj , void* event_info);
     static void _current_cb(void *data, Evas_Object*obj , void* event_info);
     static void _quick_cb(void *data, Evas_Object*obj , void* event_info);
