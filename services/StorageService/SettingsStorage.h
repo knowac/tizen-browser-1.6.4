@@ -35,9 +35,13 @@ public:
 
     void resetSettings();
     void setParam(basic_webengine::WebEngineSettings param, bool value) const;
+    void setParamString(basic_webengine::WebEngineSettings param, std::string value) const;
     bool isParamPresent(basic_webengine::WebEngineSettings param) const;
     bool getParamVal(basic_webengine::WebEngineSettings param) const;
-
+    /**
+     * @throws StorageException on error
+     */
+    std::string getParamString(basic_webengine::WebEngineSettings param) const;
     /**
      * @throws StorageException on error
      */

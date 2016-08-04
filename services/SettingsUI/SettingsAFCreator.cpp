@@ -419,13 +419,13 @@ void SettingsAFCreator::__done_button_cb(void* data, Evas_Object*, void*)
     SettingsAFCreator *safc = static_cast<SettingsAFCreator*>(data);
     if (safc->applyEntryData() == EINA_FALSE)
         return;
-    SettingsPrettySignalConnector::Instance().closeSettingsUIClicked();
+    SPSC.closeSettingsUIClicked();
 }
 
 void SettingsAFCreator::__cancel_button_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().closeSettingsUIClicked();
+    SPSC.closeSettingsUIClicked();
 }
 
 void SettingsAFCreator::__entry_changed_cb(void* data, Evas_Object* obj, void*)

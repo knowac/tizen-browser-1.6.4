@@ -35,37 +35,37 @@ void SettingsDelPersData::updateButtonMap()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     // TODO Missing translations
     ItemData selectAll;
-    selectAll.buttonText = "Select all";
+    selectAll.buttonText = Translations::SettingsDelPersDataSelectAll;
     selectAll.sui = this;
     selectAll.id = SELECT_ALL;
 
     ItemData browsHistory;
-    browsHistory.buttonText = "Browsing history";
+    browsHistory.buttonText = Translations::SettingsDelPersDataBrowsingHistory;
     browsHistory.sui = this;
     browsHistory.id = BROWSING_HISTORY;
 
     ItemData cache;
-    cache.buttonText = "Cache";
+    cache.buttonText = Translations::SettingsDelPersDataCache;
     cache.sui = this;
     cache.id = CACHE;
 
     ItemData cookies;
-    cookies.buttonText = "Cookies and site data";
+    cookies.buttonText = Translations::SettingsDelPersDataCookies;
     cookies.sui = this;
     cookies.id = COOKIES_AND_SITE;
 
     ItemData pass;
-    pass.buttonText = "Passwords";
+    pass.buttonText = Translations::SettingsDelPersDataPasswords;
     pass.sui = this;
     pass.id = PASSWORDS;
 
     ItemData autofill;
-    autofill.buttonText = "Auto fill data";
+    autofill.buttonText = Translations::SettingsDelPersDataAutoFillData;
     autofill.sui = this;
     autofill.id = DEL_PERS_AUTO_FILL;
 
     ItemData loc;
-    loc.buttonText = "Location access data";
+    loc.buttonText = Translations::SettingsDelPersDataLocationData;
     loc.sui = this;
     loc.id = LOCATION;
 
@@ -80,7 +80,7 @@ void SettingsDelPersData::updateButtonMap()
 
 bool SettingsDelPersData::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Delete Personal data");
+    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsDelPersDataTitle.c_str());
 
     elm_object_signal_emit(m_actionBar, "show,buttons,signal", "but_vis");
     elm_object_signal_emit(m_actionBar, "hide,close,icon", "del_but");
@@ -92,7 +92,7 @@ bool SettingsDelPersData::populateList(Evas_Object* genlist)
     }
     elm_object_style_set(m_cancelButton, "basic_button");
     evas_object_smart_callback_add(m_cancelButton, "clicked", __cancel_button_cb, this);
-    elm_object_part_text_set (m_actionBar, "cancel_text", "CANCEL");
+    elm_object_translatable_part_text_set(m_actionBar, "cancel_text", Translations::SettingsDelPersDataCancel.c_str());
     elm_object_part_content_set(m_actionBar, "cancel_button", m_cancelButton);
 
     m_deleteButton = elm_button_add(m_actionBar);
@@ -103,7 +103,7 @@ bool SettingsDelPersData::populateList(Evas_Object* genlist)
     elm_object_style_set(m_deleteButton, "basic_button");
     evas_object_smart_callback_add(m_deleteButton, "clicked", __delete_button_cb, this);
     elm_object_part_content_set(m_actionBar, "done_button", m_deleteButton);
-    elm_object_part_text_set (m_actionBar, "done_text", "DELETE");
+    elm_object_translatable_part_text_set(m_actionBar, "done_text", Translations::SettingsDelPersDataDelete.c_str());
     elm_object_signal_emit(m_actionBar, "dim,done,button,signal", "");
 
     appendGenlist(genlist, m_setting_check_normal_item_class, &m_buttonsMap[SettingsDelPersDataOptions::SELECT_ALL], nullptr);
@@ -119,7 +119,7 @@ bool SettingsDelPersData::populateList(Evas_Object* genlist)
 void SettingsDelPersData::__cancel_button_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().closeSettingsUIClicked();
+    SPSC.closeSettingsUIClicked();
 }
 
 void SettingsDelPersData::__delete_button_cb(void* data, Evas_Object*, void*)
@@ -130,8 +130,8 @@ void SettingsDelPersData::__delete_button_cb(void* data, Evas_Object*, void*)
         return;
     }
     auto self = static_cast<SettingsDelPersData*>(data);
-    SettingsPrettySignalConnector::Instance().deleteSelectedDataClicked(self->m_option);
-    SettingsPrettySignalConnector::Instance().closeSettingsUIClicked();
+    SPSC.deleteSelectedDataClicked(self->m_option);
+    SPSC.closeSettingsUIClicked();
 }
 
 Evas_Object* SettingsDelPersData::createNormalCheckBox(Evas_Object* obj, ItemData* itd)

@@ -106,6 +106,7 @@ protected:
     std::map<unsigned, ItemData> m_buttonsMap;
     std::map<SettingsDelPersDataOptions, bool> m_option;
     std::map<SettingsDelPersDataOptions,Evas_Object*> m_checkboxes;
+    std::map<int, Elm_Object_Item*> m_genlistItems;
     Evas_Object* m_radio;
     Elm_Gengrid_Item_Class* m_setting_item_class;
     Elm_Gengrid_Item_Class* m_setting_double_item_class;

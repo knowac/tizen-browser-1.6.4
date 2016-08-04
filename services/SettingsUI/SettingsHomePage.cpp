@@ -34,7 +34,7 @@ SettingsHomePage::~SettingsHomePage()
 std::string SettingsHomePage::getCurrentPage()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_current = SettingsPrettySignalConnector::Instance().requestCurrentPage();
+    m_current = SPSC.requestCurrentPage();
     BROWSER_LOGD("[%s:%s] ", __PRETTY_FUNCTION__, (*m_current).c_str());
     if(m_current && !(*m_current).empty())
         return *m_current;
@@ -44,31 +44,30 @@ std::string SettingsHomePage::getCurrentPage()
 void SettingsHomePage::updateButtonMap()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Missing translations
     ItemData defaultPage;
-    defaultPage.buttonText = "Default";
+    defaultPage.buttonText = Translations::SettingsHomePageDefault;
     defaultPage.subText = DEF_HOME_PAGE;
     defaultPage.sui = this;
     defaultPage.id = DEFAULT;
 
     ItemData current;
-    current.buttonText = "Current page";
+    current.buttonText = Translations::SettingsHomePageCurrentPage;
     current.subText = getCurrentPage();
     current.sui = this;
     current.id = CURRENT;
 
     ItemData quick;
-    quick.buttonText = "Quick access";
+    quick.buttonText = Translations::SettingsHomePageQuickAccess;
     quick.sui = this;
     quick.id = QUICK_ACCESS;
 
     ItemData most;
-    most.buttonText = "Most visited websites";
+    most.buttonText = Translations::SettingsHomePageMostVisited;
     most.sui = this;
     most.id = MOST_VIS;
 
     ItemData other;
-    other.buttonText = "Other";
+    other.buttonText = Translations::SettingsHomePageOther;
     other.subText = "http://wwww.samsung.com";
     other.sui = this;
     other.id = OTHER;
@@ -83,7 +82,7 @@ void SettingsHomePage::updateButtonMap()
 bool SettingsHomePage::populateList(Evas_Object* genlist)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Home page");
+    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsHomePageTitle.c_str());
     updateButtonMap();
     m_itemsMap[SettingsHomePageOptions::DEFAULT] =
         appendGenlist(genlist, m_setting_check_radio_item_class, &m_buttonsMap[SettingsHomePageOptions::DEFAULT], _default_cb);
@@ -130,7 +129,7 @@ Evas_Object* SettingsHomePage::createRadioButton(Evas_Object* obj, ItemData* itd
 void SettingsHomePage::_default_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().homePageChanged(SettingsHomePage::DEF_HOME_PAGE);
+    SPSC.homePageChanged(SettingsHomePage::DEF_HOME_PAGE);
 }
 
 void SettingsHomePage::_current_cb(void* data, Evas_Object*, void*)
@@ -141,7 +140,7 @@ void SettingsHomePage::_current_cb(void* data, Evas_Object*, void*)
         return;
     }
     auto self = static_cast<SettingsHomePage*>(data);
-    SettingsPrettySignalConnector::Instance().homePageChanged(self->getCurrentPage());
+    SPSC.homePageChanged(self->getCurrentPage());
 }
 
 void SettingsHomePage::_quick_cb(void *, Evas_Object*, void*)

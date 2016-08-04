@@ -16,6 +16,8 @@
 
 #include "SettingsMain.h"
 
+#include "Config.h"
+
 namespace tizen_browser{
 namespace base_ui{
 
@@ -31,38 +33,44 @@ SettingsMain::~SettingsMain()
 
 void SettingsMain::updateButtonMap()
 {
-    // TODO Missing translations
     ItemData homePage;
-    homePage.buttonText = "Home Page";
-    homePage.subText = "Default";
+    homePage.buttonText = Translations::SettingsMainHomePage;
+    homePage.subText = Translations::SettingsMainHomePageDefault;
     homePage.sui = this;
     homePage.id = HOME;
 
     ItemData search;
-    search.buttonText = "Default search engine";
-    search.subText = "Google";
+    search.buttonText = Translations::SettingsMainDefaultSearchEngine;
+    search.subText =  [this]() -> std::string {
+        auto sig =
+            SPSC.getWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE);
+        return (sig && !sig->empty()) ?
+            *sig :
+            Translations::Google;
+    }();
     search.sui = this;
     search.id = SEARCH;
 
     ItemData autofill;
-    autofill.buttonText = "My Auto fill profile";
-    autofill.subText = "Manage your Auto fill profile.";
+    autofill.buttonText = Translations::SettingsMainAutoFillProfiles;
+    autofill.subText = Translations::SettingsMainAutoFillProfilesSub;
     autofill.sui = this;
     autofill.id = AUTO_FILL_PROFILE;
 
     ItemData zoom;
-    zoom.buttonText = "Manual zoom";
-    zoom.subText = "Override website requests to control the zoom level.";
+    zoom.buttonText = Translations::SettingsMainManualZoom;
+    zoom.subText = Translations::SettingsMainManualZoomSub;
     zoom.sui = this;
     zoom.id = ZOOM;
 
     ItemData privacy;
-    privacy.buttonText="Privacy";
+    privacy.buttonText = Translations::SettingsMainPrivacy;
     privacy.sui = this;
     privacy.id = PRIVACY;
 
     ItemData advanced;
-    advanced.buttonText="Advanced";
+    advanced.buttonText = Translations::SettingsMainAdvanced;
     advanced.sui = this;
     advanced.id = ADVANCED;
 
@@ -72,18 +80,27 @@ void SettingsMain::updateButtonMap()
     m_buttonsMap[SettingsMainOptions::ZOOM] = zoom;
     m_buttonsMap[SettingsMainOptions::PRIVACY] = privacy;
     m_buttonsMap[SettingsMainOptions::ADVANCED] = advanced;
+
+    SPSC.setSearchEngineSubText.connect(
+        boost::bind(&SettingsMain::setSearchEngineSubText, this, _1));
 }
 
 bool SettingsMain::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Settings");
+    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsMainTitle.c_str());
     updateButtonMap();
-    appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::HOME], _home_page_cb);
-    appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::SEARCH], _search_engine_cb);
-    appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::AUTO_FILL_PROFILE], _auto_fill_cb);
-    appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsMainOptions::ZOOM], _zoom_cb);
-    appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::PRIVACY], _privacy_cb);
-    appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::ADVANCED], _advanced_cb);
+    m_genlistItems[SettingsMainOptions::HOME] =
+        appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::HOME], _home_page_cb);
+    m_genlistItems[SettingsMainOptions::SEARCH] =
+        appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::SEARCH], _search_engine_cb);
+    m_genlistItems[SettingsMainOptions::AUTO_FILL_PROFILE] =
+        appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::AUTO_FILL_PROFILE], _auto_fill_cb);
+    m_genlistItems[SettingsMainOptions::ZOOM] =
+        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsMainOptions::ZOOM], _zoom_cb);
+    m_genlistItems[SettingsMainOptions::PRIVACY] =
+        appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::PRIVACY], _privacy_cb);
+    m_genlistItems[SettingsMainOptions::ADVANCED] =
+        appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::ADVANCED], _advanced_cb);
     return true;
 }
 
@@ -101,8 +118,8 @@ Eina_Bool SettingsMain::getOriginalZoomState()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     boost::optional<bool> sig =
-        SettingsPrettySignalConnector::Instance().
-            getWebEngineSettingsParam(basic_webengine::WebEngineSettings::PAGE_OVERVIEW);
+        SPSC.getWebEngineSettingsParam(
+            basic_webengine::WebEngineSettings::PAGE_OVERVIEW);
 
     return (sig && *sig) ? EINA_TRUE : EINA_FALSE;
 }
@@ -110,13 +127,13 @@ Eina_Bool SettingsMain::getOriginalZoomState()
 void SettingsMain::_home_page_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().settingsHomePageClicked();
+    SPSC.settingsHomePageClicked();
 }
 
 void SettingsMain::_search_engine_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().settingsBaseShowRadioPopup();
+    SPSC.settingsBaseShowRadioPopup();
 }
 
 void SettingsMain::_zoom_cb(void *, Evas_Object* obj, void*)
@@ -127,27 +144,27 @@ void SettingsMain::_zoom_cb(void *, Evas_Object* obj, void*)
     auto value = !elm_check_state_get(check);
 
     elm_check_state_set(check, value);
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam(
-            basic_webengine::WebEngineSettings::PAGE_OVERVIEW, static_cast<bool>(value));
+    SPSC.setWebEngineSettingsParam(
+        basic_webengine::WebEngineSettings::PAGE_OVERVIEW,
+        static_cast<bool>(value));
 }
 
 void SettingsMain::_advanced_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().settingsAdvancedClicked();
+    SPSC.settingsAdvancedClicked();
 }
 
 void SettingsMain::_auto_fill_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().settingsAutofillClicked();
+    SPSC.settingsAutofillClicked();
 }
 
 void SettingsMain::_privacy_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().settingsPrivacyClicked();
+    SPSC.settingsPrivacyClicked();
 }
 
 void SettingsMain::grid_item_check_changed(void*, Evas_Object* obj, void*)
@@ -157,9 +174,31 @@ void SettingsMain::grid_item_check_changed(void*, Evas_Object* obj, void*)
     auto value = !elm_check_state_get(obj);
 
     elm_check_state_set(obj, value);
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam(
-            basic_webengine::WebEngineSettings::PAGE_OVERVIEW, static_cast<bool>(value));
+    SPSC.setWebEngineSettingsParam(
+        basic_webengine::WebEngineSettings::PAGE_OVERVIEW,
+        static_cast<bool>(value));
+}
+
+void SettingsMain::setSearchEngineSubText(int button)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    switch (static_cast<RadioButtons>(button)) {
+        case RadioButtons::GOOGLE:
+            m_buttonsMap[SettingsMainOptions::SEARCH].subText = Translations::Google;
+            break;
+        case RadioButtons::YAHOO:
+            m_buttonsMap[SettingsMainOptions::SEARCH].subText = Translations::Yahoo;
+            break;
+        case RadioButtons::BING:
+            m_buttonsMap[SettingsMainOptions::SEARCH].subText = Translations::Bing;
+            break;
+        default:
+            return;
+    }
+    SPSC.setWebEngineSettingsParamString(
+        basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE,
+        m_buttonsMap[SettingsMainOptions::SEARCH].subText);
+    elm_genlist_realized_items_update(m_genlist);
 }
 }
 }

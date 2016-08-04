@@ -25,30 +25,19 @@
 
 #include "AbstractPopup.h"
 #include "app_i18n.h"
+#include "Tools/SettingsEnums.h"
 
 namespace tizen_browser
 {
 
 namespace base_ui
 {
-class RadioPopup;
-
-enum struct RadioButtons : int
-{
-    NONE    = 0,
-    // WebSearch Engines
-    GOOGLE  = 1,
-    YAHOO,
-    BING,
-    // Save Content
-    DEVICE  = 10,
-    SD_CARD
-};
 
 class RadioPopup : public interfaces::AbstractPopup
 {
 public:
     static std::map<RadioButtons, std::string> createTranslations();
+    static RadioButtons translateButtonState(const std::string& name);
     static RadioPopup* createPopup(Evas_Object* parent);
 
     void show() override;
@@ -59,6 +48,7 @@ public:
     void setTitle(const std::string& title);
     void addRadio(RadioButtons button);
     void setButtons(RadioButtons rb, Evas_Object* button);
+    void setState(RadioButtons state);
     Evas_Object* createItem(Evas_Object* parent, RadioButtons button);
 
     boost::signals2::signal<void (RadioButtons)> radioButtonClicked;
@@ -72,13 +62,13 @@ private:
     Evas_Object* addRadioToGenlist(const RadioButtons& button, Evas_Object* obj);
 
     static std::map<RadioButtons, std::string> s_buttonsTranslations;
-
     Evas_Object* m_parent;
     std::map<RadioButtons, Evas_Object*> m_buttons;
     std::string m_title;
     Evas_Object* m_popup;
     Evas_Object* m_radioGroup;
     Evas_Object* m_box;
+    int m_radioState;
 };
 
 }

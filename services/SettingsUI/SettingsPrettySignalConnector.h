@@ -20,7 +20,10 @@
 #include <boost/signals2/signal.hpp>
 #include <map>
 #include <memory>
+#include "Tools/GeneralTools.h"
 #include "../../core/AbstractWebEngine/WebEngineSettings.h"
+
+#define SPSC SettingsPrettySignalConnector::Instance()
 
 namespace tizen_browser{
 namespace base_ui{
@@ -46,22 +49,27 @@ public:
     SettingsPrettySignalConnector(SettingsPrettySignalConnector const&) = delete;
     void operator=(SettingsPrettySignalConnector const&) = delete;
 
-    boost::signals2::signal<void ()> settingsPrivacyClicked;
-    boost::signals2::signal<void ()> settingsDelPersDataClicked;
-    boost::signals2::signal<void (const std::map<SettingsDelPersDataOptions, bool>&)> deleteSelectedDataClicked;
-    boost::signals2::signal<void ()> closeSettingsUIClicked;
-    boost::signals2::signal<bool (const basic_webengine::WebEngineSettings&)> getWebEngineSettingsParam;
-    boost::signals2::signal<void (const basic_webengine::WebEngineSettings&, bool)> setWebEngineSettingsParam;
-    boost::signals2::signal<void ()> settingsBaseClicked;
-    boost::signals2::signal<void ()> settingsHomePageClicked;
-    boost::signals2::signal<void ()> settingsAutofillClicked;
-    boost::signals2::signal<void ()> settingsAdvancedClicked;
-    boost::signals2::signal<void (bool)> settingsAutofillProfileClicked;
-    boost::signals2::signal<void (const std::string&)> homePageChanged;
-    boost::signals2::signal<std::string ()> requestCurrentPage;
-    boost::signals2::signal<bool ()> isLandscape;
-    boost::signals2::signal<void (unsigned)> showSettings;
-    boost::signals2::signal<void ()> settingsBaseShowRadioPopup;
+    B_SIG<void ()> settingsPrivacyClicked;
+    B_SIG<void ()> settingsDelPersDataClicked;
+    B_SIG<void (const std::map<SettingsDelPersDataOptions, bool>&)> deleteSelectedDataClicked;
+    B_SIG<void ()> closeSettingsUIClicked;
+    B_SIG<bool (const basic_webengine::WebEngineSettings&)>getWebEngineSettingsParam;
+    B_SIG<std::string (const basic_webengine::WebEngineSettings&)> getWebEngineSettingsParamString;
+    B_SIG<void (const basic_webengine::WebEngineSettings&, bool)> setWebEngineSettingsParam;
+    B_SIG<void (const basic_webengine::WebEngineSettings&, std::string)> setWebEngineSettingsParamString;
+    B_SIG<void ()> settingsBaseClicked;
+    B_SIG<void ()> settingsHomePageClicked;
+    B_SIG<void ()> settingsAutofillClicked;
+    B_SIG<void ()> settingsAdvancedClicked;
+    B_SIG<void (bool)> settingsAutofillProfileClicked;
+    B_SIG<void (const std::string&)> homePageChanged;
+    B_SIG<std::string ()> requestCurrentPage;
+    B_SIG<bool ()> isLandscape;
+    B_SIG<void (unsigned)> showSettings;
+    B_SIG<void ()> settingsBaseShowRadioPopup;
+    B_SIG<void ()> settingsSaveContentToRadioPopup;
+    B_SIG<void (int)> setSearchEngineSubText;
+    B_SIG<void (int)> setContentDestination;
 
 private:
     SettingsPrettySignalConnector(){};

@@ -34,24 +34,23 @@ SettingsPrivacy::~SettingsPrivacy()
 
 void SettingsPrivacy::updateButtonMap()
 {
-    // TODO Missing translations
     ItemData cookies;
-    cookies.buttonText = "Accept cookies";
-    cookies.subText = "Allow sites to save and read cookies.";
+    cookies.buttonText = Translations::SettingsPrivacyAcceptCookies;
+    cookies.subText = Translations::SettingsPrivacyAcceptCookiesSub;
     cookies.sui = this;
 
     ItemData suggestions;
-    suggestions.buttonText = "Suggest searches";
-    suggestions.subText = "Set the device to suggest queries and sites in the web address bar as you type.";
+    suggestions.buttonText = Translations::SettingsPrivacySuggestSearches;
+    suggestions.subText = Translations::SettingsPrivacySuggestSearchesSub;
     suggestions.sui = this;
 
     ItemData signIn;
-    signIn.buttonText = "Save sign-in info";
-    signIn.subText = " Set your device to show a pop-up with the option to save your username and password when you enter user credentials for websites.";
+    signIn.buttonText = Translations::SettingsPrivacySaveSigninInfo;
+    signIn.subText = Translations::SettingsPrivacySaveSigninInfo;
     signIn.sui = this;
 
     ItemData delPerData;
-    delPerData.buttonText = "Delete personal data";
+    delPerData.buttonText = Translations::SettingsPrivacyDeletePersonalData;
     delPerData.sui = this;
 
     m_buttonsMap[SettingsPrivacyOptions::COOKIES] = cookies;
@@ -62,7 +61,7 @@ void SettingsPrivacy::updateButtonMap()
 
 bool SettingsPrivacy::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Privacy");
+    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsPrivacyTitle.c_str());
 
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::COOKIES], _cookies_cb);
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::SUGGESTIONS], _suggestions_cb);
@@ -96,10 +95,9 @@ void SettingsPrivacy::_suggestions_cb(void *, Evas_Object* obj, void*)
 
     elm_check_state_set(check, value);
     // TODO Not sure if it is correct option
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam(
-            basic_webengine::WebEngineSettings::REMEMBER_FROM_DATA,
-            static_cast<bool>(value));
+    SPSC.setWebEngineSettingsParam(
+        basic_webengine::WebEngineSettings::REMEMBER_FROM_DATA,
+        static_cast<bool>(value));
 }
 
 void SettingsPrivacy::_signin_cb(void *, Evas_Object* obj, void*)
@@ -110,16 +108,15 @@ void SettingsPrivacy::_signin_cb(void *, Evas_Object* obj, void*)
     auto value = !elm_check_state_get(check);
 
     elm_check_state_set(check, value);
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam(
-            basic_webengine::WebEngineSettings::REMEMBER_PASSWORDS,
-            static_cast<bool>(value));
+    SPSC.setWebEngineSettingsParam(
+        basic_webengine::WebEngineSettings::REMEMBER_PASSWORDS,
+        static_cast<bool>(value));
 }
 
 void SettingsPrivacy::_del_per_data_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().settingsDelPersDataClicked();
+    SPSC.settingsDelPersDataClicked();
 }
 
 }

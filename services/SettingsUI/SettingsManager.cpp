@@ -45,24 +45,18 @@ std::shared_ptr<SettingsUI> SettingsManager::getView(const SettingsMainOptions& 
 
 void SettingsManager::connectOpenSignals()
 {
-    SettingsPrettySignalConnector::Instance().
-        settingsHomePageClicked.connect(
-            boost::bind(&SettingsManager::showSettingsHomePageUI, this));
-    SettingsPrettySignalConnector::Instance().
-        settingsAutofillClicked.connect(
-            boost::bind(&SettingsManager::showSettingsAutofillUI, this));
-    SettingsPrettySignalConnector::Instance().
-        settingsPrivacyClicked.connect(
-            boost::bind(&SettingsManager::showSettingsPrivacyUI, this));
-    SettingsPrettySignalConnector::Instance().
-        settingsAdvancedClicked.connect(
-            boost::bind(&SettingsManager::showSettingsAdvancedUI, this));
-    SettingsPrettySignalConnector::Instance().
-        settingsDelPersDataClicked.connect(
-            boost::bind(&SettingsManager::showSettingsDelPrivDataUI, this));
-    SettingsPrettySignalConnector::Instance().
-        settingsAutofillProfileClicked.connect(
-            boost::bind(&SettingsManager::showSettingsAutofillCreatorUI, this, _1));
+    SPSC.settingsHomePageClicked.connect(
+        boost::bind(&SettingsManager::showSettingsHomePageUI, this));
+    SPSC.settingsAutofillClicked.connect(
+        boost::bind(&SettingsManager::showSettingsAutofillUI, this));
+    SPSC.settingsPrivacyClicked.connect(
+        boost::bind(&SettingsManager::showSettingsPrivacyUI, this));
+    SPSC.settingsAdvancedClicked.connect(
+        boost::bind(&SettingsManager::showSettingsAdvancedUI, this));
+    SPSC.settingsDelPersDataClicked.connect(
+        boost::bind(&SettingsManager::showSettingsDelPrivDataUI, this));
+    SPSC.settingsAutofillProfileClicked.connect(
+        boost::bind(&SettingsManager::showSettingsAutofillCreatorUI, this, _1));
 }
 
 std::shared_ptr<SettingsUI> SettingsManager::addView(const SettingsMainOptions& s)
@@ -108,48 +102,48 @@ std::shared_ptr<SettingsUI> SettingsManager::addView(const SettingsMainOptions& 
 void SettingsManager::showSettingsBaseUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().showSettings(SettingsMainOptions::BASE);
+    SPSC.showSettings(SettingsMainOptions::BASE);
 }
 
 void SettingsManager::showSettingsHomePageUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().showSettings(SettingsMainOptions::HOME);
+    SPSC.showSettings(SettingsMainOptions::HOME);
 }
 
 void SettingsManager::showSettingsAutofillUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().showSettings(SettingsMainOptions::AUTO_FILL_PROFILE);
+    SPSC.showSettings(SettingsMainOptions::AUTO_FILL_PROFILE);
 }
 
 void SettingsManager::showSettingsAutofillCreatorUI(bool profile)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (profile)
-        SettingsPrettySignalConnector::Instance().
-            showSettings(SettingsMainOptions::AUTO_FILL_CREATOR_WITH_PROFILE);
+        SPSC.showSettings(
+            SettingsMainOptions::AUTO_FILL_CREATOR_WITH_PROFILE);
     else
-        SettingsPrettySignalConnector::Instance().
-            showSettings(SettingsMainOptions::AUTO_FILL_CREATOR_WITHOUT_PROFILE);
+        SPSC.showSettings(
+            SettingsMainOptions::AUTO_FILL_CREATOR_WITHOUT_PROFILE);
 }
 
 void SettingsManager::showSettingsPrivacyUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().showSettings(SettingsMainOptions::PRIVACY);
+    SPSC.showSettings(SettingsMainOptions::PRIVACY);
 }
 
 void SettingsManager::showSettingsAdvancedUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().showSettings(SettingsMainOptions::ADVANCED);
+    SPSC.showSettings(SettingsMainOptions::ADVANCED);
 }
 
 void SettingsManager::showSettingsDelPrivDataUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SettingsPrettySignalConnector::Instance().showSettings(SettingsMainOptions::DEL_PERSONAL_DATA);
+    SPSC.showSettings(SettingsMainOptions::DEL_PERSONAL_DATA);
 }
 }
 }

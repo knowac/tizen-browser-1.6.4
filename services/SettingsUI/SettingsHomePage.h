@@ -27,6 +27,7 @@
 #include <Evas.h>
 #include "BrowserLogger.h"
 #include "Tools/EflTools.h"
+#include "Tools/SettingsEnums.h"
 
 namespace tizen_browser{
 namespace base_ui{

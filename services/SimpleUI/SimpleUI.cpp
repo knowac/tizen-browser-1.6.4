@@ -438,36 +438,55 @@ void SimpleUI::connectSettingsSignals()
 
     // SETTINGS OVERALL
     m_settingsManager->connectOpenSignals();
-    SettingsPrettySignalConnector::Instance().
-        closeSettingsUIClicked.connect(boost::bind(&SimpleUI::closeSettingsUI, this));
-    SettingsPrettySignalConnector::Instance().
-        showSettings.connect(
-            boost::bind(
-                &SimpleUI::showSettings, this,_1));
-    SettingsPrettySignalConnector::Instance().
-        getWebEngineSettingsParam.connect(
-            boost::bind(
-                &basic_webengine::AbstractWebEngine<Evas_Object>::getSettingsParam, m_webEngine.get(), _1));
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam.connect(
-            boost::bind(
-                &basic_webengine::AbstractWebEngine<Evas_Object>::setSettingsParam, m_webEngine.get(), _1, _2));
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam.connect(
-            boost::bind(&storage::SettingsStorage::setParam, &m_storageService->getSettingsStorage(), _1, _2));
-    SettingsPrettySignalConnector::Instance().
-        isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-    SettingsPrettySignalConnector::Instance().
-        settingsBaseShowRadioPopup.connect(boost::bind(&SimpleUI::onDefSearchEngineClicked, this));
+    SPSC.closeSettingsUIClicked.connect(
+        boost::bind(&SimpleUI::closeSettingsUI, this));
+    SPSC.showSettings.connect(
+        boost::bind(&SimpleUI::showSettings, this,_1));
+    SPSC.getWebEngineSettingsParam.connect(
+        boost::bind(
+            &basic_webengine::AbstractWebEngine<Evas_Object>::getSettingsParam,
+            m_webEngine.get(),
+            _1));
+    SPSC. getWebEngineSettingsParamString.connect(
+        boost::bind(
+            &storage::SettingsStorage::getParamString,
+            &m_storageService->getSettingsStorage(),
+            _1));
+
+    SPSC.setWebEngineSettingsParam.connect(
+        boost::bind(
+            &basic_webengine::AbstractWebEngine<Evas_Object>::setSettingsParam,
+            m_webEngine.get(),
+            _1,
+            _2));
+    SPSC.setWebEngineSettingsParam.connect(
+        boost::bind(&storage::SettingsStorage::setParam,
+            &m_storageService->getSettingsStorage(),
+            _1,
+            _2));
+    SPSC.setWebEngineSettingsParamString.connect(
+        boost::bind(
+            &storage::SettingsStorage::setParamString,
+            &m_storageService->getSettingsStorage(),
+            _1,
+            _2));
+
+    SPSC.isLandscape.connect(
+        boost::bind(&SimpleUI::isLandscape, this));
+    SPSC.settingsBaseShowRadioPopup.connect(
+        boost::bind(&SimpleUI::onDefSearchEngineClicked, this));
+    SPSC.settingsSaveContentToRadioPopup.connect(
+        boost::bind(&SimpleUI::onSaveContentToClicked, this));
+
 
     // SETTINGS HOME PAGE SIGNALS
     m_settingsManager->init(m_viewManager.getContent());
-    SettingsPrettySignalConnector::Instance().
-        requestCurrentPage.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
+    SPSC.requestCurrentPage.connect(
+        boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
 
     // SETTINGS DELETE DATA
-    SettingsPrettySignalConnector::Instance().
-        deleteSelectedDataClicked.connect(boost::bind(&SimpleUI::settingsDeleteSelectedData, this,_1));
+    SPSC.deleteSelectedDataClicked.connect(
+        boost::bind(&SimpleUI::settingsDeleteSelectedData, this,_1));
 }
 
 void SimpleUI::initUIServices()
@@ -1470,17 +1489,58 @@ void SimpleUI::onDefSearchEngineClicked()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     auto popup = RadioPopup::createPopup(m_viewManager.getContent());
-    popup->setTitle("Default search engine");
+    popup->setTitle(Translations::SettingsDefaultSearchEngineTitle);
     popup->addRadio(RadioButtons::GOOGLE);
     popup->addRadio(RadioButtons::YAHOO);
     popup->addRadio(RadioButtons::BING);
+    auto stateString = [this]() -> std::string {
+        auto sig =
+            SPSC.getWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE);
+        return (sig && !sig->empty()) ?
+            *sig :
+            Translations::Google;
+    }();
+    auto state = RadioPopup::translateButtonState(stateString);
+    popup->setState(state);
     popup->radioButtonClicked.connect(
-        [&, this](const RadioButtons&){
-        BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+        [&, this](const RadioButtons& button){
+        SPSC.setSearchEngineSubText(
+            static_cast<int>(button));
         dismissPopup(popup);
     });
     popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
-    popup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
+    popup->popupDismissed.connect(
+        boost::bind(&SimpleUI::dismissPopup, this, _1));
+    popup->show();
+}
+
+void SimpleUI::onSaveContentToClicked()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto popup = RadioPopup::createPopup(m_viewManager.getContent());
+    popup->setTitle(Translations::SettingsAdvancedSaveContentTitle);
+    popup->addRadio(RadioButtons::DEVICE);
+    popup->addRadio(RadioButtons::SD_CARD);
+    auto stateString = [this]() -> std::string {
+        auto sig =
+            SPSC.getWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION);
+        return (sig && !sig->empty()) ?
+            *sig :
+            Translations::Device;
+    }();
+    auto state = RadioPopup::translateButtonState(stateString);
+    popup->setState(state);
+    popup->radioButtonClicked.connect(
+        [&, this](const RadioButtons& button){
+        SPSC.setContentDestination(static_cast<int>(button));
+        dismissPopup(popup);
+    });
+    popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
+    popup->popupDismissed.connect(
+        boost::bind(&SimpleUI::dismissPopup, this, _1));
     popup->show();
 }
 

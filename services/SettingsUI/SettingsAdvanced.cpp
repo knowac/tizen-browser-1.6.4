@@ -16,6 +16,8 @@
 
 #include "SettingsAdvanced.h"
 
+#include "Config.h"
+
 namespace tizen_browser{
 namespace base_ui{
 
@@ -32,28 +34,34 @@ SettingsAdvanced::~SettingsAdvanced()
 
 void SettingsAdvanced::updateButtonMap()
 {
-    // TODO Missing translations
     ItemData enable_js;
-    enable_js.buttonText = "Enable JavaScript";
-    enable_js.subText = "Allow sites to run JavaScript.";
+    enable_js.buttonText = Translations::SettingsAdvancedEnableJavaScript;
+    enable_js.subText = Translations::SettingsAdvancedEnableJavaScriptSub;
     enable_js.sui = this;
     enable_js.id = ENABLE_JS;
 
     ItemData block_popups;
-    block_popups.buttonText = "Block pop-ups";
-    block_popups.subText = "Block pop-ups on webpages.";
+    block_popups.buttonText = Translations::SettingsAdvancedBlockPopups;
+    block_popups.subText = Translations::SettingsAdvancedBlockPopupsSub;
     block_popups.sui = this;
     block_popups.id = BLOCK_POPUPS;
 
     ItemData save_content;
-    save_content.buttonText = "Save content to";
-    save_content.subText = "Device";
+    save_content.buttonText = Translations::SettingsAdvancedSaveContent;
+    save_content.subText =  [this]() -> std::string {
+        auto sig =
+            SPSC.getWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION);
+        return (sig && !sig->empty()) ?
+            *sig :
+            Translations::Device;
+    }();
     save_content.sui = this;
     save_content.id = SAVE_CONTENT;
 
     ItemData manage_web_data;
-    manage_web_data.buttonText = "Manage website data";
-    manage_web_data.subText = "Set advanced settings for individual websites.";
+    manage_web_data.buttonText = Translations::SettingsAdvancedManageWebsiteData;
+    manage_web_data.subText = Translations::SettingsAdvancedManageWebsiteDataSub;
     manage_web_data.sui = this;
     manage_web_data.id = MANAGE_WEB_DATA;
 
@@ -61,16 +69,23 @@ void SettingsAdvanced::updateButtonMap()
     m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS] = block_popups;
     m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT] = save_content;
     m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA] = manage_web_data;
+
+    SPSC.setContentDestination.connect(
+        boost::bind(&SettingsAdvanced::setContentDestination, this, _1));
 }
 
 bool SettingsAdvanced::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Advanced");
+    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsAdvancedTitle.c_str());
 
-    appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS], _enable_js_cb);
-    appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS], _block_popups_cb);
-    appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT], _save_content_cb);
-    appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA], _manage_web_data_cb);
+    m_genlistItems[SettingsAdvancedOptions::ENABLE_JS] =
+        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS], _enable_js_cb);
+    m_genlistItems[SettingsAdvancedOptions::BLOCK_POPUPS] =
+        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS], _block_popups_cb);
+    m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT] =
+        appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT], _save_content_cb);
+    m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA] =
+        appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA], _manage_web_data_cb);
     return true;
 }
 
@@ -90,10 +105,12 @@ Eina_Bool SettingsAdvanced::getOriginalState(int id)
     boost::optional<bool> sig;
     switch (id){
         case ENABLE_JS:
-            sig = SettingsPrettySignalConnector::Instance().getWebEngineSettingsParam(basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT);
+            sig = SPSC.getWebEngineSettingsParam(
+                basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT);
             break;
         case BLOCK_POPUPS:
-            sig = SettingsPrettySignalConnector::Instance().getWebEngineSettingsParam(basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES);
+            sig = SPSC.getWebEngineSettingsParam(
+                basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES);
             break;
         default:
             sig = false;
@@ -110,10 +127,9 @@ void SettingsAdvanced::_enable_js_cb(void *, Evas_Object* obj, void*)
     auto value = !elm_check_state_get(check);
 
     elm_check_state_set(check, value);
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam(
-            basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT,
-            static_cast<bool>(value));
+    SPSC.setWebEngineSettingsParam(
+        basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT,
+        static_cast<bool>(value));
 }
 
 void SettingsAdvanced::_block_popups_cb(void *, Evas_Object* obj, void*)
@@ -124,16 +140,15 @@ void SettingsAdvanced::_block_popups_cb(void *, Evas_Object* obj, void*)
     auto value = !elm_check_state_get(check);
 
     elm_check_state_set(check, value);
-    SettingsPrettySignalConnector::Instance().
-        setWebEngineSettingsParam(
-            basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES,
-            static_cast<bool>(value));
+    SPSC.setWebEngineSettingsParam(
+        basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES,
+        static_cast<bool>(value));
 }
 
 void SettingsAdvanced::_save_content_cb(void *, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Implementation
+    SPSC.settingsSaveContentToRadioPopup();
 }
 
 void SettingsAdvanced::_manage_web_data_cb(void *, Evas_Object*, void*)
@@ -154,21 +169,38 @@ void SettingsAdvanced::grid_item_check_changed(void* data, Evas_Object* obj, voi
     switch (itd->id){
         case ENABLE_JS:
             elm_check_state_set(obj, value);
-            SettingsPrettySignalConnector::Instance().
-                setWebEngineSettingsParam(
-                    basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT,
-                    static_cast<bool>(value));
+            SPSC.setWebEngineSettingsParam(
+                basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT,
+                static_cast<bool>(value));
             break;
         case BLOCK_POPUPS:
             elm_check_state_set(obj, value);
-            SettingsPrettySignalConnector::Instance().
-                setWebEngineSettingsParam(
-                    basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES,
-                    static_cast<bool>(value));
+            SPSC.setWebEngineSettingsParam(
+                basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES,
+                static_cast<bool>(value));
             break;
         default:
             break;
     }
+}
+
+void SettingsAdvanced::setContentDestination(int button)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    switch (static_cast<RadioButtons>(button)) {
+        case RadioButtons::DEVICE:
+            m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = Translations::Device;
+            break;
+        case RadioButtons::SD_CARD:
+            m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = Translations::SDCard;
+            break;
+        default:
+            return;
+    }
+    SPSC.setWebEngineSettingsParamString(
+        basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION,
+        m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText);
+    elm_genlist_item_update(m_genlistItems[SAVE_CONTENT]);
 }
 }
 }

@@ -27,6 +27,7 @@
 #include <Evas.h>
 #include "BrowserLogger.h"
 #include "Tools/EflTools.h"
+#include "Tools/SettingsEnums.h"
 
 #include <ewk_chromium.h>
 

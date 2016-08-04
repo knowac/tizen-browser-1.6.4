@@ -27,11 +27,13 @@
 #include <Evas.h>
 #include "BrowserLogger.h"
 #include "Tools/EflTools.h"
+#include "Tools/SettingsEnums.h"
 
 namespace tizen_browser{
 namespace base_ui{
 
-enum SettingsAdvancedOptions {
+enum SettingsAdvancedOptions
+{
     ENABLE_JS,
     BLOCK_POPUPS,
     SAVE_CONTENT,
@@ -45,8 +47,8 @@ public:
     SettingsAdvanced(){};
     SettingsAdvanced(Evas_Object* parent);
     virtual ~SettingsAdvanced();
-    virtual bool populateList(Evas_Object* genlist);
-    virtual void updateButtonMap();
+    virtual bool populateList(Evas_Object* genlist) override;
+    virtual void updateButtonMap() override;
     Evas_Object* createOnOffCheckBox(Evas_Object* obj, ItemData*);
     Eina_Bool getOriginalState(int id);
     static void _enable_js_cb(void *data, Evas_Object*obj , void* event_info);
@@ -54,6 +56,7 @@ public:
     static void _save_content_cb(void *data, Evas_Object*obj , void* event_info);
     static void _manage_web_data_cb(void *data, Evas_Object*obj , void* event_info);
     static void grid_item_check_changed(void *data, Evas_Object *obj, void *event_info);
+    void setContentDestination(int button);
 };
 
 }

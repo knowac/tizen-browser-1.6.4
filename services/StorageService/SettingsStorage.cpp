@@ -111,6 +111,12 @@ void SettingsStorage::resetSettings()
             tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_AUTOFILL_PROFILE_DATA)));
     setParam(basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES, boost::any_cast<bool>(
             tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_SCRIPTS_CAN_OPEN_PAGES)));
+    setParamString(basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES, boost::any_cast<std::string>(
+            tizen_browser::config::Config::getInstance().get(CONFIG_KEY::SAVE_CONTENT_LOCATION)));
+    setParamString(basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES, boost::any_cast<std::string>(
+            tizen_browser::config::Config::getInstance().get(CONFIG_KEY::DEFAULT_SEARCH_ENGINE)));
+    setParamString(basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES, boost::any_cast<std::string>(
+            tizen_browser::config::Config::getInstance().get(CONFIG_KEY::CURRENT_HOME_PAGE)));
 }
 
 void SettingsStorage::init(bool testmode)
@@ -181,6 +187,13 @@ void SettingsStorage::setParam(basic_webengine::WebEngineSettings param, bool va
     setSettingsInt(paramName, static_cast<int>(value));
 }
 
+void SettingsStorage::setParamString(basic_webengine::WebEngineSettings param, std::string value) const
+{
+    BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__, value.c_str());
+    const std::string& paramName = basic_webengine::PARAMS_NAMES.at(param);
+    setSettingsString(paramName,value);
+}
+
 bool SettingsStorage::isParamPresent(basic_webengine::WebEngineSettings param) const
 {
     const std::string& paramName = basic_webengine::PARAMS_NAMES.at(param);
@@ -197,6 +210,16 @@ bool SettingsStorage::getParamVal(basic_webengine::WebEngineSettings param) cons
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     const std::string& paramName = basic_webengine::PARAMS_NAMES.at(param);
     return static_cast<bool>(getSettingsInt(paramName, 0));
+}
+
+/**
+ * @throws StorageException on error
+ */
+std::string SettingsStorage::getParamString(basic_webengine::WebEngineSettings param) const
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    const std::string& paramName = basic_webengine::PARAMS_NAMES.at(param);
+    return getSettingsText(paramName, std::string());
 }
 
 /**

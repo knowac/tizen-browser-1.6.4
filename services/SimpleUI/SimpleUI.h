@@ -260,6 +260,7 @@ private:
     void showSettings(unsigned);
     void closeSettingsUI();
     void onDefSearchEngineClicked();
+    void onSaveContentToClicked();
     std::string requestSettingsCurrentPage();
 
     void showBookmarkFlowUI();

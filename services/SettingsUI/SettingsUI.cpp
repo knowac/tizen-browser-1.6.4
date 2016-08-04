@@ -317,7 +317,7 @@ void SettingsUI::close_clicked_cb(void* data, Evas_Object*, void*)
         BROWSER_LOGE("data is null");
         return;
     }
-    SettingsPrettySignalConnector::Instance().closeSettingsUIClicked();
+    SPSC.closeSettingsUIClicked();
 }
 
 }

@@ -35,11 +35,10 @@ SettingsAFProfile::~SettingsAFProfile()
 void SettingsAFProfile::updateButtonMap()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Missing translations
     ItemData profileName;
     m_profile = ewk_context_form_autofill_profile_get(ewk_context_default_get(), 1);
     if (!m_profile)
-        profileName.buttonText = "Set my profile";
+        profileName.buttonText = Translations::SettingsAutoFillProfileSetMyProfile;
     else
         profileName.buttonText = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_NAME);
     m_buttonsMap[0] = profileName;
@@ -47,7 +46,7 @@ void SettingsAFProfile::updateButtonMap()
 
 bool SettingsAFProfile::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", "My Auto fill profile");
+    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsAutoFillProfileTitle.c_str());
     appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[0], _select_profile_cb);
     return true;
 }
@@ -61,9 +60,9 @@ void SettingsAFProfile::_select_profile_cb(void* data, Evas_Object*, void*)
     }
     auto self = static_cast<SettingsAFProfile*>(data);
     if (self->m_profile)
-        SettingsPrettySignalConnector::Instance().settingsAutofillProfileClicked(true);
+        SPSC.settingsAutofillProfileClicked(true);
     else
-        SettingsPrettySignalConnector::Instance().settingsAutofillProfileClicked(false);
+        SPSC.settingsAutofillProfileClicked(false);
 }
 }
 }
