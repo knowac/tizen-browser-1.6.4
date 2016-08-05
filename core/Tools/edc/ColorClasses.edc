@@ -1,0 +1,38 @@
+color_classes {
+
+//Background colors
+    color_class {
+        name: "AO025";
+        color: 235 235 235 255;
+    }
+    color_class {
+        name: "AO025P";
+        color: 20 20 20 127;
+    }
+    color_class {
+        name: "AO026";
+        color: 235 235 235 255;
+    }
+    color_class {
+        name: "AO027";
+        color: 0 0 0 255;
+    }
+    color_class {
+        name: "AO034";
+        color: 0 0 0 205;
+    }
+    color_class {
+        name: "AO035";
+        color: 255 255 255 230;
+    }
+
+//Font colors
+    color_class {
+        name: "ATO015";
+        color: 255 255 255 255;
+    }
+    color_class {
+        name: "ATO016";
+        color: 0 0 0 255;
+    }
+}

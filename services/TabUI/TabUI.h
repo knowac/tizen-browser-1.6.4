@@ -26,9 +26,8 @@
 #include "ServiceFactory.h"
 #include "service_macros.h"
 #include "TabIdTypedef.h"
-#if PROFILE_MOBILE
 #include "AbstractRotatable.h"
-#endif
+#include "NaviframeWrapper.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -37,9 +36,7 @@ class BROWSER_EXPORT TabUI
         : public tizen_browser::interfaces::AbstractContextMenu
         , public tizen_browser::interfaces::AbstractUIComponent
         , public tizen_browser::core::AbstractService
-#if PROFILE_MOBILE
         , public tizen_browser::interfaces::AbstractRotatable
-#endif
 {
 public:
     TabUI();
@@ -53,86 +50,66 @@ public:
     virtual std::string getName();
 
     void addTabItems(std::vector<basic_webengine::TabContentPtr>& items);
-    bool isEditMode();
-    void onBackKey();
-#if PROFILE_MOBILE
     virtual void orientationChanged() override;
-#endif
 
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
 
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> tabClicked;
     boost::signals2::signal<void ()> newTabClicked;
-    boost::signals2::signal<void ()> newIncognitoTabClicked;
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> closeTabsClicked;
-    boost::signals2::signal<void (const std::string & )> openedTabsClicked;
-#if ON_OTHER_DEVICES
-    boost::signals2::signal<void (const std::string & )> onOtherDevicesClicked;
-#endif
     boost::signals2::signal<void ()> closeTabUIClicked;
-    boost::signals2::signal<int () > tabsCount;
-    boost::signals2::signal<bool (const tizen_browser::basic_webengine::TabId& )> isIncognito;
 
 private:
+    struct TabData
+    {
+        basic_webengine::TabContentPtr item;
+        std::shared_ptr<tizen_browser::base_ui::TabUI> tabUI;
+    };
 
-    static char* _grid_text_get(void *data, Evas_Object *obj, const char *part);
-    static Evas_Object * _tab_grid_content_get(void *data, Evas_Object *obj, const char *part);
-    static void _del_item(void* /*data*/, Evas_Object* obj);
-    static void _itemSelected(void * data, Evas_Object * obj, void * event_info);
-    static void _item_deleted(void *data, Evas_Object *obj);
-    static void _thumbSelected(void * data, Evas_Object * obj, void * event_info);
-    static void _deleteBookmark(void *data, Evas_Object *obj, void *event_info);
+    static char* _gengrid_text_get(void *data, Evas_Object *obj, const char *part);
+    static Evas_Object * _gengrid_content_get(void *data, Evas_Object *obj, const char *part);
+
+    static void _gengrid_tab_pressed(void * data, Evas_Object * obj, void * event_info);
+    static void _gengrid_tab_released(void * data, Evas_Object * obj, void * event_info);
+    static void _gengrid_tab_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _close_clicked(void *data, Evas_Object *obj, void *event_info);
-    void setEmptyGengrid(bool setEmpty);
+    void updateNoTabsText();
 
     static void _openedtabs_clicked(void * data, Evas_Object * obj, void * event_info);
-    static void _newtab_clicked(void * data, Evas_Object * obj, void * event_info);
+    static void _new_tab_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _newincognitotab_clicked(void * data, Evas_Object * obj, void * event_info);
-    static void _closetabs_clicked(void * data, Evas_Object * obj, void * event_info);
+    static void _enable_secret_clicked(void * data, Evas_Object * obj, void * event_info);
+    static void _close_all_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _close_tab_clicked(void *data, Evas_Object*, void*);
-#if ON_OTHER_DEVICES
-    static void _onotherdevices_clicked(void * data, Evas_Object * obj, void * event_info);
-#endif
-    static void _focus_in(void * data, Evas*, Evas_Object * obj, void * event_info);
-    static Eina_Bool _ready(void *data);
     static void _cm_sync_clicked(void*, Evas_Object*, void*);
     static void _cm_secret_clicked(void*, Evas_Object*, void*);
     static void _cm_close_clicked(void*, Evas_Object*, void*);
 
+    SharedNaviframeWrapper m_naviframe;
     void createTabUILayout();
-    Evas_Object* createActionBar(Evas_Object* parent);
-    Evas_Object* createGengrid(Evas_Object* parent);
-    Evas_Object* createTopButtons(Evas_Object* parent);
-    Evas_Object* createBottomBar(Evas_Object* parent);
-    Evas_Object* createNoHistoryLabel();
+    void createTopContent();
+    void createBottomContent();
+    void createEmptyLayout();
+    void createGengrid();
     void createTabItemClass();
     void closeAllTabs();
     void addTabItem(basic_webengine::TabContentPtr);
 
-    Evas_Object* m_button_left;
-    Evas_Object* m_button_right;
-    Evas_Object *m_tab_layout;
-    Evas_Object* m_gengrid_layout;
-    Evas_Object *m_gengrid;
     Evas_Object *m_parent;
+    Evas_Object *m_content;
+    Evas_Object *m_gengrid;
+    Evas_Object *m_empty_layout;
+
     Elm_Object_Item* m_itemToShow;
-    Ecore_Timer* m_timer;
-    bool editMode;
-    bool onOtherDevicesSwitch;
 
     Elm_Gengrid_Item_Class * m_item_class;
     std::string m_edjFilePath;
 
-#if PROFILE_MOBILE
-    const unsigned int GENGRID_ITEM_WIDTH = 674;
-    const unsigned int GENGRID_ITEM_HEIGHT = 468;
-    const unsigned int GENGRID_ITEM_WIDTH_LANDSCAPE = 308;
-    const unsigned int GENGRID_ITEM_HEIGHT_LANDSCAPE = 326;
-#else
-    const unsigned int GENGRID_ITEM_WIDTH = 364;
-    const unsigned int GENGRID_ITEM_HEIGHT = 320;
-#endif
+    const unsigned int GENGRID_ITEM_WIDTH = 700;
+    const unsigned int GENGRID_ITEM_HEIGHT = 312;
+    const unsigned int GENGRID_ITEM_WIDTH_LANDSCAPE = 636;
+    const unsigned int GENGRID_ITEM_HEIGHT_LANDSCAPE = 274;
 };
 }
 }

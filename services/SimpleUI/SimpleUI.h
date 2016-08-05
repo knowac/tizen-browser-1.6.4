@@ -135,7 +135,6 @@ private:
     void newTabClicked();
     void tabClicked(const tizen_browser::basic_webengine::TabId& tabId);
     void closeTabsClicked(const tizen_browser::basic_webengine::TabId& tabId);
-    bool isIncognito(const tizen_browser::basic_webengine::TabId& tabId);
     void tabCreated();
     bool checkIfCreate();
     void tabClosed(const tizen_browser::basic_webengine::TabId& id);

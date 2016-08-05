@@ -346,22 +346,14 @@ void SimpleUI::connectUISignals()
     m_tabUI->newTabClicked.connect(boost::bind(&SimpleUI::newTabClicked, this));
     m_tabUI->tabClicked.connect(boost::bind(&SimpleUI::tabClicked, this,_1));
     m_tabUI->closeTabsClicked.connect(boost::bind(&SimpleUI::closeTabsClicked, this,_1));
-    m_tabUI->isIncognito.connect(boost::bind(&SimpleUI::isIncognito, this, _1));
     m_tabUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
-#if PROFILE_MOBILE
     m_tabUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-    bool desktop_ua = false;
-#else
-    bool desktop_ua = true;
-#endif
-    m_tabUI->newIncognitoTabClicked.connect(boost::bind(&SimpleUI::openNewTab, this, "", "", boost::none, desktop_ua, true, basic_webengine::TabOrigin::UNKNOWN));
-    m_tabUI->tabsCount.connect(boost::bind(&SimpleUI::tabsCount, this));
 
     M_ASSERT(m_historyUI.get());
     m_historyUI->clearHistoryClicked.connect(boost::bind(&SimpleUI::onClearHistoryAllClicked, this));
     m_historyUI->signalDeleteHistoryItems.connect(boost::bind(&SimpleUI::onDeleteHistoryItems, this, _1));
     m_historyUI->closeHistoryUIClicked.connect(boost::bind(&SimpleUI::closeHistoryUI, this));
-    m_historyUI->signalHistoryItemClicked.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2, desktop_ua));
+    m_historyUI->signalHistoryItemClicked.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2, false));
     m_historyUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
 
     connectSettingsSignals();
@@ -1001,8 +993,6 @@ void SimpleUI::onBackPressed()
         return;
     } else if (m_popupVector.size() > 0) {
         m_popupVector.back()->onBackPressed();
-    } else if ((m_viewManager.topOfStack() == m_tabUI.get()) && m_tabUI->isEditMode()) {
-        m_tabUI->onBackKey();
     } else if (m_viewManager.topOfStack() == m_bookmarkManagerUI.get()) {
         m_bookmarkManagerUI->onBackPressed();
     } else if (m_viewManager.topOfStack() == nullptr) {
@@ -1322,12 +1312,6 @@ void SimpleUI::tabClicked(const tizen_browser::basic_webengine::TabId& tabId)
     m_viewManager.popStackTo(m_webPageUI.get());
     m_webPageUI->toIncognito(m_webEngine->isPrivateMode(tabId));
     switchToTab(tabId);
-}
-
-bool SimpleUI::isIncognito(const tizen_browser::basic_webengine::TabId& tabId)
-{
-    BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__, __func__);
-    return m_webEngine->isPrivateMode(tabId);
 }
 
 void SimpleUI::closeTabsClicked(const tizen_browser::basic_webengine::TabId& tabId)
@@ -1692,11 +1676,6 @@ void SimpleUI::updateView()
 {
     int tabs = m_webEngine->tabsCount();
     BROWSER_LOGD("[%s] Opened tabs: %d", __func__, tabs);
-    if (tabs == 0) {
-        switchViewToQuickAccess();
-    } else if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS)) {
-        switchViewToWebPage();
-    }
     m_webPageUI->setTabsNumber(tabs);
 }
 

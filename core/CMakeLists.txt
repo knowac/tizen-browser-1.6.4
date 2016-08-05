@@ -18,6 +18,7 @@ set(browserCore_SRCS
     BasicUI/EAction.cpp
     BasicUI/Action.cpp
     BasicUI/MenuButton.cpp
+    BasicUI/NaviframeWrapper.cpp
     Config/Config.cpp
     Logger/Logger.cpp
     Logger/LoggerTools.cpp
