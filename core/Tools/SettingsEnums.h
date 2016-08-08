@@ -81,6 +81,24 @@ namespace Translations {
     ADD_TRAN(SettingsHomePageQuickAccess,"IDS_BR_HEADER_QUICK_ACCESS")
 };
 
+struct SearchEngineTranslation
+{
+    static SearchEngineTranslation& instance() {
+       static SearchEngineTranslation INSTANCE;
+       return INSTANCE;
+    }
+    SearchEngineTranslation(SearchEngineTranslation const&) = delete;
+    void operator=(SearchEngineTranslation const&) = delete;
+    std::string get(const std::string& key) { return searchEngine[key]; }
+private:
+    SearchEngineTranslation() {
+        searchEngine[Translations::Google] = "http://www.google.com/search?q=";
+        searchEngine[Translations::Yahoo] = "http://www.yahoo.com/search?q=";
+        searchEngine[Translations::Bing] = "http://www.bing.com/search?q=";
+    }
+    std::map<std::string, std::string> searchEngine;
+};
+
 enum struct RadioButtons : int
 {
     NONE    = 0,

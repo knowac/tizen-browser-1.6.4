@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-#include <Elementary.h>
-#include <Evas.h>
 #include "URIEntry.h"
-#include "BrowserLogger.h"
-#include "MenuButton.h"
+
 #include <algorithm>
 #include <boost/regex.hpp>
+#include <Elementary.h>
+#include <Evas.h>
+
 #include "BrowserAssert.h"
+#include "BrowserLogger.h"
+#include "MenuButton.h"
+#include "SettingsPrettySignalConnector.h"
 #include "Tools/URIschemes.h"
+#include "Tools/SettingsEnums.h"
 
 namespace tizen_browser {
 namespace base_ui {
@@ -300,7 +304,15 @@ std::string URIEntry::rewriteURI(const std::string& url)
         else if (boost::regex_match(std::string("http://") + url, urlRegex) &&  url.find(".") != std::string::npos)
             return std::string("http://") + url;
         else {
-            std::string searchString("http://www.google.com/search?q=");
+            const std::string searchEngine  = [this]() -> std::string {
+                auto sig =
+                    SPSC.getWebEngineSettingsParamString(
+                        basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE);
+                return (sig && !sig->empty()) ?
+                    *sig :
+                    Translations::Google;
+            }();
+            std::string searchString = SearchEngineTranslation::instance().get(searchEngine);
             searchString += url;
             std::replace(searchString.begin(), searchString.end(), ' ', '+');
             BROWSER_LOGD("[%s:%d] Search string: %s", __PRETTY_FUNCTION__, __LINE__, searchString.c_str());
