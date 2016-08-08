@@ -49,11 +49,8 @@ URIEntry::URIEntry(WPUStatesManagerPtrConst statesMgr)
     , m_isPageLoading(false)
     , m_statesMgr(statesMgr)
     , m_rightIconType(RightIconType::NONE)
-{
-    std::string edjFilePath = EDJE_DIR;
-    edjFilePath.append("WebPageUI/URIEntry.edj");
-    elm_theme_extension_add(NULL, edjFilePath.c_str());
-}
+    , m_rightIcon(nullptr)
+{}
 
 URIEntry::~URIEntry()
 {}
@@ -70,11 +67,10 @@ Evas_Object* URIEntry::getContent()
 
     if (!m_entry_layout) {
         m_entry_layout = elm_layout_add(m_parent);
-        std::string edjFilePath = EDJE_DIR;
-        edjFilePath.append("WebPageUI/URIEntry.edj");
-        Eina_Bool layoutSetResult = elm_layout_file_set(m_entry_layout, edjFilePath.c_str(), "uri_entry_layout");
-        if (!layoutSetResult)
-            throw std::runtime_error("Layout file not found: " + edjFilePath);
+        m_customEdjPath = EDJE_DIR;
+        m_customEdjPath.append("WebPageUI/URIEntry.edj");
+        elm_theme_extension_add(NULL, m_customEdjPath.c_str());
+        elm_layout_file_set(m_entry_layout, m_customEdjPath.c_str(), "uri_entry_layout");
 
         m_entry = elm_entry_add(m_entry_layout);
         elm_object_style_set(m_entry, "uri_entry");
@@ -83,7 +79,13 @@ Evas_Object* URIEntry::getContent()
         elm_entry_scrollable_set(m_entry, EINA_TRUE);
         elm_entry_input_panel_layout_set(m_entry, ELM_INPUT_PANEL_LAYOUT_URL);
         elm_object_signal_callback_add(m_entry_layout,  "left,icon,clicked", "ui", _uri_left_icon_clicked, this);
-        elm_object_signal_callback_add(m_entry_layout,  "right,icon,clicked", "ui", _uri_right_icon_clicked, this);
+
+        m_rightIcon = elm_button_add(m_entry_layout);
+        elm_object_style_set(m_rightIcon, "custom");
+        elm_object_focus_allow_set(m_rightIcon, EINA_FALSE);
+        evas_object_smart_callback_add(m_rightIcon, "clicked", _uri_right_icon_clicked, this);
+        evas_object_show(m_rightIcon);
+        elm_object_part_content_set(m_entry_layout, "right_icon", m_rightIcon);
 
         setUrlGuideText(GUIDE_TEXT_UNFOCUSED);
 
@@ -155,11 +157,6 @@ void URIEntry::setDocIcon()
 {
     m_currentIconType = IconTypeDoc;
     elm_object_signal_emit(m_entry_layout, "set_doc_icon", "model");
-}
-
-URIEntry::IconType URIEntry::getCurrentIconTyep()
-{
-    return m_currentIconType;
 }
 
 void URIEntry::selectionTool()
@@ -393,7 +390,7 @@ void URIEntry::_uri_left_icon_clicked(void* data, Evas_Object*, const char*, con
     self->secureIconClicked();
 }
 
-void URIEntry::_uri_right_icon_clicked(void* data, Evas_Object* /*obj*/, const char* /*emission*/, const char* /*source*/)
+void URIEntry::_uri_right_icon_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     URIEntry* self = static_cast<URIEntry*>(data);
@@ -413,13 +410,22 @@ void URIEntry::_uri_right_icon_clicked(void* data, Evas_Object* /*obj*/, const c
     }
 }
 
+void URIEntry::showRightIcon(const std::string& fileName)
+{
+    elm_object_signal_emit(m_entry_layout, "show,right,icon", "ui");
+    Evas_Object *ic;
+    ic = elm_icon_add(m_rightIcon);
+    elm_image_file_set(ic, m_customEdjPath.c_str(), fileName.c_str());
+    elm_object_part_content_set(m_rightIcon, "elm.swallow.content", ic);
+}
+
 void URIEntry::showCancelIcon()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_rightIconType = RightIconType::CANCEL;
     bool isEntryEmpty = elm_entry_is_empty(m_entry);
     if(!isEntryEmpty)
-        elm_object_signal_emit(m_entry_layout, "show,cancel,icon", "ui");
+        showRightIcon("toolbar_input_ic_cancel.png");
     else
         hideRightIcon();
 }
@@ -444,14 +450,14 @@ void URIEntry::showStopIcon()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_rightIconType = RightIconType::STOP_LOADING;
-    elm_object_signal_emit(m_entry_layout, "show,cancel,icon", "ui");
+    showRightIcon("toolbar_input_ic_cancel.png");
 }
 
 void URIEntry::showReloadIcon()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_rightIconType = RightIconType::RELOAD;
-    elm_object_signal_emit(m_entry_layout, "show,reload,icon", "");
+    showRightIcon("toolbar_input_ic_refresh.png");
 }
 
 void URIEntry::hideRightIcon()

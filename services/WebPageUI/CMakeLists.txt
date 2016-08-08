@@ -62,6 +62,7 @@ set(edcFiles
     URIEntry.edc
     PrivateMode.edc
     UrlHistoryList.edc
+    CustomButton.edc
     )
 
 foreach(edec ${edcFiles})

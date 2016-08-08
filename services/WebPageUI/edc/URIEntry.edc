@@ -1,3 +1,5 @@
+#include "CustomButton.edc"
+
 #define URI_INPUTBOX_LENGTH 518
 #define URI_INPUTBOX_LENGTH_ENLARGED 656
 #define URI_INPUTBOX_LENGTH_SMALL 320
@@ -15,16 +17,16 @@
                image.normal: FILE_NAME; \
                aspect: 1 1; \
                aspect_preference: BOTH; \
+               color: 105 105 105 255;  \
             } \
          } \
       } \
    }
 
 collections { base_scale: 2.6;
-RESOURCE_IMAGE_LOSSY("toolbar_input_ic_cancel.png")
 RESOURCE_IMAGE_LOSSY("toolbar_input_ic_security.png")
 RESOURCE_IMAGE_LOSSY("toolbar_input_ic_security_off.png")
-RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
+
     group {
         name: "elm/entry/selection/browser_entry";
         parts {
@@ -264,7 +266,7 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                     min: 0 URI_INPUTBOX_HEIGHT;
                     max: -1 URI_INPUTBOX_HEIGHT;
                     fixed: 0 1;
-                    color: 255 255 255 255;
+                    color_class: "uri_bg";
                     rel1 { relative: 0.0 0.0; }
                     rel2 { relative: 1.0 1.0; }
                 }
@@ -314,7 +316,7 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                     rel2.to: "uri_entry_space";
                     rel2.relative: 1.0 1.0;
                     align: 0 0;
-                    color: 255 255 255 255;
+                    color_class: "uri_bg";
                 }
                 description {
                     state: "visible" 0.0;
@@ -418,13 +420,7 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                         relative: 1.0 1.0;
                     }
                     visible: 1;
-                    color: 255 255 255 255;
-                }
-                description {
-                    state: "focused" 0.0;
-                    inherit: "visible" 0.0;
-                    visible: 1;
-                    color: 224 237 251 255;
+                    color_class: "uri_bg";
                 }
             }
             part {
@@ -455,8 +451,10 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
             }
             part {
                 name: "right_icon";
-                type: IMAGE;
+                type: SWALLOW;
                 scale: 1;
+                repeat_events: 1;
+                mouse_events: 1;
                 description {
                     state: "default" 0.0;
                     visible: 0;
@@ -471,69 +469,18 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                         to: "right_icon_bg";
                         relative: 1.0 1.0;
                     }
-                    image.border_scale: 1;
                     align: 0.5 0.5;
                 }
                 description {
                     state: "visible" 0.0;
                     inherit: "default" 0.0;
-                    min: 50 50;
-                    max: 50 50;
-                    visible: 1;
-                }
-                description {
-                    state: "cancel" 0.0;
-                    inherit: "visible" 0.0;
-                    image.normal: "toolbar_input_ic_cancel.png";
-                }
-                description {
-                    state: "reload" 0.0;
-                    inherit: "visible" 0.0;
-                    image.normal: "toolbar_input_ic_refresh.png";
-                }
-            }
-            part {
-                name: "right_icon_over";
-                scale:1;
-                type: RECT;
-                mouse_events: 1;
-                description {
-                    state: "default" 0.0;
-                    min: URI_INPUTBOX_HEIGHT URI_INPUTBOX_HEIGHT;
-                    max: URI_INPUTBOX_HEIGHT URI_INPUTBOX_HEIGHT;
-                    visible: 0;
-                    rel1 {
-                        to: "right_icon_bg";
-                        relative: 0.0 0.0;
-                    }
-                    rel2 {
-                        to: "right_icon_bg";
-                        relative: 1.0 1.0;
-                    }
-                    color: 0 0 0 0;
-                }
-                description {
-                    state: "visible" 0.0;
-                    inherit: "default" 0.0;
+                    min: 80 80;
+                    max: 80 80;
                     visible: 1;
                 }
             }
         }
         programs {
-            program {
-                name: "mouse_in_right_icon";
-                signal: "mouse,down,*";
-                source: "right_icon_over";
-                action: STATE_SET "focused" 0.0;
-                target: "right_icon_bg";
-            }
-            program {
-                name: "mouse_out_right_icon";
-                signal: "mouse,up,*";
-                source: "right_icon_over";
-                action: STATE_SET "visible" 0.0;
-                target: "right_icon_bg";
-            }
             program {
                 name: "show_secure_icon";
                 signal: "show,secure,icon";
@@ -551,29 +498,10 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                 after: "show_left_icon_bg";
             }
             program {
-                name: "show_reload_icon";
-                signal: "show,reload,icon";
-                source: "";
-                action: STATE_SET "reload" 0.0;
-                target: "right_icon";
-                after: "show_right_icon_bg";
-            }
-            program {
                 name: "mouse_clicked_left_icon";
                 signal: "mouse,clicked,*";
                 source: "left_icon_over";
                 action: SIGNAL_EMIT "left,icon,clicked" "ui";
-            }
-            program {
-                name: "mouse_clicked_right_icon";
-                signal: "mouse,clicked,*";
-                source: "right_icon_over";
-                after: "call_on_right_icon_clicked_cb";
-            }
-            program {
-                name: "call_on_right_icon_clicked_cb";
-                source: "ui";
-                action: SIGNAL_EMIT "right,icon,clicked" "ui";
             }
             program {
                 name: "hide_left_icon";
@@ -596,7 +524,14 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                 name: "show_right_icon_bg";
                 action: STATE_SET "visible" 0.0;
                 target: "right_icon_bg";
-                target: "right_icon_over";
+            }
+            program {
+                name: "show_right_icon";
+                source: "ui";
+                signal: "show,right,icon";
+                action: STATE_SET "visible" 0.0;
+                target: "right_icon";
+                after: "show_right_icon_bg";
             }
             program {
                 name: "hide_right_icon";
@@ -605,7 +540,6 @@ RESOURCE_IMAGE_LOSSY("toolbar_input_ic_refresh.png")
                 action: STATE_SET "default" 0.0;
                 target: "right_icon";
                 target: "right_icon_bg";
-                target: "right_icon_over";
             }
             program {
                 name: "show_left_icon_bg";

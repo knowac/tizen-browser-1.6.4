@@ -68,7 +68,6 @@ public:
     void setCurrentFavIcon();
     void setSearchIcon();
     void setDocIcon();
-    IconType getCurrentIconTyep();
     /**
      * \brief Adds Action to URI bar.
      *
@@ -126,7 +125,8 @@ private:
     };
 
     static void _uri_left_icon_clicked(void* data, Evas_Object*, const char*, const char*);
-    static void _uri_right_icon_clicked(void* data, Evas_Object*, const char*, const char*);
+    static void _uri_right_icon_clicked(void* data, Evas_Object* obj, void* event_info);
+    void showRightIcon(const std::string& fileName);
     void showCancelIcon();
     void showStopIcon();
     void showReloadIcon();
@@ -134,6 +134,7 @@ private:
     void hideLeftIcon();
 
 private:
+    std::string m_customEdjPath;
     Evas_Object* m_parent;
     IconType m_currentIconType;
     std::list<sharedAction> m_actions;
@@ -149,6 +150,7 @@ private:
     bool m_isPageLoading;
     WPUStatesManagerPtrConst m_statesMgr;
     RightIconType m_rightIconType;
+    Evas_Object* m_rightIcon;
     bool m_securePageIcon;
     bool m_showSecureIcon;
 };

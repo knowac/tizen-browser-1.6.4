@@ -60,7 +60,7 @@ part {  name: NAME;                                                 \
         state: "landscape" 0.0;                                     \
         inherit: "default" 0.0;                                     \
         min: WIDTH_LANDSCAPE HEIGHT;                                \
-        max: WIDHT_LANDSCAPE HEIGHT;                                \
+        max: WIDTH_LANDSCAPE HEIGHT;                                \
     }                                                               \
 }
 
