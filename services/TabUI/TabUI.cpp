@@ -37,6 +37,7 @@ TabUI::TabUI()
     , m_gengrid(nullptr)
     , m_empty_layout(nullptr)
     , m_itemToShow(nullptr)
+    , m_last_pressed_gengrid_item(nullptr)
     , m_item_class(nullptr)
 {
     m_edjFilePath = EDJE_DIR;
@@ -274,6 +275,25 @@ void TabUI::_cm_close_clicked(void* data, Evas_Object*, void*)
     }
 }
 
+Evas_Event_Flags TabUI::_gesture_occured(void * data, void * event_info)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    auto flag = EVAS_EVENT_FLAG_NONE;
+    if (data && event_info) {
+        auto tabUI = static_cast<TabUI*>(data);
+        auto info = static_cast<Elm_Gesture_Line_Info*>(event_info);
+        if (info->momentum.mx != 0) {
+            //ignore too small gestures
+            if (abs(info->momentum.mx) < tabUI->GESTURE_MOMENTUM_MIN)
+                return flag;
+            tabUI->_close_tab_clicked(data, nullptr, nullptr);
+        }
+    } else {
+        BROWSER_LOGW("[%s] data or event_info = nullptr", __PRETTY_FUNCTION__);
+    }
+    return flag;
+}
+
 void TabUI::_new_tab_clicked(void * data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -367,6 +387,11 @@ Evas_Object * TabUI::_gengrid_content_get(void *data, Evas_Object *obj, const ch
             auto button = elm_button_add(obj);
             elm_object_style_set(button, "invisible_button");
             evas_object_smart_callback_add(button, "clicked", _gengrid_tab_clicked, data);
+
+            auto gesture = elm_gesture_layer_add(obj);
+            elm_gesture_layer_attach(gesture, button);
+            elm_gesture_layer_cb_add(gesture, ELM_GESTURE_N_LINES, ELM_GESTURE_STATE_MOVE,
+                _gesture_occured, data);
             return button;
         }
     } else {
@@ -375,11 +400,13 @@ Evas_Object * TabUI::_gengrid_content_get(void *data, Evas_Object *obj, const ch
     return nullptr;
 }
 
-void TabUI::_gengrid_tab_pressed(void *, Evas_Object *, void *event_info)
+void TabUI::_gengrid_tab_pressed(void *data, Evas_Object *, void *event_info)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (event_info) {
         auto object_item = static_cast<Elm_Object_Item*>(event_info);
+        auto tabUI = static_cast<TabUI*>(data);
+        tabUI->m_last_pressed_gengrid_item = object_item;
         elm_object_signal_emit(
             elm_object_item_part_content_get(object_item, "elm.icon"),
             "on_mouse_down", "ui");
@@ -419,6 +446,17 @@ void TabUI::_close_tab_clicked(void *data, Evas_Object*, void*)
         TabData* itemData = static_cast<TabData*>(data);
 
         Elm_Object_Item* it = elm_gengrid_selected_item_get(itemData->tabUI->m_gengrid);
+
+        if (!it && itemData->tabUI->m_last_pressed_gengrid_item) {
+            it = itemData->tabUI->m_last_pressed_gengrid_item;
+            itemData->tabUI->m_last_pressed_gengrid_item = nullptr;
+        }
+
+        if (!it) {
+            BROWSER_LOGE("[%s] Delete called without selected and pressed item", __PRETTY_FUNCTION__);
+            return;
+        }
+
         auto prev = elm_gengrid_item_prev_get(it);
         auto next = elm_gengrid_item_next_get(it);
         elm_object_item_del(it);

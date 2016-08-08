@@ -85,6 +85,7 @@ private:
     static void _cm_sync_clicked(void*, Evas_Object*, void*);
     static void _cm_secret_clicked(void*, Evas_Object*, void*);
     static void _cm_close_clicked(void*, Evas_Object*, void*);
+    static Evas_Event_Flags _gesture_occured(void * data, void * event_info);
 
     SharedNaviframeWrapper m_naviframe;
     void createTabUILayout();
@@ -102,6 +103,7 @@ private:
     Evas_Object *m_empty_layout;
 
     Elm_Object_Item* m_itemToShow;
+    Elm_Object_Item* m_last_pressed_gengrid_item;
 
     Elm_Gengrid_Item_Class * m_item_class;
     std::string m_edjFilePath;
@@ -110,6 +112,7 @@ private:
     const unsigned int GENGRID_ITEM_HEIGHT = 312;
     const unsigned int GENGRID_ITEM_WIDTH_LANDSCAPE = 636;
     const unsigned int GENGRID_ITEM_HEIGHT_LANDSCAPE = 274;
+    const unsigned int GESTURE_MOMENTUM_MIN = 2000;
 };
 }
 }
