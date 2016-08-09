@@ -59,7 +59,7 @@ public:
         WebDisplayModeLast = WebDisplayModeFullscreen
     } webDisplayMode;
 
-    struct wpaInfo {
+    struct pwaInfo {
         std::string     id;
         std::string     decodedIcon; // needs to src, type, sizes.
         std::string     uri;
@@ -208,7 +208,7 @@ private:
     sharedAction m_bookmarks;
     sharedAction m_tabs;
 
-    std::shared_ptr<wpaInfo> m_wpaInfo;
+    std::shared_ptr<pwaInfo> m_pwaInfo;
 #if GESTURE
     Evas_Object* m_gestureLayer;
     bool m_uriBarHidden;

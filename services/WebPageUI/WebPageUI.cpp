@@ -48,7 +48,7 @@ WebPageUI::WebPageUI()
     , m_urlHistoryList(std::make_shared<UrlHistoryList>(getStatesMgr()))
     , m_webviewLocked(false)
     , m_WebPageUIvisible(false)
-    , m_wpaInfo(nullptr)
+    , m_pwaInfo(nullptr)
 #if GESTURE
     , m_gestureLayer(nullptr)
     , m_uriBarHidden(false)
@@ -484,17 +484,36 @@ void WebPageUI::_cm_add_to_hs_clicked(void* data, Evas_Object*, void* )
 
     if (data) {
         WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
-        webPageUI->m_wpaInfo = std::make_shared<wpaInfo>();
+        webPageUI->m_pwaInfo = std::make_shared<pwaInfo>();
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
 
         std::string uri = webPageUI->getURI();
 
-        webPageUI->m_wpaInfo->uri = uri.c_str();
-        webPageUI->m_wpaInfo->orientation = portrait_secondary;
-        webPageUI->m_wpaInfo->displayMode = WebDisplayModeMinimalUi;
+        // TODO just test or temporary code. after will fixing from engine data receive.
+        webPageUI->m_pwaInfo->id = "test";
+        webPageUI->m_pwaInfo->decodedIcon = "Icon";
+        webPageUI->m_pwaInfo->uri = uri.c_str();
+        webPageUI->m_pwaInfo->name = "ProgressiveWebApp";
+        webPageUI->m_pwaInfo->shortName = "pwa";
+        webPageUI->m_pwaInfo->orientation = portrait_secondary;
+        webPageUI->m_pwaInfo->displayMode = WebDisplayModeMinimalUi;
+        webPageUI->m_pwaInfo->themeColor = 1.1;
+        webPageUI->m_pwaInfo->backgroundColor = 2.2;
 
-       if (shortcut_add_to_home("Shortcut", LAUNCH_BY_APP, NULL, NULL, 0,
-               result_cb, webPageUI) != SHORTCUT_ERROR_NONE) {
+        std::string str = std::string("browser_shortcut:://")
+            + "pwd_id:" + (webPageUI->m_pwaInfo->id) + "/"
+            + "pwa_decodedIcon:" + (webPageUI->m_pwaInfo->decodedIcon) + "/"
+            + "pwa_uri:" + (webPageUI->m_pwaInfo->uri) + "/"
+            + "pwa_name:" + (webPageUI->m_pwaInfo->name) + "/"
+            + "pwa_shortName:" + (webPageUI->m_pwaInfo->shortName) + "/"
+            + "pwa_orientation:" + std::to_string(webPageUI->m_pwaInfo->orientation) + "/"
+            + "pwa_displayMode:" + std::to_string(webPageUI->m_pwaInfo->displayMode) + "/"
+            + "pwa_themeColor:" + std::to_string(webPageUI->m_pwaInfo->themeColor) + "/"
+            + "pwa_backgroundColor:" + std::to_string(webPageUI->m_pwaInfo->backgroundColor) + "/";
+
+        BROWSER_LOGD("[%s:%d] str : %s", __PRETTY_FUNCTION__, __LINE__, str.c_str());
+
+        if (shortcut_add_to_home("Shortcut", LAUNCH_BY_URI, str.c_str(), NULL, 0, result_cb, NULL) != SHORTCUT_ERROR_NONE) {
             BROWSER_LOGE("[%s:%d] Fail to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
         }
     }
@@ -506,15 +525,7 @@ void WebPageUI::_cm_add_to_hs_clicked(void* data, Evas_Object*, void* )
 int WebPageUI::result_cb(int ret, void *data) {
 
     if (data) {
-        WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
-        _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
-
-    BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
-    BROWSER_LOGD("[%s:%d] ret : %d, data : %s", __PRETTY_FUNCTION__, __LINE__, ret, data);
-
-    BROWSER_LOGD("[%s:%d] uri : %s", __PRETTY_FUNCTION__, __LINE__, (webPageUI->m_wpaInfo->uri).c_str());
-    BROWSER_LOGD("[%s:%d] orientation : %d", __PRETTY_FUNCTION__, __LINE__, webPageUI->m_wpaInfo->orientation);
-    BROWSER_LOGD("[%s:%d] displayMode : %d", __PRETTY_FUNCTION__, __LINE__, webPageUI->m_wpaInfo->displayMode);
+        BROWSER_LOGD("[%s:%d] ret : %d, data : %s", __PRETTY_FUNCTION__, __LINE__, ret, data);
     }
     else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
