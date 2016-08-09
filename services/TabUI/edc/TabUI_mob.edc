@@ -3,6 +3,42 @@
 #define ON_OTHER_DEVICE 0
 
 collections { base_scale: 2.6;
+
+    group { name: "bottom_bar_with_margins";
+        parts {
+            rect { "top_left_content_spacer"; scale;
+                description { "default";
+                    min: 32 0;
+                    max: 32 0;
+                    align: 0 0;
+                    fixed: 1 1;
+                    visible: 0;
+                }
+            }
+            rect { "bottom_right_content_spacer"; scale;
+                description { "default";
+                    min: 32 0;
+                    max: 32 0;
+                    align: 1 1;
+                    fixed: 1 1;
+                    visible: 0;
+                }
+            }
+            swallow { "elm.swallow.content"; scale;
+                description { "default";
+                    rel1 {
+                        relative: 1 1;
+                        to: "top_left_content_spacer";
+                    }
+                    rel2 {
+                        relative: 0 0;
+                        to: "bottom_right_content_spacer";
+                    }
+                }
+            }
+        }
+    }
+
     group { name: "naviframe_content";
         parts {
             rect { "content_top_left_spacer"; scale;

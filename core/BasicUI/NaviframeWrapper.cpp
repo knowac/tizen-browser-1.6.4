@@ -91,7 +91,7 @@ void NaviframeWrapper::setVisibilityPrevButton(bool visible)
 void NaviframeWrapper::addButtonToBottomBar(std::string text, Evas_Smart_Cb callback, void *data)
 {
     if (!m_bottom_box)
-        createBottomBox();
+        createBottomBar();
     Evas_Object* button = elm_button_add(m_bottom_box);
     elm_object_style_set(button, "bottom");
     evas_object_size_hint_weight_set(button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -117,7 +117,7 @@ void NaviframeWrapper::setEnableButtonInBottomBar(std::string text, bool enabled
 void NaviframeWrapper::setVisibilityBottomBar(bool visible)
 {
     if (!m_bottom_box)
-        createBottomBox();
+        createBottomBar();
     if (visible) {
         evas_object_show(m_bottom_box);
         elm_object_signal_emit(m_layout, "elm,state,toolbar,show", "elm");
@@ -127,14 +127,20 @@ void NaviframeWrapper::setVisibilityBottomBar(bool visible)
     }
 }
 
-void NaviframeWrapper::createBottomBox()
+void NaviframeWrapper::createBottomBar(Evas_Object* layout, std::string swallow_name)
 {
     m_bottom_box = elm_box_add(m_layout);
     elm_box_horizontal_set(m_bottom_box, EINA_TRUE);
     elm_box_padding_set(m_bottom_box, 32, 0);
     evas_object_size_hint_weight_set(m_bottom_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_bottom_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_object_part_content_set(m_layout, "toolbar", m_bottom_box);
+
+    if (layout) {
+        elm_object_part_content_set(m_layout, "toolbar", layout);
+        elm_object_part_content_set(layout, swallow_name.c_str(), m_bottom_box);
+    } else {
+        elm_object_part_content_set(m_layout, "toolbar", m_bottom_box);
+    }
 }
 
 

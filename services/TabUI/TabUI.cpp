@@ -126,6 +126,13 @@ void TabUI::createTopContent()
 
 void TabUI::createBottomContent()
 {
+    Evas_Object *layout = elm_layout_add(m_naviframe->getLayout());
+    elm_layout_file_set(layout, m_edjFilePath.c_str(), "bottom_bar_with_margins");
+    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_show(layout);
+
+    m_naviframe->createBottomBar(layout);
     m_naviframe->setVisibilityBottomBar(true);
     //TODO: Missing translation
     m_naviframe->addButtonToBottomBar("Enable Secret", _enable_secret_clicked, this);

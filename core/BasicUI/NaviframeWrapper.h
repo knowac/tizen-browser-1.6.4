@@ -51,13 +51,13 @@ public:
     void addPrevButton(Evas_Smart_Cb callback, void* data);
     void setVisibilityPrevButton(bool visible);
 
+    void createBottomBar(Evas_Object* layout = nullptr,
+        std::string swallow_name = "elm.swallow.content");
     void addButtonToBottomBar(std::string text, Evas_Smart_Cb callback, void* data);
     void setEnableButtonInBottomBar(std::string text, bool enabled);
     void setVisibilityBottomBar(bool visible);
 
 protected:
-    void createBottomBox();
-
     Evas_Object *m_parent;
     Evas_Object *m_layout;
     Evas_Object *m_bottom_box;
