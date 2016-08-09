@@ -53,12 +53,18 @@ public:
     virtual void connectSignals(){};
     virtual void disconnectSignals(){};
     virtual Evas_Object* createRadioButton(Evas_Object* obj, ItemData*);
+    void setRadioOnChange();
     static void _default_cb(void *data, Evas_Object*obj , void* event_info);
     static void _current_cb(void *data, Evas_Object*obj , void* event_info);
     static void _quick_cb(void *data, Evas_Object*obj , void* event_info);
     static void _most_visited_cb(void *data, Evas_Object*obj , void* event_info);
     static void _other_cb(void* data, Evas_Object* obj, void* event_info);
     static const std::string DEF_HOME_PAGE;
+    static const std::string QUICK_PAGE;
+    static const std::string MOST_VISITED_PAGE;
+    static const std::string OTHER_PAGE;
+    static const std::string CURRENT_PAGE;
+
 private:
     std::map<SettingsHomePageOptions, Elm_Object_Item*> m_itemsMap;
     boost::optional<std::string> m_current;

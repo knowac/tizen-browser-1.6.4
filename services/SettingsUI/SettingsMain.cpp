@@ -41,7 +41,7 @@ void SettingsMain::updateButtonMap()
 
     ItemData search;
     search.buttonText = Translations::SettingsMainDefaultSearchEngine;
-    search.subText =  [this]() -> std::string {
+    search.subText =  []() -> std::string {
         auto sig =
             SPSC.getWebEngineSettingsParamString(
                 basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE);
@@ -83,6 +83,7 @@ void SettingsMain::updateButtonMap()
 
     SPSC.setSearchEngineSubText.connect(
         boost::bind(&SettingsMain::setSearchEngineSubText, this, _1));
+    setHomePageSubText();
 }
 
 bool SettingsMain::populateList(Evas_Object* genlist)
@@ -122,6 +123,16 @@ Eina_Bool SettingsMain::getOriginalZoomState()
             basic_webengine::WebEngineSettings::PAGE_OVERVIEW);
 
     return (sig && *sig) ? EINA_TRUE : EINA_FALSE;
+}
+
+std::string SettingsMain::getHomePage()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    boost::optional<std::string> sig =
+        SPSC.getWebEngineSettingsParamString(
+            basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE);
+
+    return (sig && !sig->empty()) ? (*sig) : Translations::SamsungPage;
 }
 
 void SettingsMain::_home_page_cb(void*, Evas_Object*, void*)
@@ -198,6 +209,34 @@ void SettingsMain::setSearchEngineSubText(int button)
     SPSC.setWebEngineSettingsParamString(
         basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE,
         m_buttonsMap[SettingsMainOptions::SEARCH].subText);
+    elm_genlist_realized_items_update(m_genlist);
+}
+
+void SettingsMain::setHomePageSubText()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto homePage = getHomePage();
+    auto it = homePage.find(Translations::CurrentPage);
+
+    if (!homePage.compare(Translations::SamsungPage)) {
+        m_buttonsMap[SettingsMainOptions::HOME].subText =
+            Translations::SamsungPage;
+    } else if (!homePage.compare(Translations::QuickPage)) {
+        m_buttonsMap[SettingsMainOptions::HOME].subText =
+            Translations::SettingsHomePageQuickAccess;
+    } else if (!homePage.compare(Translations::MostVisitedPage)) {
+        m_buttonsMap[SettingsMainOptions::HOME].subText =
+            Translations::SettingsHomePageMostVisited;
+    } else if (it != std::string::npos) {
+        homePage.erase(it, Translations::CurrentPage.length());
+        m_buttonsMap[SettingsMainOptions::HOME].subText = homePage;
+        SPSC.setWebEngineSettingsParamString(
+            basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE,
+            homePage);
+    } else {
+        m_buttonsMap[SettingsMainOptions::HOME].subText = homePage;
+    }
     elm_genlist_realized_items_update(m_genlist);
 }
 }

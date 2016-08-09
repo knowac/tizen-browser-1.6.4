@@ -698,6 +698,7 @@ void WebPageUI::connectActions()
     m_forward->triggered.connect(boost::bind(&WebPageUI::forwardPageConnect, this));
     m_tabs->triggered.connect(WebPageUI::showTabUI);
     m_bookmarks->triggered.connect(WebPageUI::showBookmarksUI);
+    m_homePage->triggered.connect(WebPageUI::showHomePage);
 
     //right bar
     m_addTab->triggered.connect(boost::bind(&WebPageUI::addNewTabConnect, this));

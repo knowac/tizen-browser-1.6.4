@@ -262,7 +262,9 @@ private:
     void onDefSearchEngineClicked();
     void onSaveContentToClicked();
     std::string requestSettingsCurrentPage();
+    void selectSettingsOtherPageChange();
 
+    void onEditOtherPagePopupClicked(const std::string& newName);
     void showBookmarkFlowUI();
     void closeBookmarkFlowUI();
     void showFindOnPageUI(const std::string& str);
@@ -287,6 +289,7 @@ private:
     void closeBookmarkManagerUI();
     void showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
                                BookmarkManagerState state);
+    void showHomePage();
     void redirectedWebPage(const std::string& oldUrl, const std::string& newUrl);
 
     void showPopup(interfaces::AbstractPopup* popup);

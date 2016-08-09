@@ -300,6 +300,7 @@ void SimpleUI::connectUISignals()
     m_webPageUI->showTabUI.connect(boost::bind(&SimpleUI::showTabUI, this));
     m_webPageUI->showBookmarksUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
         m_favoriteService->getRoot(), BookmarkManagerState::Default));
+    m_webPageUI->showHomePage.connect(boost::bind(&SimpleUI::showHomePage, this));
     m_webPageUI->forwardPage.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::forward, m_webEngine.get()));
     m_webPageUI->showQuickAccess.connect(boost::bind(&SimpleUI::showQuickAccess, this));
     m_webPageUI->hideQuickAccess.connect(boost::bind(&QuickAccess::hideUI, m_quickAccess));
@@ -483,6 +484,8 @@ void SimpleUI::connectSettingsSignals()
     m_settingsManager->init(m_viewManager.getContent());
     SPSC.requestCurrentPage.connect(
         boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
+    SPSC.showTextPopup.connect(
+        boost::bind(&SimpleUI::selectSettingsOtherPageChange, this));
 
     // SETTINGS DELETE DATA
     SPSC.deleteSelectedDataClicked.connect(
@@ -1493,7 +1496,7 @@ void SimpleUI::onDefSearchEngineClicked()
     popup->addRadio(RadioButtons::GOOGLE);
     popup->addRadio(RadioButtons::YAHOO);
     popup->addRadio(RadioButtons::BING);
-    auto stateString = [this]() -> std::string {
+    auto stateString = []() -> std::string {
         auto sig =
             SPSC.getWebEngineSettingsParamString(
                 basic_webengine::WebEngineSettings::DEFAULT_SEARCH_ENGINE);
@@ -1504,7 +1507,7 @@ void SimpleUI::onDefSearchEngineClicked()
     auto state = RadioPopup::translateButtonState(stateString);
     popup->setState(state);
     popup->radioButtonClicked.connect(
-        [&, this](const RadioButtons& button){
+        [&,this](const RadioButtons& button){
         SPSC.setSearchEngineSubText(
             static_cast<int>(button));
         dismissPopup(popup);
@@ -1523,7 +1526,7 @@ void SimpleUI::onSaveContentToClicked()
     popup->setTitle(Translations::SettingsAdvancedSaveContentTitle);
     popup->addRadio(RadioButtons::DEVICE);
     popup->addRadio(RadioButtons::SD_CARD);
-    auto stateString = [this]() -> std::string {
+    auto stateString = []() -> std::string {
         auto sig =
             SPSC.getWebEngineSettingsParamString(
                 basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION);
@@ -1534,7 +1537,7 @@ void SimpleUI::onSaveContentToClicked()
     auto state = RadioPopup::translateButtonState(stateString);
     popup->setState(state);
     popup->radioButtonClicked.connect(
-        [&, this](const RadioButtons& button){
+        [&,this](const RadioButtons& button){
         SPSC.setContentDestination(static_cast<int>(button));
         dismissPopup(popup);
     });
@@ -1548,6 +1551,34 @@ std::string SimpleUI::requestSettingsCurrentPage()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     return m_webEngine->getURI();
+}
+
+void SimpleUI::selectSettingsOtherPageChange()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    InputPopup* popup = InputPopup::createPopup(m_viewManager.getContent());
+    popup->setTitle(_("IDS_BR_MBODY_SET_HOMEPAGE"));
+    popup->setAcceptRightLeft(true);
+    popup->setCancelButtonText(_("IDS_BR_BUTTON_CANCEL"));
+    popup->setOkButtonText(_("IDS_BR_BUTTON_SET"));
+    popup->setTip(_("IDS_BR_BODY_WEB_ADDRESS"));
+    popup->button_clicked.connect(
+        [this](const std::string& otherPage){
+        if (!otherPage.empty()) {
+            SPSC.setWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE,
+                otherPage);
+            m_settingsUI->updateButtonMap();
+        }
+    });
+    popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
+    popup->popupDismissed.connect(
+        [this](interfaces::AbstractPopup* popup){
+            dismissPopup(popup);
+            m_settingsUI->updateButtonMap();
+        }
+    );
+    popup->show();
 }
 
 void SimpleUI::switchToMobileMode()
@@ -1610,6 +1641,34 @@ void SimpleUI::showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> par
     m_viewManager.pushViewToStack(m_bookmarkManagerUI.get());
     m_bookmarkManagerUI->addBookmarkItems(parent,
         m_favoriteService->getAllBookmarkItems(parent->getId()));
+}
+
+void SimpleUI::showHomePage()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    auto stateString = []() -> std::string {
+        auto sig =
+            SettingsPrettySignalConnector::Instance().
+                getWebEngineSettingsParamString(
+                    basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE);
+        return (sig && !sig->empty()) ?
+            *sig :
+            SettingsHomePage::DEF_HOME_PAGE;
+    }();
+    auto it = stateString.find(Translations::CurrentPage);
+    if (!stateString.compare(SettingsHomePage::QUICK_PAGE)) {
+        switchViewToQuickAccess();
+        m_quickAccess->showQuickAccess();
+        return;
+    } else if (!stateString.compare(SettingsHomePage::MOST_VISITED_PAGE)) {
+        switchViewToQuickAccess();
+        m_quickAccess->showMostVisited();
+        return;
+    } else if (it != std::string::npos) {
+        stateString.erase(it, Translations::CurrentPage.length());
+    }
+    auto url = m_webPageUI->getURIEntry().rewriteURI(stateString);
+    onOpenURL(url);
 }
 
 void SimpleUI::redirectedWebPage(const std::string& oldUrl, const std::string& newUrl)

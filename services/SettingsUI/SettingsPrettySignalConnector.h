@@ -70,6 +70,7 @@ public:
     B_SIG<void ()> settingsSaveContentToRadioPopup;
     B_SIG<void (int)> setSearchEngineSubText;
     B_SIG<void (int)> setContentDestination;
+    B_SIG<void ()> showTextPopup;
 
 private:
     SettingsPrettySignalConnector(){};

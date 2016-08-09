@@ -55,7 +55,8 @@ public:
     void backButtonClicked();
     inline bool isMostVisitedActive() const;
     void orientationChanged();
-
+    void showMostVisited();
+    void showQuickAccess();
 
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, int)> mostVisitedTileClicked;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, bool)> openURL;
@@ -73,8 +74,6 @@ private:
     void clearQuickAccessGengrid();
     Evas_Object* createQuickAccessGengrid(Evas_Object *parent);
     Evas_Object* createMostVisitedGengrid(Evas_Object *parent);
-    void showMostVisited();
-    void showQuickAccess();
     void showScrollerPage(int page);
 
     void addToQuickAccessTile();

@@ -90,6 +90,11 @@ public:
      */
     bool hasFocus() const;
 
+    /**
+     * \brief Rewrites URI to support search and prefixing http:// if needed
+     */
+    std::string rewriteURI(const std::string& url);
+
     void setDisabled(bool disabled);
     void editingCanceled();
     void loadStarted();
@@ -105,11 +110,6 @@ private:
     // TODO This method should be removed when input events will be fixed
     void selectionTool();
     void setUrlGuideText(const char* txt) const;
-
-    /**
-     * \brief Rewrites URI to support search and prefixing http:// if needed
-     */
-    std::string rewriteURI(const std::string& url);
 
     static void _fixed_entry_key_down_handler(void* data, Evas* e, Evas_Object* obj, void* event_info);
     static void _uri_entry_clicked(void* data, Evas_Object* obj, void* event_info);

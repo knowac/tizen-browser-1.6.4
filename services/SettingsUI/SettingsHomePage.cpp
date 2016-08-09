@@ -19,7 +19,11 @@
 namespace tizen_browser{
 namespace base_ui{
 
-const std::string SettingsHomePage::DEF_HOME_PAGE = "http://www.samsung.com";
+const std::string SettingsHomePage::DEF_HOME_PAGE = Translations::SamsungPage;
+const std::string SettingsHomePage::QUICK_PAGE = Translations::QuickPage;
+const std::string SettingsHomePage::MOST_VISITED_PAGE = Translations::MostVisitedPage;
+const std::string SettingsHomePage::OTHER_PAGE = Translations::OtherPage;
+const std::string SettingsHomePage::CURRENT_PAGE = Translations::CurrentPage;
 
 SettingsHomePage::SettingsHomePage(Evas_Object* parent)
 {
@@ -36,7 +40,7 @@ std::string SettingsHomePage::getCurrentPage()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_current = SPSC.requestCurrentPage();
     BROWSER_LOGD("[%s:%s] ", __PRETTY_FUNCTION__, (*m_current).c_str());
-    if(m_current && !(*m_current).empty())
+    if (m_current && !m_current->empty())
         return *m_current;
     return SettingsHomePage::DEF_HOME_PAGE;
 }
@@ -68,7 +72,19 @@ void SettingsHomePage::updateButtonMap()
 
     ItemData other;
     other.buttonText = Translations::SettingsHomePageOther;
-    other.subText = "http://wwww.samsung.com";
+    other.subText = [this]() -> std::string {
+        auto sig = SPSC.getWebEngineSettingsParamString(
+            basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE);
+        auto otherPage = (sig && !sig->empty()) ? *sig : Translations::SamsungPage;
+
+        if (!otherPage.compare(QUICK_PAGE) ||
+            !otherPage.compare(MOST_VISITED_PAGE) ||
+            !otherPage.compare(DEF_HOME_PAGE) ||
+            otherPage.find(CURRENT_PAGE) != std::string::npos) {
+            otherPage = m_buttonsMap[SettingsHomePageOptions::OTHER].subText;
+        }
+        return otherPage;
+    }();
     other.sui = this;
     other.id = OTHER;
 
@@ -77,6 +93,30 @@ void SettingsHomePage::updateButtonMap()
     m_buttonsMap[SettingsHomePageOptions::QUICK_ACCESS] = quick;
     m_buttonsMap[SettingsHomePageOptions::MOST_VIS] = most;
     m_buttonsMap[SettingsHomePageOptions::OTHER] = other;
+
+    setRadioOnChange();
+}
+
+void SettingsHomePage::setRadioOnChange()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    auto stateString = []() -> std::string {
+        auto sig = SPSC.getWebEngineSettingsParamString(
+            basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE);
+        return (sig && !sig->empty()) ? *sig : DEF_HOME_PAGE;
+    }();
+    if (!stateString.compare(QUICK_PAGE)) {
+        elm_radio_value_set(m_radio, SettingsHomePageOptions::QUICK_ACCESS);
+    } else if (!stateString.compare(MOST_VISITED_PAGE)) {
+        elm_radio_value_set(m_radio, SettingsHomePageOptions::MOST_VIS);
+    } else if (!stateString.compare(DEF_HOME_PAGE)) {
+        elm_radio_value_set(m_radio, SettingsHomePageOptions::DEFAULT);
+    } else if (stateString.find(CURRENT_PAGE) != std::string::npos) {
+        elm_radio_value_set(m_radio, SettingsHomePageOptions::CURRENT);
+    } else {
+        elm_radio_value_set(m_radio, SettingsHomePageOptions::OTHER);
+    }
+    elm_genlist_realized_items_update(m_genlist);
 }
 
 bool SettingsHomePage::populateList(Evas_Object* genlist)
@@ -94,11 +134,13 @@ bool SettingsHomePage::populateList(Evas_Object* genlist)
         appendGenlist(genlist, m_setting_check_radio_item_class, &m_buttonsMap[SettingsHomePageOptions::MOST_VIS], _most_visited_cb);
     m_itemsMap[SettingsHomePageOptions::OTHER] =
         appendGenlist(genlist, m_setting_check_radio_item_class, &m_buttonsMap[SettingsHomePageOptions::OTHER], _other_cb);
+
     return true;
 }
 
 Evas_Object* SettingsHomePage::createRadioButton(Evas_Object* obj, ItemData* itd)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     auto radio_button = elm_radio_add(obj);
     if (radio_button) {
         elm_radio_state_value_set(radio_button, itd->id);
@@ -126,12 +168,6 @@ Evas_Object* SettingsHomePage::createRadioButton(Evas_Object* obj, ItemData* itd
     return radio_button;
 }
 
-void SettingsHomePage::_default_cb(void*, Evas_Object*, void*)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    SPSC.homePageChanged(SettingsHomePage::DEF_HOME_PAGE);
-}
-
 void SettingsHomePage::_current_cb(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -140,25 +176,58 @@ void SettingsHomePage::_current_cb(void* data, Evas_Object*, void*)
         return;
     }
     auto self = static_cast<SettingsHomePage*>(data);
-    SPSC.homePageChanged(self->getCurrentPage());
+    SPSC.setWebEngineSettingsParamString(
+        basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE,
+        SettingsHomePage::CURRENT_PAGE + self->getCurrentPage());
+    self->updateButtonMap();
 }
 
-void SettingsHomePage::_quick_cb(void *, Evas_Object*, void*)
+void SettingsHomePage::_default_cb(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Implementation
+    if (!data) {
+        BROWSER_LOGE("data is null");
+        return;
+    }
+    auto self = static_cast<SettingsHomePage*>(data);
+    SPSC.setWebEngineSettingsParamString(
+        basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE,
+        SettingsHomePage::DEF_HOME_PAGE);
+    self->updateButtonMap();
 }
 
-void SettingsHomePage::_most_visited_cb(void *, Evas_Object*, void*)
+void SettingsHomePage::_quick_cb(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Implementation
+    if (!data) {
+        BROWSER_LOGE("data is null");
+        return;
+    }
+    auto self = static_cast<SettingsHomePage*>(data);
+    SPSC.setWebEngineSettingsParamString(
+        basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE,
+        SettingsHomePage::QUICK_PAGE);
+    self->updateButtonMap();
 }
 
-void SettingsHomePage::_other_cb(void *, Evas_Object*, void*)
+void SettingsHomePage::_most_visited_cb(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Implementation
+    if (!data) {
+        BROWSER_LOGE("data is null");
+        return;
+    }
+    auto self = static_cast<SettingsHomePage*>(data);
+    SPSC.setWebEngineSettingsParamString(
+        basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE,
+        SettingsHomePage::MOST_VISITED_PAGE);
+    self->updateButtonMap();
+}
+
+void SettingsHomePage::_other_cb(void*, Evas_Object*, void*)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    SPSC.showTextPopup();
 }
 
 }
