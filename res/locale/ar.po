@@ -1988,7 +1988,7 @@ msgid "IDS_BR_BODY_LOGIN"
 msgstr "تسجيل الدخول"
 
 msgid "IDS_BR_BODY_LOADING_ING"
-msgstr "جارٍ التحميل \u2026"
+msgstr "جارٍ التحميل "
 
 msgid "IDS_BR_BODY_FIT_TO_SCREEN"
 msgstr "ملاءمة مع الشاشة"
