@@ -68,6 +68,8 @@ public:
     void setCurrentFavIcon();
     void setSearchIcon();
     void setDocIcon();
+    void setPageLoading(bool isLoading) { m_isPageLoading = isLoading; }
+
     /**
      * \brief Adds Action to URI bar.
      *
@@ -124,7 +126,7 @@ private:
         STOP_LOADING
     };
 
-    static void _uri_left_icon_clicked(void* data, Evas_Object*, const char*, const char*);
+    static void _uri_left_icon_clicked(void* data, Evas_Object* obj, void* event_info);
     static void _uri_right_icon_clicked(void* data, Evas_Object* obj, void* event_info);
     void showRightIcon(const std::string& fileName);
     void showCancelIcon();
@@ -151,8 +153,7 @@ private:
     WPUStatesManagerPtrConst m_statesMgr;
     RightIconType m_rightIconType;
     Evas_Object* m_rightIcon;
-    bool m_securePageIcon;
-    bool m_showSecureIcon;
+    Evas_Object* m_leftIcon;
 };
 
 

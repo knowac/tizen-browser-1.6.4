@@ -27,6 +27,7 @@
 #include "SettingsPrettySignalConnector.h"
 #include "Tools/URIschemes.h"
 #include "Tools/SettingsEnums.h"
+#include "GeneralTools.h"
 
 namespace tizen_browser {
 namespace base_ui {
@@ -54,6 +55,7 @@ URIEntry::URIEntry(WPUStatesManagerPtrConst statesMgr)
     , m_statesMgr(statesMgr)
     , m_rightIconType(RightIconType::NONE)
     , m_rightIcon(nullptr)
+    , m_leftIcon(nullptr)
 {}
 
 URIEntry::~URIEntry()
@@ -82,7 +84,6 @@ Evas_Object* URIEntry::getContent()
         elm_entry_single_line_set(m_entry, EINA_TRUE);
         elm_entry_scrollable_set(m_entry, EINA_TRUE);
         elm_entry_input_panel_layout_set(m_entry, ELM_INPUT_PANEL_LAYOUT_URL);
-        elm_object_signal_callback_add(m_entry_layout,  "left,icon,clicked", "ui", _uri_left_icon_clicked, this);
 
         m_rightIcon = elm_button_add(m_entry_layout);
         elm_object_style_set(m_rightIcon, "custom");
@@ -90,6 +91,13 @@ Evas_Object* URIEntry::getContent()
         evas_object_smart_callback_add(m_rightIcon, "clicked", _uri_right_icon_clicked, this);
         evas_object_show(m_rightIcon);
         elm_object_part_content_set(m_entry_layout, "right_icon", m_rightIcon);
+
+        m_leftIcon = elm_button_add(m_entry_layout);
+        elm_object_style_set(m_leftIcon, "custom");
+        elm_object_focus_allow_set(m_leftIcon, EINA_FALSE);
+        evas_object_smart_callback_add(m_leftIcon, "clicked", _uri_left_icon_clicked, this);
+        evas_object_show(m_leftIcon);
+        elm_object_part_content_set(m_entry_layout, "left_icon", m_leftIcon);
 
         setUrlGuideText(GUIDE_TEXT_UNFOCUSED);
 
@@ -121,8 +129,11 @@ void URIEntry::changeUri(const std::string& newUri)
     m_URI = newUri;
     if (elm_object_focus_get(m_entry) == EINA_FALSE) {
         if (!m_URI.empty()) {
-            elm_entry_entry_set(m_entry, elm_entry_utf8_to_markup(m_URI.c_str()));
-            m_rightIconType = RightIconType::NONE;
+            elm_entry_entry_set(m_entry, elm_entry_utf8_to_markup(tools::clearURL(m_URI).c_str()));
+            if (!m_isPageLoading)
+                showReloadIcon();
+            else
+                showStopIcon();
         } else {
             elm_entry_entry_set(m_entry, elm_entry_utf8_to_markup(""));
             hideRightIcon();
@@ -225,21 +236,11 @@ void URIEntry::unfocused(void* data, Evas_Object*, void*)
     if (!self->m_entryContextMenuOpen) {
         self->m_entrySelectionState = SelectionState::SELECTION_NONE;
         self->mobileEntryUnfocused();
-        if (!self->m_statesMgr->equals(WPUState::QUICK_ACCESS) && !self->m_statesMgr->equals(WPUState::MAIN_INCOGNITO_PAGE)) {
-            if (self->m_isPageLoading)
-                self->showStopIcon();
-            else
-                self->showReloadIcon();
-        } else {
-            self->hideRightIcon();
-        }
     }
     self->m_first_click = true;
     elm_entry_select_none(self->m_entry);
 
-    self->showSecureIcon(self->m_showSecureIcon, self->m_securePageIcon);
-
-    elm_entry_entry_set(self->m_entry, elm_entry_utf8_to_markup(self->m_URI.c_str()));
+    self->changeUri(self->m_URI);
 }
 
 void URIEntry::focused(void* data, Evas_Object* /* obj */, void* /* event_info */)
@@ -252,6 +253,7 @@ void URIEntry::focused(void* data, Evas_Object* /* obj */, void* /* event_info *
         self->m_entryContextMenuOpen = false;
     }
     if(self->m_first_click) {
+        elm_entry_entry_set(self->m_entry, elm_entry_utf8_to_markup(self->m_URI.c_str()));
         elm_entry_select_all(self->m_entry);
         self->m_first_click = false;
         self->m_entrySelectionState = SelectionState::SELECTION_NONE;
@@ -395,7 +397,7 @@ void URIEntry::_uri_entry_longpressed(void* data, Evas_Object* /*obj*/, void* /*
 
 }
 
-void URIEntry::_uri_left_icon_clicked(void* data, Evas_Object*, const char*, const char*)
+void URIEntry::_uri_left_icon_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     auto self = static_cast<URIEntry*>(data);
@@ -488,13 +490,14 @@ void URIEntry::showSecureIcon(bool show, bool secure)
 {
     BROWSER_LOGD("[%s:%d] [ show : %d, secure : %d] ", __PRETTY_FUNCTION__, __LINE__, show, secure);
 
-    m_securePageIcon = secure;
-    m_showSecureIcon = show;
     if (show) {
+        auto ic = elm_icon_add(m_leftIcon);
         if (secure)
-            elm_object_signal_emit(m_entry_layout, "show,secure,icon", "");
+            elm_image_file_set(ic, m_customEdjPath.c_str(), "toolbar_input_ic_security.png");
         else
-            elm_object_signal_emit(m_entry_layout, "show,unsecure,icon", "");
+            elm_image_file_set(ic, m_customEdjPath.c_str(), "toolbar_input_ic_security_off.png");
+        elm_object_part_content_set(m_leftIcon, "elm.swallow.content", ic);
+        elm_object_signal_emit(m_entry_layout, "show,left,icon", "ui");
     } else {
         hideLeftIcon();
     }

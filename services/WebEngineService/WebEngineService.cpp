@@ -172,6 +172,14 @@ void WebEngineService::disconnectCurrentWebViewSignals()
         disconnectSignals(m_currentWebView);
 }
 
+void WebEngineService::connectCurrentWebViewSignals()
+{
+    if (m_currentWebView)
+        connectSignals(m_currentWebView);
+    else
+        BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__,"m_currentWebView is null");
+}
+
 int WebEngineService::createTabId()
 {
     m_tabIdCreated = -1;

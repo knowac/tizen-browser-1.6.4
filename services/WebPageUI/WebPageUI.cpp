@@ -119,7 +119,7 @@ void WebPageUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_mainLayout);
-    elm_object_focus_custom_chain_unset(m_mainLayout);
+    m_URIEntry->loadFinished();
     evas_object_hide(m_mainLayout);
 
     if(m_statesMgr->equals(WPUState::QUICK_ACCESS))
@@ -229,7 +229,7 @@ void WebPageUI::switchViewToIncognitoPage()
     m_URIEntry->changeUri("");
 }
 
-void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri)
+void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri, bool loading)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if(m_statesMgr->equals(WPUState::QUICK_ACCESS))
@@ -239,7 +239,7 @@ void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri)
     }
     setMainContent(content);
     elm_object_signal_emit(m_mainLayout, "shiftright_uri", "ui");
-    updateURIBar(uri);
+    updateURIBar(uri, loading);
 }
 
 void WebPageUI::switchViewToQuickAccess(Evas_Object* content)
@@ -742,9 +742,10 @@ void WebPageUI::setPrivateButtons()
     m_forward->setEnabled(false);
 }
 
-void WebPageUI::updateURIBar(const std::string& uri)
+void WebPageUI::updateURIBar(const std::string& uri, bool loading)
 {
     BROWSER_LOGD("[%s:%d] URI:%s", __PRETTY_FUNCTION__, __LINE__, uri.c_str());
+    m_URIEntry->setPageLoading(loading);
     m_URIEntry->changeUri(uri);
     hideProgressBar();
 }

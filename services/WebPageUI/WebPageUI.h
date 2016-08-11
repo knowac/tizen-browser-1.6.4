@@ -101,7 +101,7 @@ public:
     bool isWebPageUIvisible() { return m_WebPageUIvisible; }
     void toIncognito(bool);
     void switchViewToErrorPage();
-    void switchViewToWebPage(Evas_Object* content, const std::string uri);
+    void switchViewToWebPage(Evas_Object* content, const std::string uri, bool loading);
     void switchViewToIncognitoPage();
     void switchViewToQuickAccess(Evas_Object* content);
     URIEntry& getURIEntry() const { return *m_URIEntry.get(); }
@@ -175,7 +175,7 @@ private:
     void setErrorButtons();
     void setPrivateButtons();
     void setMainContent(Evas_Object* content);
-    void updateURIBar(const std::string& uri);
+    void updateURIBar(const std::string& uri, bool loading);
     std::string edjePath(const std::string& file);
 #if GESTURE
     void gestureUp();

@@ -628,7 +628,8 @@ void SimpleUI::switchViewToWebPage()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if(m_webEngine->isSuspended())
         m_webEngine->resume();
-    m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), m_webEngine->getURI());
+    m_webEngine->connectCurrentWebViewSignals();
+    m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), m_webEngine->getURI(), m_webEngine->isLoading());
     m_webPageUI->toIncognito(m_webEngine->isPrivateMode(m_webEngine->currentTabId()));
 }
 
@@ -738,7 +739,7 @@ void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool 
         if (tabsCount() == 0 || m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
             openNewTab(url, title, boost::none, desktopMode, false, basic_webengine::TabOrigin::QUICKACCESS);
         else {
-            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), title);
+            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), url, false);
             m_webEngine->setURI(url);
             m_webPageUI->getURIEntry().clearFocus();
         }
@@ -793,8 +794,8 @@ void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::Bookma
             openNewTab(bookmarkAddress);
         else {
             std::string bookmarkTitle = bookmarkItem->getTitle();
-            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), bookmarkAddress);
             m_webEngine->setURI(bookmarkAddress);
+            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), bookmarkAddress, m_webEngine->isLoading());
             m_webPageUI->getURIEntry().clearFocus();
             closeBookmarkManagerUI();
         }

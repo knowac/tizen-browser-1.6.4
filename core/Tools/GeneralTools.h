@@ -27,7 +27,7 @@ namespace tizen_browser
 {
 namespace tools
 {
-    static const int SUFIX_CHAR_DEL = 1;
+    static const int SUFFIX_CHAR_DEL = 1;
     static const char * PROTCOL_BEGIN = "://";
     static const char END_SLASH = '/';
     // which protocol, when only domain is available?
@@ -41,9 +41,12 @@ namespace tools
     static std::string fromChar(const char* c) { return c ? std::string(c) : std::string(); }
 
     static std::string clearURL(const std::string & url) {
+        int suffix = 0;
+        if (url.back() == END_SLASH)
+            suffix = SUFFIX_CHAR_DEL;
         size_t beg = url.find(PROTCOL_BEGIN);
         beg += strlen(PROTCOL_BEGIN);
-        return url.substr(beg, url.size() - beg - SUFIX_CHAR_DEL);
+        return url.substr(beg, url.size() - beg - suffix);
     }
 
     static std::string extractDomain(const std::string & url) {

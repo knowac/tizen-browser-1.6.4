@@ -253,6 +253,7 @@ private:
     void disconnectSignals(WebViewPtr);
 
     void disconnectCurrentWebViewSignals();
+    void connectCurrentWebViewSignals();
 
     /**
      * connect signals of specified WebView

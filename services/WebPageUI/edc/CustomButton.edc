@@ -16,6 +16,8 @@ collections { base_scale: 2.6;
 
 IMAGE_BUTTON("toolbar_input_ic_cancel.png", BUTTON_ICON_DEFAULT_HEIGHT_INC, BUTTON_ICON_DEFAULT_WIDTH_INC, "toolbar_input_ic_cancel.png")
 IMAGE_BUTTON("toolbar_input_ic_refresh.png", BUTTON_ICON_DEFAULT_HEIGHT_INC, BUTTON_ICON_DEFAULT_WIDTH_INC, "toolbar_input_ic_refresh.png")
+IMAGE_BUTTON("toolbar_input_ic_security.png", BUTTON_ICON_DEFAULT_HEIGHT_INC, BUTTON_ICON_DEFAULT_WIDTH_INC, "toolbar_input_ic_security.png")
+IMAGE_BUTTON("toolbar_input_ic_security_off.png", BUTTON_ICON_DEFAULT_HEIGHT_INC, BUTTON_ICON_DEFAULT_WIDTH_INC, "toolbar_input_ic_security_off.png")
 
    group { name: "elm/button/base/custom";
       data.item: "vector_ux" "default";
