@@ -17,6 +17,7 @@
 #include "SettingsAdvanced.h"
 
 #include "Config.h"
+#include "app_preference.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -25,6 +26,7 @@ SettingsAdvanced::SettingsAdvanced(Evas_Object* parent)
 {
     init(parent);
     updateButtonMap();
+    vconf_notify_key_changed("memory/sysman/mmc", notifyStorageChange, this);
 };
 
 SettingsAdvanced::~SettingsAdvanced()
@@ -48,7 +50,7 @@ void SettingsAdvanced::updateButtonMap()
 
     ItemData save_content;
     save_content.buttonText = Translations::SettingsAdvancedSaveContent;
-    save_content.subText =  [this]() -> std::string {
+    save_content.subText =  []() {
         auto sig =
             SPSC.getWebEngineSettingsParamString(
                 basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION);
@@ -72,6 +74,37 @@ void SettingsAdvanced::updateButtonMap()
 
     SPSC.setContentDestination.connect(
         boost::bind(&SettingsAdvanced::setContentDestination, this, _1));
+
+    changeGenlistStorage();
+}
+
+void SettingsAdvanced::changeGenlistStorage()
+{
+    int mmc_mode = VCONFKEY_SYSMAN_MMC_REMOVED;
+    if (vconf_get_int(VCONFKEY_SYSMAN_MMC_STATUS, &mmc_mode) != 0)
+        BROWSER_LOGE("Fail to get vconf_get_int : VCONFKEY_SYSMAN_MMC_STATUS");
+
+    if (mmc_mode == -1) /* This values also means unmounted mmc */
+        mmc_mode = VCONFKEY_SYSMAN_MMC_REMOVED;
+
+    if (mmc_mode == VCONFKEY_SYSMAN_MMC_REMOVED) {
+        setContentDestination(
+            static_cast<std::underlying_type_t<RadioButtons>>(RadioButtons::DEVICE));
+        elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT], EINA_TRUE);
+    } else
+        elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT], EINA_FALSE);
+    elm_genlist_realized_items_update(m_genlist);
+}
+
+void SettingsAdvanced::notifyStorageChange(keynode_t* /*key*/, void* data)
+{
+    if (!data) {
+        BROWSER_LOGD("[no data] ");
+        return;
+    }
+
+    auto self = static_cast<SettingsAdvanced*>(data);
+    self->changeGenlistStorage();
 }
 
 bool SettingsAdvanced::populateList(Evas_Object* genlist)
@@ -86,6 +119,9 @@ bool SettingsAdvanced::populateList(Evas_Object* genlist)
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT], _save_content_cb);
     m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA] =
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA], _manage_web_data_cb);
+
+    elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA], EINA_TRUE);
+
     return true;
 }
 
@@ -184,19 +220,34 @@ void SettingsAdvanced::grid_item_check_changed(void* data, Evas_Object* obj, voi
     }
 }
 
+bool SettingsAdvanced::setStorageType(SettingsStorageType type)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    if (preference_set_int("DefaultStorage", static_cast<int>(type)) != PREFERENCE_ERROR_NONE) {
+        BROWSER_LOGD("[%s:%d] setStorageType error", __PRETTY_FUNCTION__, __LINE__);
+        return true;
+    }
+    return false;
+}
+
 void SettingsAdvanced::setContentDestination(int button)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     switch (static_cast<RadioButtons>(button)) {
         case RadioButtons::DEVICE:
             m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = Translations::Device;
+            setStorageType(SettingsStorageType::DEVICE);
             break;
         case RadioButtons::SD_CARD:
             m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = Translations::SDCard;
+            setStorageType(SettingsStorageType::SD_CARD);
             break;
         default:
             return;
     }
+
     SPSC.setWebEngineSettingsParamString(
         basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION,
         m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText);

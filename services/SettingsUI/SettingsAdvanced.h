@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <vector>
 #include <Evas.h>
+#include <vconf.h>
 #include "BrowserLogger.h"
 #include "Tools/EflTools.h"
 #include "Tools/SettingsEnums.h"
@@ -40,23 +41,31 @@ enum SettingsAdvancedOptions
     MANAGE_WEB_DATA
 };
 
+enum struct SettingsStorageType : int
+{
+    DEVICE = 0,
+    SD_CARD
+};
+
 class SettingsAdvanced
     : public SettingsUI
 {
 public:
-    SettingsAdvanced(){};
     SettingsAdvanced(Evas_Object* parent);
     virtual ~SettingsAdvanced();
     virtual bool populateList(Evas_Object* genlist) override;
     virtual void updateButtonMap() override;
     Evas_Object* createOnOffCheckBox(Evas_Object* obj, ItemData*);
     Eina_Bool getOriginalState(int id);
+    void changeGenlistStorage();
     static void _enable_js_cb(void *data, Evas_Object*obj , void* event_info);
     static void _block_popups_cb(void *data, Evas_Object*obj , void* event_info);
     static void _save_content_cb(void *data, Evas_Object*obj , void* event_info);
     static void _manage_web_data_cb(void *data, Evas_Object*obj , void* event_info);
     static void grid_item_check_changed(void *data, Evas_Object *obj, void *event_info);
+    static void notifyStorageChange(keynode_t *key, void* data);
     void setContentDestination(int button);
+    bool setStorageType(SettingsStorageType type);
 };
 
 }
