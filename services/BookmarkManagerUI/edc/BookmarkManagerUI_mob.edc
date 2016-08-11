@@ -1,7 +1,9 @@
 #include "../../../core/Tools/edc/FolderImage.edc"
+#include "../../../core/Tools/edc/ColorClasses.edc"
 
 #define BOOKMARK_NAVIGATOR_TOOLBAR_HEIGHT 75
 #define BOOKMARK_MODULES_TOOLBAR_HEIGHT 80
+#define INCOGNITO_IMAGE_SIZE 50
 
 collections {
     base_scale: 2.6;
@@ -43,6 +45,28 @@ collections {
                     max: IMAGE_SIZE IMAGE_SIZE;
                     visible: 1;
                     image.normal: "internet_ic_default.png";
+                }
+            }
+        }
+    }
+
+    group { name: "private_image";
+        images.image: "internet_ic_private_mode.png" COMP;
+        parts {
+            part {
+                name: "image";
+                type: IMAGE;
+                mouse_events: 1;
+                repeat_events: 0;
+                description {
+                    state: "default" 0.0;
+                    fixed: 1 1;
+                    align: 0.5 0.5;
+                    min: INCOGNITO_IMAGE_SIZE INCOGNITO_IMAGE_SIZE;
+                    max: INCOGNITO_IMAGE_SIZE INCOGNITO_IMAGE_SIZE;
+                    visible: 1;
+                    image.normal: "internet_ic_private_mode.png";
+                    color_class: "AO030";
                 }
             }
         }

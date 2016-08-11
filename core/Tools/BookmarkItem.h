@@ -55,6 +55,9 @@ public:
     void setId(int id) { m_saved_id = id; }
     int getId() const { return m_saved_id; }
 
+    //TODO: create bool with a value when database is updated
+    bool getPrivate() const { return false; }
+
     void setThumbnail(std::shared_ptr<tizen_browser::tools::BrowserImage> thumbnail);
     std::shared_ptr<tizen_browser::tools::BrowserImage> getThumbnail() const ;
 

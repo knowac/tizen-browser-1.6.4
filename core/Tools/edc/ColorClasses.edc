@@ -18,6 +18,10 @@ color_classes {
         color: 0 0 0 255;
     }
     color_class {
+        name: "AO030";
+        color: 102 102 102 205;
+    }
+    color_class {
         name: "AO034";
         color: 0 0 0 205;
     }

@@ -129,17 +129,22 @@ Evas_Object *BookmarkManagerUI::_genlist_bookmark_content_get(void *data, Evas_O
     if (data && part) {
         BookmarkData *bookmarkData = static_cast<BookmarkData*>(data);
         if (!strcmp(part, "elm.swallow.icon")) {
-            Evas_Object* layout = elm_layout_add(obj);
+            Evas_Object *icon = elm_icon_add(obj);
             if (bookmarkData->bookmarkItem->is_folder())
-                elm_layout_file_set(layout, bookmarkData->bookmarkManagerUI->m_edjFilePath.c_str(), "folder_image");
+                elm_image_file_set(icon, bookmarkData->bookmarkManagerUI->m_edjFilePath.c_str(), "folder_image");
             else if (bookmarkData->bookmarkItem->has_favicon()) {
-                elm_layout_file_set(layout, bookmarkData->bookmarkManagerUI->m_edjFilePath.c_str(), "content_image");
                 std::shared_ptr<tools::BrowserImage> image = bookmarkData->bookmarkItem->getFavicon();
-                Evas_Object* favicon = image->getEvasImage(obj);
-                elm_object_part_content_set(layout, "content", favicon);
+                icon = image->getEvasImage(obj);
             } else
-                elm_layout_file_set(layout, bookmarkData->bookmarkManagerUI->m_edjFilePath.c_str(), "favicon_image");
-            return layout;
+                elm_image_file_set(icon, bookmarkData->bookmarkManagerUI->m_edjFilePath.c_str(), "favicon_image");
+            elm_image_resizable_set(icon, EINA_TRUE, EINA_TRUE);
+            evas_object_size_hint_min_set(icon,
+                ELM_SCALE_SIZE(bookmarkData->bookmarkManagerUI->ICON_SIZE),
+                ELM_SCALE_SIZE(bookmarkData->bookmarkManagerUI->ICON_SIZE));
+            evas_object_size_hint_max_set(icon,
+                ELM_SCALE_SIZE(bookmarkData->bookmarkManagerUI->ICON_SIZE),
+                ELM_SCALE_SIZE(bookmarkData->bookmarkManagerUI->ICON_SIZE));
+            return icon;
         } else if (!strcmp(part, "elm.swallow.end")) {
             switch (bookmarkData->bookmarkManagerUI->m_state) {
             case BookmarkManagerState::Delete: {
@@ -161,6 +166,10 @@ Evas_Object *BookmarkManagerUI::_genlist_bookmark_content_get(void *data, Evas_O
             default:
                 break;
             }
+        } else if (!strcmp(part, "elm.swallow.icon.2") && bookmarkData->bookmarkItem->getPrivate()) {
+            Evas_Object* layout = elm_layout_add(obj);
+            elm_layout_file_set(layout, bookmarkData->bookmarkManagerUI->m_edjFilePath.c_str(), "private_image");
+            return layout;
         }
     } else
         BROWSER_LOGE("[%s:%d] Data or part is null", __PRETTY_FUNCTION__, __LINE__);
@@ -244,6 +253,7 @@ void BookmarkManagerUI::createGenlist()
     evas_object_size_hint_weight_set(m_genlist, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_genlist, EVAS_HINT_FILL, EVAS_HINT_FILL);
     evas_object_smart_callback_add(m_genlist, "moved", _genlist_bookmark_moved, this);
+    evas_object_smart_callback_add(m_genlist, "realized", _genlist_bookmark_realized, this);
 
     elm_box_pack_end(m_box, m_genlist);
     evas_object_show(m_genlist);
@@ -380,6 +390,22 @@ void BookmarkManagerUI::_genlist_bookmark_moved(void *data, Evas_Object *, void 
         bookmarkManagerUI->m_reordered = true;
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+}
+
+void BookmarkManagerUI::_genlist_bookmark_realized(void *, Evas_Object *, void *event_info)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (event_info) {
+        auto bookmarkItem = static_cast<Elm_Object_Item*>(event_info);
+        auto bookmarkData = static_cast<BookmarkData*>(elm_object_item_data_get(bookmarkItem));
+
+        if (!bookmarkData->bookmarkItem->is_folder())
+            elm_object_item_signal_emit(bookmarkItem, "elm,state,elm.text.sub,visible", "elm");
+        if (bookmarkData->bookmarkItem->getPrivate())
+            elm_object_item_signal_emit(bookmarkItem, "elm,state,elm.swallow.end,visible", "elm");
+    } else {
+        BROWSER_LOGW("[%s] event_info = nullptr", __PRETTY_FUNCTION__);
+    }
 }
 
 void BookmarkManagerUI::_select_all_down(void *data, Evas *, Evas_Object *, void *)

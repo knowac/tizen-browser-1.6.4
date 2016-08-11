@@ -116,6 +116,7 @@ private:
     static void _prev_clicked(void *data, Evas_Object *, void *);
     static void _check_state_changed(void *data, Evas_Object *, void *);
     static void _genlist_bookmark_moved(void *data, Evas_Object *, void *);
+    static void _genlist_bookmark_realized(void *, Evas_Object *, void *event_info);
     static void _select_all_down(void *data, Evas *, Evas_Object *, void *);
     static void _select_all_state_changed(void *data, Evas_Object *obj, void *);
     static void _cm_delete_clicked(void*, Evas_Object*, void*);
@@ -149,6 +150,8 @@ private:
     std::map<unsigned int, Elm_Object_Item*> m_map_bookmark;
     std::map<unsigned int, bool> m_map_delete;
     unsigned int m_delete_count;
+
+    const unsigned int ICON_SIZE = 64;
 };
 
 }
