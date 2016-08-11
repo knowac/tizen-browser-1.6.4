@@ -122,7 +122,7 @@ void TabUI::createTopContent()
 {
     m_naviframe->setTitle("Tabs"); //TODO: _("IDS_BR_HEADER_TABS_ABB2") when it works
     m_naviframe->addPrevButton(_close_clicked, this);
-    m_naviframe->setVisibilityPrevButton(true);
+    m_naviframe->setPrevButtonVisible(true);
 }
 
 void TabUI::createBottomContent()
@@ -134,7 +134,7 @@ void TabUI::createBottomContent()
     evas_object_show(layout);
 
     m_naviframe->createBottomBar(layout);
-    m_naviframe->setVisibilityBottomBar(true);
+    m_naviframe->setVisibleBottomBar(true);
     //TODO: Missing translation
     m_naviframe->addButtonToBottomBar("Enable Secret", _enable_secret_clicked, this);
     m_naviframe->setEnableButtonInBottomBar("Enable Secret", true);

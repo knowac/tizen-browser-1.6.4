@@ -29,6 +29,7 @@
 #include "services/HistoryService/HistoryItem.h"
 #include "BookmarkItem.h"
 #include "BookmarkFolder.h"
+#include "NaviframeWrapper.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -92,7 +93,7 @@ private:
         BookmarkManagerUI* bookmarkManagerUI;
     } BookmarkData;
 
-    Evas_Object* createBookmarksLayout(Evas_Object* parent);
+    void createBookmarksLayout();
     void createTopContent();
     void createModulesToolbar();
     void createNavigatorToolbar();
@@ -130,11 +131,8 @@ private:
     std::string m_edjFilePath;
 
     Evas_Object *m_parent;
-    Evas_Object *b_mm_layout;
+    SharedNaviframeWrapper m_naviframe;
     Evas_Object *m_content;
-    Evas_Object *m_cancel_button;
-    Evas_Object *m_accept_button;
-    Evas_Object *m_prev_button;
     Evas_Object *m_modulesToolbar;
     Evas_Object *m_navigatorToolbar;
     Evas_Object *m_box;

@@ -49,13 +49,23 @@ public:
     void setContent(Evas_Object *content);
 
     void addPrevButton(Evas_Smart_Cb callback, void* data);
-    void setVisibilityPrevButton(bool visible);
+    void setPrevButtonVisible(bool visible);
+
+    void addLeftButton(Evas_Smart_Cb callback, void* data);
+    void setLeftButtonText(std::string text);
+    void setLeftButtonVisible(bool visible);
+    void setLeftButtonEnabled(bool enabled);
+
+    void addRightButton(Evas_Smart_Cb callback, void* data);
+    void setRightButtonText(std::string text);
+    void setRightButtonVisible(bool visible);
+    void setRightButtonEnabled(bool enabled);
 
     void createBottomBar(Evas_Object* layout = nullptr,
         std::string swallow_name = "elm.swallow.content");
     void addButtonToBottomBar(std::string text, Evas_Smart_Cb callback, void* data);
     void setEnableButtonInBottomBar(std::string text, bool enabled);
-    void setVisibilityBottomBar(bool visible);
+    void setVisibleBottomBar(bool visible);
 
 protected:
     Evas_Object *m_parent;

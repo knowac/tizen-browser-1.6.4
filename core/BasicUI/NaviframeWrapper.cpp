@@ -76,15 +76,121 @@ void NaviframeWrapper::addPrevButton(Evas_Smart_Cb callback, void *data)
     evas_object_size_hint_align_set(button, EVAS_HINT_FILL, EVAS_HINT_FILL);
 }
 
-void NaviframeWrapper::setVisibilityPrevButton(bool visible)
+void NaviframeWrapper::setPrevButtonVisible(bool visible)
 {
     Evas_Object* button = elm_object_part_content_get(m_layout, "elm.swallow.prev_btn");
-    if (visible) {
-        evas_object_show(button);
-        elm_object_signal_emit(m_layout, "elm,state,prev_btn,show", "elm");
+    if (button) {
+        if (visible) {
+            evas_object_show(button);
+            elm_object_signal_emit(m_layout, "elm,state,prev_btn,show", "elm");
+        } else {
+            evas_object_hide(button);
+            elm_object_signal_emit(m_layout, "elm,state,prev_btn,hide", "elm");
+        }
     } else {
-        evas_object_hide(button);
-        elm_object_signal_emit(m_layout, "elm,state,prev_btn,hide", "elm");
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
+    }
+}
+
+void NaviframeWrapper::addLeftButton(Evas_Smart_Cb callback, void *data)
+{
+    Evas_Object* button = elm_button_add(m_layout);
+    elm_object_part_content_set(m_layout, "title_left_btn", button);
+    elm_object_style_set(button, "naviframe/title_left");
+    evas_object_smart_callback_add(button, "clicked", callback, data);
+    evas_object_size_hint_weight_set(button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(button, EVAS_HINT_FILL, EVAS_HINT_FILL);
+}
+
+void NaviframeWrapper::setLeftButtonText(std::string text)
+{
+    Evas_Object* button = elm_object_part_content_get(m_layout, "title_left_btn");
+    if (button)
+        elm_object_translatable_text_set(button, text.c_str());
+    else
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
+}
+
+void NaviframeWrapper::setLeftButtonVisible(bool visible)
+{
+    Evas_Object* button = elm_object_part_content_get(m_layout, "title_left_btn");
+    if (button) {
+        if (visible) {
+            evas_object_show(button);
+            elm_object_signal_emit(m_layout, "elm,state,title_left_btn,show", "elm");
+        } else {
+            evas_object_hide(button);
+            elm_object_signal_emit(m_layout, "elm,state,title_left_btn,hide", "elm");
+        }
+    } else {
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
+    }
+}
+
+void NaviframeWrapper::setLeftButtonEnabled(bool enabled)
+{
+    Evas_Object* button = elm_object_part_content_get(m_layout, "title_left_btn");
+    if (button) {
+        if (enabled)
+            elm_object_signal_emit(button, "elm,state,enabled", "elm");
+        else
+            elm_object_signal_emit(button, "elm,state,disabled", "elm");
+    } else {
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
+    }
+}
+
+void NaviframeWrapper::addRightButton(Evas_Smart_Cb callback, void *data)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    Evas_Object* button = elm_button_add(m_layout);
+
+    elm_object_part_content_set(m_layout, "title_right_btn", button);
+    elm_object_style_set(button, "naviframe/title_right");
+    evas_object_smart_callback_add(button, "clicked", callback, data);
+    evas_object_size_hint_weight_set(button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(button, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+}
+
+void NaviframeWrapper::setRightButtonText(std::string text)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    Evas_Object* button = elm_object_part_content_get(m_layout, "title_right_btn");
+    if (button)
+        elm_object_translatable_text_set(button, text.c_str());
+    else
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
+}
+
+void NaviframeWrapper::setRightButtonVisible(bool visible)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    Evas_Object* button = elm_object_part_content_get(m_layout, "title_right_btn");
+    if (button) {
+        if (visible) {
+            evas_object_show(button);
+            elm_object_signal_emit(m_layout, "elm,state,title_right_btn,show", "elm");
+        } else {
+            evas_object_hide(button);
+            elm_object_signal_emit(m_layout, "elm,state,title_right_btn,hide", "elm");
+        }
+    } else {
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
+    }
+}
+
+void NaviframeWrapper::setRightButtonEnabled(bool enabled)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    Evas_Object* button = elm_object_part_content_get(m_layout, "title_right_btn");
+    if (button) {
+        if (enabled)
+            elm_object_signal_emit(button, "elm,state,enabled", "elm");
+        else
+            elm_object_signal_emit(button, "elm,state,disabled", "elm");
+    } else {
+        BROWSER_LOGW("[%s] Button does not exist!", __PRETTY_FUNCTION__);
     }
 }
 
@@ -114,7 +220,7 @@ void NaviframeWrapper::setEnableButtonInBottomBar(std::string text, bool enabled
         elm_object_signal_emit(m_map_bottom_box[text], "elm,state,disabled", "elm");
 }
 
-void NaviframeWrapper::setVisibilityBottomBar(bool visible)
+void NaviframeWrapper::setVisibleBottomBar(bool visible)
 {
     if (!m_bottom_box)
         createBottomBar();

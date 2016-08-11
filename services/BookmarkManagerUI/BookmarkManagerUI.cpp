@@ -42,11 +42,7 @@ struct ItemData
 
 BookmarkManagerUI::BookmarkManagerUI()
     : m_parent(nullptr)
-    , b_mm_layout(nullptr)
     , m_content(nullptr)
-    , m_cancel_button(nullptr)
-    , m_accept_button(nullptr)
-    , m_prev_button(nullptr)
     , m_modulesToolbar(nullptr)
     , m_navigatorToolbar(nullptr)
     , m_genlist(nullptr)
@@ -79,23 +75,27 @@ void BookmarkManagerUI::init(Evas_Object* parent)
 
 void BookmarkManagerUI::showUI()
 {
-    evas_object_show(b_mm_layout);
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    M_ASSERT(m_naviframe->getLayout());
+    m_naviframe->show();
 }
 
 void BookmarkManagerUI::hideUI()
 {
-    evas_object_hide(b_mm_layout);
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    M_ASSERT(m_naviframe->getLayout());
+    m_naviframe->hide();
 }
 
 Evas_Object* BookmarkManagerUI::getContent()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_parent);
-    if (!b_mm_layout)
-      b_mm_layout = createBookmarksLayout(m_parent);
+    if (!m_naviframe)
+        createBookmarksLayout();
     changeState(m_state);
 
-    return b_mm_layout;
+    return m_naviframe->getLayout();
 }
 
 void BookmarkManagerUI::createGenlistItemClasses()
@@ -176,22 +176,18 @@ Evas_Object *BookmarkManagerUI::_genlist_bookmark_content_get(void *data, Evas_O
     return nullptr;
 }
 
-Evas_Object* BookmarkManagerUI::createBookmarksLayout(Evas_Object* parent)
+void BookmarkManagerUI::createBookmarksLayout()
 {
     elm_theme_extension_add(nullptr, m_edjFilePath.c_str());
-    b_mm_layout = elm_layout_add(parent);
 
-    evas_object_size_hint_weight_set(b_mm_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(b_mm_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    evas_object_show(b_mm_layout);
-    elm_layout_theme_set(b_mm_layout, "naviframe", "item/basic", "default");
+    m_naviframe = std::make_shared<NaviframeWrapper>(m_parent);
 
-    m_content = elm_layout_add(b_mm_layout);
+    m_content = elm_layout_add(m_naviframe->getLayout());
     evas_object_size_hint_weight_set(m_content, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_content, EVAS_HINT_FILL, EVAS_HINT_FILL);
     evas_object_show(m_content);
     elm_layout_file_set(m_content, m_edjFilePath.c_str(), "naviframe_content");
-    elm_object_part_content_set(b_mm_layout, "elm.swallow.content", m_content);
+    m_naviframe->setContent(m_content);
 
     createTopContent();
     createModulesToolbar();
@@ -200,7 +196,6 @@ Evas_Object* BookmarkManagerUI::createBookmarksLayout(Evas_Object* parent)
 
     createGenlist();
     createEmptyLayout();
-    return b_mm_layout;
 }
 
 void BookmarkManagerUI::createModulesToolbar()
@@ -301,29 +296,13 @@ void BookmarkManagerUI::createEmptyLayout()
 void BookmarkManagerUI::createTopContent()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    M_ASSERT(b_mm_layout);
+    M_ASSERT(m_naviframe->getLayout());
 
-    m_cancel_button = elm_button_add(b_mm_layout);
-    elm_object_part_content_set(b_mm_layout, "title_left_btn", m_cancel_button);
-    elm_object_style_set(m_cancel_button, "naviframe/title_left");
-    elm_object_text_set(m_cancel_button, _("IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"));
-    evas_object_smart_callback_add(m_cancel_button, "clicked", _cancel_clicked, this);
-    evas_object_size_hint_weight_set(m_cancel_button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_cancel_button, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-    m_accept_button = elm_button_add(b_mm_layout);
-    elm_object_part_content_set(b_mm_layout, "title_right_btn", m_accept_button);
-    elm_object_style_set(m_accept_button, "naviframe/title_right");
-    evas_object_smart_callback_add(m_accept_button, "clicked", _accept_clicked, this);
-    evas_object_size_hint_weight_set(m_accept_button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_accept_button, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-    m_prev_button = elm_button_add(b_mm_layout);
-    elm_object_part_content_set(b_mm_layout, "elm.swallow.prev_btn", m_prev_button);
-    elm_object_style_set(m_prev_button, "tizen_view/prev_btn");
-    evas_object_smart_callback_add(m_prev_button, "clicked", _prev_clicked, this);
-    evas_object_size_hint_weight_set(m_prev_button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_prev_button, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    m_naviframe->addLeftButton(_cancel_clicked, this);
+    //TODO: Missing translation. In guidelines this should be uppercase
+    m_naviframe->setLeftButtonText(_("IDS_BR_SK_CANCEL"));
+    m_naviframe->addRightButton(_accept_clicked, this);
+    m_naviframe->addPrevButton(_prev_clicked, this);
 }
 
 void BookmarkManagerUI::_cancel_clicked(void* data, Evas_Object*, void*)
@@ -663,10 +642,11 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
     switch (state) {
     case BookmarkManagerState::SelectFolder:
         elm_genlist_realized_items_update(m_genlist);
-        elm_object_signal_emit(b_mm_layout, "elm,state,prev_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_left_btn,show", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_right_btn,show", "elm");
-        elm_object_text_set(m_accept_button, _("IDS_TPLATFORM_ACBUTTON_DONE_ABB"));
+        m_naviframe->setPrevButtonVisible(false);
+        m_naviframe->setLeftButtonVisible(true);
+        m_naviframe->setRightButtonVisible(true);
+        //TODO: Missing translation. In guidelines this should be uppercase
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
         elm_object_signal_emit(m_content, "show_toolbars", "ui");
         evas_object_show(m_navigatorToolbar);
         elm_object_signal_emit(m_content, "hide_modules_toolbar", "ui");
@@ -674,10 +654,10 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         break;
     case BookmarkManagerState::Edit:
         m_reordered = false;
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_left_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_right_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,prev_btn,show", "elm");
-        elm_object_part_text_set(b_mm_layout, "elm.text.title", _("IDS_BR_HEADER_SELECT_BOOKMARK"));
+        m_naviframe->setLeftButtonVisible(false);
+        m_naviframe->setRightButtonVisible(false);
+        m_naviframe->setPrevButtonVisible(true);
+        m_naviframe->setTitle(_("IDS_BR_HEADER_SELECT_BOOKMARK"));
         elm_object_signal_emit(m_content, "hide_toolbars", "ui");
         evas_object_hide(m_modulesToolbar);
         evas_object_hide(m_navigatorToolbar);
@@ -689,10 +669,11 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
             m_map_delete.insert(std::pair<unsigned int, bool>(it->first, false));
 
         elm_genlist_realized_items_update(m_genlist);
-        elm_object_signal_emit(b_mm_layout, "elm,state,prev_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_left_btn,show", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_right_btn,show", "elm");
-        elm_object_text_set(m_accept_button, _("IDS_TPLATFORM_ACBUTTON_DELETE_ABB"));
+        m_naviframe->setPrevButtonVisible(false);
+        m_naviframe->setLeftButtonVisible(true);
+        m_naviframe->setRightButtonVisible(true);
+        //TODO: Missing translation. In guidelines this should be uppercase
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE"));
         updateDeleteTopContent();
         elm_object_signal_emit(m_content, "hide_toolbars", "ui");
         evas_object_hide(m_modulesToolbar);
@@ -702,10 +683,10 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         evas_object_show(m_select_all);
         break;
     case BookmarkManagerState::Reorder:
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_left_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_right_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,prev_btn,show", "elm");
-        elm_object_part_text_set(b_mm_layout, "elm.text.title", _("IDS_BR_OPT_REORDER_ABB"));
+        m_naviframe->setLeftButtonVisible(false);
+        m_naviframe->setRightButtonVisible(false);
+        m_naviframe->setPrevButtonVisible(true);
+        m_naviframe->setTitle(_("IDS_BR_OPT_REORDER_ABB"));
         elm_object_signal_emit(m_content, "hide_toolbars", "ui");
         evas_object_hide(m_modulesToolbar);
         evas_object_hide(m_navigatorToolbar);
@@ -715,13 +696,13 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
     default:
         updateNoBookmarkText();
         reoderBookmarkItems();
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_left_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,title_right_btn,hide", "elm");
-        elm_object_signal_emit(b_mm_layout, "elm,state,prev_btn,show", "elm");
+        m_naviframe->setLeftButtonVisible(false);
+        m_naviframe->setRightButtonVisible(false);
+        m_naviframe->setPrevButtonVisible(true);
+        m_naviframe->setTitle(_("IDS_BR_BODY_BOOKMARKS"));
         elm_object_signal_emit(m_content, "show_toolbars", "ui");
         evas_object_show(m_modulesToolbar);
         evas_object_show(m_navigatorToolbar);
-        elm_object_part_text_set(b_mm_layout, "elm.text.title", _("IDS_BR_BODY_BOOKMARKS"));
         elm_genlist_reorder_mode_set(m_genlist, EINA_FALSE);
         elm_box_unpack(m_box, m_select_all);
         evas_object_hide(m_select_all);
@@ -772,15 +753,12 @@ void BookmarkManagerUI::updateDeleteClick(int id)
 
 void BookmarkManagerUI::updateDeleteTopContent()
 {
-    if (m_delete_count) {
-        elm_object_part_text_set(b_mm_layout, "elm.text.title",
-                (boost::format(_("IDS_BR_HEADER_PD_SELECTED_ABB")) % m_delete_count).str().c_str());
-        elm_object_signal_emit(m_accept_button, "elm,state,enabled", "elm");
-    } else {
-        elm_object_part_text_set(b_mm_layout, "elm.text.title", "Select Items");
+    if (m_delete_count)
+        m_naviframe->setTitle((boost::format(_("IDS_BR_HEADER_PD_SELECTED_ABB")) % m_delete_count).str());
+    else
         //TODO: Add translation
-        elm_object_signal_emit(m_accept_button, "elm,state,disabled", "elm");
-    }
+        m_naviframe->setTitle("Select items");
+    m_naviframe->setRightButtonEnabled(m_delete_count);
 }
 
 }
