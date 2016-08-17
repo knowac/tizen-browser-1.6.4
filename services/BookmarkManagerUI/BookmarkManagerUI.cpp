@@ -84,6 +84,7 @@ void BookmarkManagerUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
+    onBackPressed();
     m_naviframe->hide();
 }
 
@@ -178,6 +179,7 @@ Evas_Object *BookmarkManagerUI::_genlist_bookmark_content_get(void *data, Evas_O
 
 void BookmarkManagerUI::createBookmarksLayout()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     elm_theme_extension_add(nullptr, m_edjFilePath.c_str());
 
     m_naviframe = std::make_shared<NaviframeWrapper>(m_parent);
@@ -200,6 +202,7 @@ void BookmarkManagerUI::createBookmarksLayout()
 
 void BookmarkManagerUI::createModulesToolbar()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_modulesToolbar = elm_toolbar_add(m_content);
 
     elm_object_style_set(m_modulesToolbar, "tabbar/notitle");
@@ -215,6 +218,7 @@ void BookmarkManagerUI::createModulesToolbar()
 
 void BookmarkManagerUI::createNavigatorToolbar()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_navigatorToolbar = elm_toolbar_add(m_content);
 
     elm_object_style_set(m_navigatorToolbar, "navigationbar");
@@ -479,6 +483,14 @@ void BookmarkManagerUI::onBackPressed()
         //TODO: We should go to the previous navigatorToolbar element if it exists.
         closeBookmarkManagerClicked();
         break;
+    case BookmarkManagerState::HistoryView:
+        elm_toolbar_item_selected_set(
+            elm_toolbar_first_item_get(m_modulesToolbar),
+            EINA_TRUE);
+        prepareBookmarksContent();
+        closeBookmarkManagerClicked();
+        changeState(BookmarkManagerState::Default);
+        break;
     default:
         changeState(BookmarkManagerState::Default);
         break;
@@ -505,6 +517,10 @@ void BookmarkManagerUI::showContextMenu()
             }
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_SK3_CREATE_FOLDER"), nullptr,
                                      _cm_create_folder_clicked, this);
+            alignContextMenu(*window);
+        } else if (m_state == BookmarkManagerState::HistoryView) {
+            createContextMenu(*window);
+            elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_REMOVE"), nullptr, nullptr, nullptr);
             alignContextMenu(*window);
         }
     } else
@@ -585,11 +601,37 @@ void BookmarkManagerUI::_navigatorFolderClicked(void* data, Evas_Object*, void* 
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
 
+void BookmarkManagerUI::prepareBookmarksContent()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    elm_box_unpack_all(m_box);
+    elm_box_pack_end(m_box, m_genlist);
+    evas_object_hide(m_historyGenlist);
+    evas_object_show(m_genlist);
+}
+
+void BookmarkManagerUI::prepareHistoryContent()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto historyGenlist = getHistoryGenlistContent(m_box);
+    elm_box_unpack_all(m_box);
+
+    if (historyGenlist && *historyGenlist) {
+        m_historyGenlist = *historyGenlist;
+        elm_box_pack_end(m_box, m_historyGenlist);
+        evas_object_hide(m_genlist);
+        evas_object_show(m_historyGenlist);
+    }
+}
+
 void BookmarkManagerUI::_modules_bookmarks_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
-        //TODO: When History is properly shown, go back to Bookmarks
+        auto self = static_cast<BookmarkManagerUI*>(data);
+        self->changeState(BookmarkManagerState::Default);
+        self->prepareBookmarksContent();
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
@@ -598,10 +640,11 @@ void BookmarkManagerUI::_modules_history_clicked(void* data, Evas_Object*, void*
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
-        //This is temporary solution to enable a way to show history. This has some issues,
-        //like underline staying on history after going back.
-        BookmarkManagerUI *bookmarkManagerUI = static_cast<BookmarkManagerUI*>(data);
-        bookmarkManagerUI->showHistory();
+        auto self = static_cast<BookmarkManagerUI*>(data);
+        if (self->m_state != BookmarkManagerState::HistoryView) {
+            self->changeState(BookmarkManagerState::HistoryView);
+            self->prepareHistoryContent();
+        }
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
@@ -692,6 +735,21 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         evas_object_hide(m_navigatorToolbar);
         elm_genlist_reorder_mode_set(m_genlist, EINA_TRUE);
         break;
+    case BookmarkManagerState::HistoryView:
+        updateNoBookmarkText();
+        m_naviframe->setLeftButtonVisible(false);
+        m_naviframe->setRightButtonVisible(false);
+        m_naviframe->setPrevButtonVisible(true);
+        m_naviframe->setTitle(_("IDS_BR_MBODY_HISTORY"));
+        elm_object_signal_emit(m_content, "show_toolbars", "ui");
+        evas_object_hide(m_navigatorToolbar);
+        elm_object_part_content_unset(m_content, "navigator_toolbar");
+        elm_object_signal_emit(m_content, "hide_navigator_toolbar", "ui");
+        evas_object_show(m_modulesToolbar);
+        elm_genlist_reorder_mode_set(m_genlist, EINA_FALSE);
+        elm_box_unpack(m_box, m_select_all);
+        evas_object_hide(m_select_all);
+        break;
     case BookmarkManagerState::Default:
     default:
         updateNoBookmarkText();
@@ -703,6 +761,8 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         elm_object_signal_emit(m_content, "show_toolbars", "ui");
         evas_object_show(m_modulesToolbar);
         evas_object_show(m_navigatorToolbar);
+        elm_object_part_content_set(m_content, "navigator_toolbar", m_navigatorToolbar);
+        elm_object_signal_emit(m_content, "show_toolbars", "ui");
         elm_genlist_reorder_mode_set(m_genlist, EINA_FALSE);
         elm_box_unpack(m_box, m_select_all);
         evas_object_hide(m_select_all);
@@ -733,7 +793,7 @@ void BookmarkManagerUI::reoderBookmarkItems()
 
 void BookmarkManagerUI::updateNoBookmarkText()
 {
-    if (m_map_bookmark.size()) {
+    if (m_map_bookmark.size() || m_state == BookmarkManagerState::HistoryView) {
         evas_object_hide(m_empty_layout);
         elm_object_signal_emit(m_content, "hide_overlay", "ui");
     } else {

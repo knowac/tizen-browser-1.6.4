@@ -478,15 +478,15 @@ std::shared_ptr<HistoryItem> HistoryService::getHistoryItem(int * ids, int idNum
     history->setUrl(std::string(history_info.url ? history_info.url : ""));
     history->setTitle(std::string(history_info.title ? history_info.title : ""));
 
-    tools::BrowserImagePtr thumbnail = std::make_shared<tools::BrowserImage>(
-            history_info.thumbnail_width,
-            history_info.thumbnail_height,
-            history_info.thumbnail_length);
+    auto thumbnail = std::make_shared<tools::BrowserImage>(
+        history_info.thumbnail_width,
+        history_info.thumbnail_height,
+        history_info.thumbnail_length);
     thumbnail->setData((void*)history_info.thumbnail, false, tools::ImageType::ImageTypePNG);
-    tools::BrowserImagePtr favIcon = std::make_shared<tools::BrowserImage>(
-            history_info.favicon_width,
-            history_info.favicon_height,
-            history_info.favicon_length);
+    auto favIcon = std::make_shared<tools::BrowserImage>(
+        history_info.favicon_width,
+        history_info.favicon_height,
+        history_info.favicon_length);
     favIcon->setData((void*)history_info.favicon, false, tools::ImageType::ImageTypePNG);
     history->setThumbnail(thumbnail);
     history->setFavIcon(favIcon);

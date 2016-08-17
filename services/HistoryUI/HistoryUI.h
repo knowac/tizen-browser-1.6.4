@@ -28,18 +28,17 @@
 #include "AbstractService.h"
 #include "ServiceFactory.h"
 #include "service_macros.h"
+#include "NaviframeWrapper.h"
+
 
 namespace tizen_browser{
 namespace base_ui{
 
 class HistoryDaysListManager;
-typedef std::shared_ptr<HistoryDaysListManager> HistoryDaysListManagerPtr;
-#if !PROFILE_MOBILE
-class HistoryUIFocusManager;
-typedef std::unique_ptr<HistoryUIFocusManager> HistoryUIFocusManagerPtrUnique;
-#endif
 class HistoryDeleteManager;
-typedef std::shared_ptr<HistoryDeleteManager> HistoryDeleteManagerPtr;
+
+using HistoryDaysListManagerPtr = std::shared_ptr<HistoryDaysListManager>;
+using HistoryDeleteManagerPtr = std::shared_ptr<HistoryDeleteManager>;
 
 class BROWSER_EXPORT HistoryUI
     : public interfaces::AbstractContextMenu
@@ -58,7 +57,6 @@ public:
     void addHistoryItems(std::shared_ptr<services::HistoryItemVector>,
             HistoryPeriod period = HistoryPeriod::HISTORY_TODAY);
     void removeHistoryItem(const std::string& uri);
-    Evas_Object* createActionBar(Evas_Object* history_layout);
     void addItems();
 
     //AbstractContextMenu interface implementation
@@ -70,7 +68,9 @@ public:
     boost::signals2::signal<void (std::string url, std::string title)> signalHistoryItemClicked;
 private:
     void clearItems();
-    void createHistoryUILayout(Evas_Object* parent);
+    void createHistoryUILayout();
+    void createTopContent();
+    void createModulesToolbar();
 
     HistoryDeleteManagerPtr getHistoryDeleteManager() {return m_historyDeleteManager;}
 
@@ -79,7 +79,7 @@ private:
      *
      * @return key: domain, value: domain's history items
      */
-    std::map<std::string, services::HistoryItemVector>
+    services::HistoryItemVectorMap
     groupItemsByDomain(const services::HistoryItemVector& historyItems);
 
     static Evas_Object* _listActionBarContentGet(void *data, Evas_Object *obj, const char *part);
@@ -90,19 +90,14 @@ private:
     std::string m_edjFilePath;
     Evas_Object *m_parent;
     Evas_Object *m_main_layout;
-    Evas_Object *m_actionBar;
     Evas_Object *m_buttonClose;
     Evas_Object *m_buttonClear;
     Evas_Object *m_daysList;
     HistoryDaysListManagerPtr m_historyDaysListManager;
-#if !PROFILE_MOBILE
-    HistoryUIFocusManagerPtrUnique m_focusManager;
-#endif
     HistoryDeleteManagerPtr m_historyDeleteManager;
-
-};
-
-}
+    SharedNaviframeWrapper m_naviframe;
+    Evas_Object* m_modulesToolbar;
+};}
 }
 
 #endif // BOOKMARKSUI_H

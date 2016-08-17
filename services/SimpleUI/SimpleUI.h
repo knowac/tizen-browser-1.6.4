@@ -255,7 +255,7 @@ private:
     void closeTabUI();
     void switchToMobileMode();
     void switchToDesktopMode();
-    void showHistoryUI();
+    Evas_Object* showHistoryUI(Evas_Object* parent);
     void closeHistoryUI();
     void showSettings(unsigned);
     void closeSettingsUI();

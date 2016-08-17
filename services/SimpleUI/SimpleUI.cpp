@@ -371,7 +371,6 @@ void SimpleUI::connectUISignals()
     m_findOnPageUI->startFindingWord.connect(boost::bind(&SimpleUI::findWord, this, _1));
 
     M_ASSERT(m_bookmarkManagerUI.get());
-    m_bookmarkManagerUI->showHistory.connect(boost::bind(&SimpleUI::showHistoryUI, this));
     m_bookmarkManagerUI->closeBookmarkManagerClicked.connect(boost::bind(&SimpleUI::closeBookmarkManagerUI, this));
     m_bookmarkManagerUI->folderSelected.connect(boost::bind(&BookmarkFlowUI::setFolder, m_bookmarkFlowUI.get(), _1));
     m_bookmarkManagerUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
@@ -381,6 +380,7 @@ void SimpleUI::connectUISignals()
     m_bookmarkManagerUI->bookmarkItemDeleted.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
     m_bookmarkManagerUI->newFolderItemClicked.connect(boost::bind(&SimpleUI::onNewFolderClicked, this, _1));
     m_bookmarkManagerUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
+    m_bookmarkManagerUI->getHistoryGenlistContent.connect(boost::bind(&SimpleUI::showHistoryUI, this, _1));
 #if PROFILE_MOBILE
     m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
 #else
@@ -1451,20 +1451,21 @@ void SimpleUI::certPopupButtonClicked(PopupButtons button, std::shared_ptr<Popup
     }
 }
 
-void SimpleUI::showHistoryUI()
+Evas_Object* SimpleUI::showHistoryUI(Evas_Object* parent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_viewManager.pushViewToStack(m_historyUI.get());
-    m_historyUI->addHistoryItems(m_historyService->getHistoryToday(),
-            HistoryPeriod::HISTORY_TODAY);
-    m_historyUI->addHistoryItems(m_historyService->getHistoryYesterday(),
-            HistoryPeriod::HISTORY_YESTERDAY);
-    m_historyUI->addHistoryItems(m_historyService->getHistoryLastWeek(),
-            HistoryPeriod::HISTORY_LASTWEEK);
-    m_historyUI->addHistoryItems(m_historyService->getHistoryLastMonth(),
-            HistoryPeriod::HISTORY_LASTMONTH);
-    m_historyUI->addHistoryItems(m_historyService->getHistoryOlder(),
-            HistoryPeriod::HISTORY_OLDER);
+    auto ret = m_historyUI->createDaysList(parent);
+    m_historyUI->addHistoryItems(
+        m_historyService->getHistoryToday(), HistoryPeriod::HISTORY_TODAY);
+    m_historyUI->addHistoryItems(
+        m_historyService->getHistoryYesterday(), HistoryPeriod::HISTORY_YESTERDAY);
+    m_historyUI->addHistoryItems(
+        m_historyService->getHistoryLastWeek(), HistoryPeriod::HISTORY_LASTWEEK);
+    m_historyUI->addHistoryItems(
+        m_historyService->getHistoryLastMonth(), HistoryPeriod::HISTORY_LASTMONTH);
+    m_historyUI->addHistoryItems(
+        m_historyService->getHistoryOlder(), HistoryPeriod::HISTORY_OLDER);
+    return ret;
 }
 
 void SimpleUI::closeHistoryUI()

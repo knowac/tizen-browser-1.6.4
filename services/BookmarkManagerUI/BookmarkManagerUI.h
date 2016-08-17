@@ -39,14 +39,21 @@ enum class BookmarkManagerState {
     SelectFolder,
     Edit,
     Delete,
-    Reorder
+    Reorder,
+    HistoryView,
+    HistoryDeleteView
+};
+
+enum struct BookmarkManagerView {
+    Bookmarks,
+    History
 };
 
 class BROWSER_EXPORT BookmarkManagerUI
-        : public interfaces::AbstractContextMenu
-        , public tizen_browser::interfaces::AbstractUIComponent
-        , public tizen_browser::core::AbstractService
-        , public tizen_browser::interfaces::AbstractRotatable
+    : public interfaces::AbstractContextMenu
+    , public tizen_browser::interfaces::AbstractUIComponent
+    , public tizen_browser::core::AbstractService
+    , public tizen_browser::interfaces::AbstractRotatable
 {
 public:
     BookmarkManagerUI();
@@ -77,21 +84,22 @@ public:
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemOrderEdited;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemDeleted;
     boost::signals2::signal<void (int)> newFolderItemClicked;
+    boost::signals2::signal<Evas_Object* (Evas_Object*)> getHistoryGenlistContent;
 
 private:
-    typedef struct
+    using FolderData = struct
     {
         std::string name;
         int count;
         unsigned int folder_id;
         BookmarkManagerUI* bookmarkManagerUI;
-    } FolderData;
+    };
 
-    typedef struct
+    using BookmarkData = struct
     {
         services::SharedBookmarkItem bookmarkItem;
         BookmarkManagerUI* bookmarkManagerUI;
-    } BookmarkData;
+    };
 
     void createBookmarksLayout();
     void createTopContent();
@@ -107,6 +115,9 @@ private:
     void updateNoBookmarkText();
     void updateDeleteClick(int id);
     void updateDeleteTopContent();
+
+    void prepareHistoryContent();
+    void prepareBookmarksContent();
 
     static void _navigatorFolderClicked(void* data, Evas_Object* obj, void* event_info);
     static void _modules_bookmarks_clicked(void* data, Evas_Object* obj, void* event_info);
@@ -139,6 +150,7 @@ private:
     Evas_Object *m_genlist;
     Evas_Object *m_empty_layout;
     Evas_Object *m_select_all;
+    Evas_Object *m_historyGenlist;
 
     Elm_Genlist_Item_Class * m_bookmark_item_class;
 

@@ -74,7 +74,7 @@ protected:
     std::map<std::string, Evas_Object*> m_map_bottom_box;
 };
 
-typedef std::shared_ptr<NaviframeWrapper> SharedNaviframeWrapper;
+using SharedNaviframeWrapper = std::shared_ptr<NaviframeWrapper>;
 
 }
 }

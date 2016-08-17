@@ -90,14 +90,10 @@ void* getBlobPNG(int width, int height, void* image_data, unsigned long long* le
     return outputBuffer;
 }
 
-
-
 void setExpandHints(Evas_Object* toSet)
 {
-    evas_object_size_hint_weight_set(toSet, EVAS_HINT_EXPAND,
-    EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(toSet, EVAS_HINT_FILL,
-    EVAS_HINT_FILL);
+    evas_object_size_hint_weight_set(toSet, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(toSet, EVAS_HINT_FILL, EVAS_HINT_FILL);
 }
 
 bool pointInObject(Evas_Object* object, int px, int py)

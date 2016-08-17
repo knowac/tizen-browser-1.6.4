@@ -214,6 +214,13 @@ collections {
                 target: "navigator_toolbar";
             }
             program {
+                name: "hide_navigator_toolbar";
+                signal: "hide_navigator_toolbar";
+                source: "ui";
+                action: STATE_SET "hidden_modules_toolbar" 0.0;
+                target: "navigator_toolbar";
+            }
+            program {
                 name: "hide_toolbars";
                 signal: "hide_toolbars";
                 source: "ui";

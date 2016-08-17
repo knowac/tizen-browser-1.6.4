@@ -33,9 +33,7 @@ class HistoryDaysListManager
 public:
     virtual ~HistoryDaysListManager() {}
     virtual Evas_Object* createDaysList(Evas_Object* parentLayout) = 0;
-    virtual void addHistoryItems(
-            const std::map<std::string, services::HistoryItemVector>&,
-            HistoryPeriod period) = 0;
+    virtual void addHistoryItems(const std::shared_ptr<services::HistoryItemVector>& items, HistoryPeriod period) = 0;
     // clear everything including efl objects (result: empty list)
     virtual void clear() = 0;
     virtual void setFocusChain(Evas_Object* obj) = 0;
