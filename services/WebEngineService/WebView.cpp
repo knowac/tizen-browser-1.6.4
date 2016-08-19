@@ -1160,10 +1160,12 @@ void WebView::_show_context_menu_text_link(Ewk_Context_Menu *menu)
     //ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_COPY_LINK_DATA, _("IDS_BR_OPT_COPY_TO_CLIPBOARD"), true);             //TODO: missing translation
     /* Copy link address */
     ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_COPY_LINK_TO_CLIPBOARD, _("IDS_BR_OPT_COPY_LINK_URL"), true);  //TODO: missing translation
-    ///* Share Link */
+    /* Share Link */
     //ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_SHARE_LINK, "Share Link", true);                     //TODO: missing translation
     /* Save link */
     ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_DOWNLOAD_LINK_TO_DISK, _("IDS_BR_OPT_SAVE_LINK"), true);
+    /*Text Selection Mode */
+    ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_TEXT_SELECTION_MODE, _("IDS_BR_OPT_SELECT_TEXT"), true);
 }
 
 void WebView::_show_context_menu_email_address(Ewk_Context_Menu *menu)
@@ -1296,6 +1298,8 @@ void WebView::_show_context_menu_text_image_link(Ewk_Context_Menu *menu)
     ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_COPY_IMAGE_TO_CLIPBOARD, _("IDS_BR_OPT_COPY_IMAGE"), true);
     /* Downlad image */
     ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_DOWNLOAD_IMAGE_TO_DISK, _("IDS_BR_OPT_SAVE_IMAGE"), true);
+    /*Text Selection Mode */
+    ewk_context_menu_item_append_as_action(menu, EWK_CONTEXT_MENU_ITEM_TAG_TEXT_SELECTION_MODE, _("IDS_BR_OPT_SELECT_TEXT"), true);
 }
 
 void WebView::_show_context_menu_image_link(Ewk_Context_Menu *menu)
