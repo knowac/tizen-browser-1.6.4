@@ -58,10 +58,9 @@ QuickAccess::QuickAccess()
     , m_currPage(QuickAccess::QUICKACCESS_PAGE)
     , m_quickAccess_item_class(nullptr)
     , m_mostVisited_item_class(nullptr)
-    , m_detailPopup(this)
     , m_index(nullptr)
     , m_verticalScroller(nullptr)
-    , m_quickAccessTileclass(nullptr)
+    , m_quickAccess_tile_class(nullptr)
     , m_landscapeView(isOrientationLandscape())
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -78,7 +77,7 @@ QuickAccess::~QuickAccess()
     clearMostVisitedGengrid();
     elm_gengrid_item_class_free(m_quickAccess_item_class);
     elm_gengrid_item_class_free(m_mostVisited_item_class);
-    elm_gengrid_item_class_free(m_quickAccessTileclass);
+    elm_gengrid_item_class_free(m_quickAccess_tile_class);
     eina_list_free(m_parentFocusChain);
 }
 
@@ -117,13 +116,13 @@ void QuickAccess::createItemClasses()
         m_mostVisited_item_class->func.state_get = nullptr;
         m_mostVisited_item_class->func.del = _grid_mostVisited_del;
     }
-    if (!m_quickAccessTileclass) {
-        m_quickAccessTileclass = elm_gengrid_item_class_new();
-        m_quickAccessTileclass->item_style = "bookmark_manager";
-        m_quickAccessTileclass->func.text_get = nullptr;
-        m_quickAccessTileclass->func.content_get = nullptr;
-        m_quickAccessTileclass->func.state_get = nullptr;
-        m_quickAccessTileclass->func.del = nullptr;
+    if (!m_quickAccess_tile_class) {
+        m_quickAccess_tile_class = elm_gengrid_item_class_new();
+        m_quickAccess_tile_class->item_style = "bookmark_manager";
+        m_quickAccess_tile_class->func.text_get = nullptr;
+        m_quickAccess_tile_class->func.content_get = nullptr;
+        m_quickAccess_tile_class->func.state_get = nullptr;
+        m_quickAccess_tile_class->func.del = nullptr;
     }
 }
 
@@ -334,13 +333,12 @@ void QuickAccess::setMostVisitedItems(std::shared_ptr<services::HistoryItemVecto
 void QuickAccess::addQuickAccessItem(std::shared_ptr<tizen_browser::services::BookmarkItem> bi)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    //TODO: It should be guaranted that items added here are not folders.
     if (bi->is_folder())
         return;
     BookmarkItemData *itemData = new BookmarkItemData();        // deleted in _grid_bookmark_del
     itemData->item = bi;
     itemData->quickAccess = this;
-    elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccess_item_class, itemData, _thumbBookmarkClicked, itemData);
+    elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccess_item_class, itemData, _thumbQuickAccessClicked, itemData);
 }
 
 void QuickAccess::clearMostVisitedGengrid()
@@ -363,7 +361,7 @@ void QuickAccess::setQuickAccessItems(std::vector<std::shared_ptr<tizen_browser:
 
 void QuickAccess::addToQuickAccessTile()
 {
-    elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccessTileclass, this, _addToQuickAccess_clicked, this);
+    elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccess_tile_class, this, _addToQuickAccess_clicked, this);
 }
 
 void QuickAccess::setIndexPage(const uintptr_t page) const
@@ -391,8 +389,8 @@ void QuickAccess::orientationChanged()
 
     m_landscapeView = isOrientationLandscape();
     createBox(m_horizontalScroller);
-    setQuickAccessItems(m_QuickAccessItems);
-    setMostVisitedItems(m_mostVisitedItems);
+    getQuickAccessItems();
+    getMostVisitedItems();
 }
 
 void QuickAccess::_quickAccess_tile_realized(void* data, Evas_Object*, void* event_info)
@@ -494,7 +492,7 @@ void QuickAccess::_grid_mostVisited_del(void *data, Evas_Object *)
     }
 }
 
-void QuickAccess::_thumbBookmarkClicked(void * data, Evas_Object * , void *)
+void QuickAccess::_thumbQuickAccessClicked(void * data, Evas_Object * , void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
@@ -564,7 +562,7 @@ void QuickAccess::showUI()
 
     evas_object_show(m_layout);
     getMostVisitedItems();
-    getBookmarksItems();
+    getQuickAccessItems();
     showScrollerPage(m_currPage);
 }
 
@@ -574,11 +572,6 @@ void QuickAccess::hideUI()
     evas_object_hide(m_layout);
     clearMostVisitedGengrid();
     clearQuickAccessGengrid();
-}
-
-void QuickAccess::openDetailPopup(std::shared_ptr<services::HistoryItem> currItem, std::shared_ptr<services::HistoryItemVector> prevItems)
-{
-    m_detailPopup.show(m_layout, m_parent, currItem, prevItems);
 }
 
 void QuickAccess::showNoMostVisitedLabel()
@@ -610,27 +603,15 @@ void QuickAccess::setDesktopMode(bool mode)
     m_desktopMode = mode;
 }
 
-DetailPopup& QuickAccess::getDetailPopup()
-{
-    return m_detailPopup;
-}
-
 bool QuickAccess::canBeBacked(int tabCount)
 {
-    if (m_detailPopup.isVisible())
-        return true;
-    else
-        return (tabCount != 0);
+    return (tabCount != 0);
 }
 
 void QuickAccess::backButtonClicked()
 {
-    if (m_detailPopup.isVisible()) {
-        m_detailPopup.hide();
-    } else {
-        hideUI();
-        switchViewToWebPage();
-    }
+    hideUI();
+    switchViewToWebPage();
 }
 
 bool QuickAccess::isMostVisitedActive() const

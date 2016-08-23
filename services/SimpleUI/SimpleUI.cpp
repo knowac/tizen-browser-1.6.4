@@ -41,7 +41,6 @@
 #include "HistoryItem.h"
 #include "boost/date_time/gregorian/gregorian.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
-#include "DetailPopup.h"
 #include "UrlHistoryList/UrlHistoryList.h"
 #include "NotificationPopup.h"
 #include "ContentPopup_mob.h"
@@ -330,13 +329,9 @@ void SimpleUI::connectUISignals()
     m_webPageUI->requestCurrentPageForWebPageUI.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
 
     M_ASSERT(m_quickAccess.get());
-    m_quickAccess->getDetailPopup().openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2));
     m_quickAccess->openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2));
-    m_quickAccess->mostVisitedTileClicked.connect(boost::bind(&SimpleUI::onMostVisitedTileClicked, this, _1, _2));
     m_quickAccess->getMostVisitedItems.connect(boost::bind(&SimpleUI::onMostVisitedClicked, this));
-    m_quickAccess->getBookmarksItems.connect(boost::bind(&SimpleUI::onBookmarkButtonClicked, this));
-    m_quickAccess->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
-        m_favoriteService->getRoot(), BookmarkManagerState::Default));
+    m_quickAccess->getQuickAccessItems.connect(boost::bind(&SimpleUI::onQuickAccessClicked, this));
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
 #if PROFILE_MOBILE
     m_quickAccess->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
@@ -748,12 +743,6 @@ void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool 
     }
 }
 
-void SimpleUI::onMostVisitedTileClicked(std::shared_ptr< services::HistoryItem > historyItem, int itemsNumber)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_quickAccess->openDetailPopup(historyItem, m_historyService->getHistoryItemsByURL(historyItem->getUrl(), itemsNumber));
-}
-
 void SimpleUI::onClearHistoryAllClicked()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -774,7 +763,7 @@ void SimpleUI::onMostVisitedClicked()
    m_quickAccess->setMostVisitedItems(getMostVisitedItems());
 }
 
-void SimpleUI::onBookmarkButtonClicked()
+void SimpleUI::onQuickAccessClicked()
 {
    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
    //TODO: Elements added here shouldn't be bookmark items, but quick access items.

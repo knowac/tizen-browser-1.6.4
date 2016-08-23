@@ -27,8 +27,8 @@
 #include "ServiceFactory.h"
 #include "service_macros.h"
 #include "services/HistoryService/HistoryItem.h"
+#include "services/HistoryService/HistoryItemTypedef.h"
 #include "BookmarkItem.h"
-#include "DetailPopup.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -47,10 +47,8 @@ public:
     void hideUI();
     void showUI();
     virtual std::string getName();
-    void openDetailPopup(std::shared_ptr<services::HistoryItem> currItem, std::shared_ptr<services::HistoryItemVector> prevItems);
     bool isDesktopMode() const;
     void setDesktopMode(bool mode);
-    DetailPopup & getDetailPopup();
     bool canBeBacked(int tabCount);
     void backButtonClicked();
     inline bool isMostVisitedActive() const;
@@ -58,11 +56,9 @@ public:
     void showMostVisited();
     void showQuickAccess();
 
-    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, int)> mostVisitedTileClicked;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, bool)> openURL;
     boost::signals2::signal<void ()> getMostVisitedItems;
-    boost::signals2::signal<void ()> getBookmarksItems;
-    boost::signals2::signal<void ()> bookmarkManagerClicked;
+    boost::signals2::signal<void ()> getQuickAccessItems;
     boost::signals2::signal<void ()> addQuickAccessClicked;
     boost::signals2::signal<void ()> switchViewToWebPage;
 
@@ -93,7 +89,7 @@ private:
     static char* _grid_mostVisited_text_get(void *data, Evas_Object *obj, const char *part);
     static Evas_Object * _grid_mostVisited_content_get(void *data, Evas_Object *obj, const char *part);
     static void _grid_mostVisited_del(void *data, Evas_Object *obj);
-    static void _thumbBookmarkClicked(void * data, Evas_Object * obj, void * event_info);
+    static void _thumbQuickAccessClicked(void * data, Evas_Object * obj, void * event_info);
     static void _thumbMostVisitedClicked(void * data, Evas_Object * obj, void * event_info);
     void setEmptyView(bool empty);
     void showNoMostVisitedLabel();
@@ -119,7 +115,6 @@ private:
     int m_currPage;
     Elm_Gengrid_Item_Class * m_quickAccess_item_class;
     Elm_Gengrid_Item_Class * m_mostVisited_item_class;
-    DetailPopup m_detailPopup;
     std::shared_ptr<services::HistoryItemVector> m_mostVisitedItems;
     bool m_gengridSetup;
     std::string edjFilePath;
@@ -127,7 +122,7 @@ private:
 
     Evas_Object* m_index;
     Evas_Object* m_verticalScroller;
-    Elm_Gengrid_Item_Class * m_quickAccessTileclass;
+    Elm_Gengrid_Item_Class * m_quickAccess_tile_class;
     std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > m_QuickAccessItems;
     bool m_landscapeView;
     static const int MOST_VISITED_PAGE = 1;
