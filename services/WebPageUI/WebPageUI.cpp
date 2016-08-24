@@ -26,6 +26,7 @@
 #include "WebPageUIStatesManager.h"
 #include <shortcut_manager.h>
 #include <string>
+#include <app_control.h>
 
 namespace tizen_browser {
 namespace base_ui {
@@ -410,6 +411,9 @@ void WebPageUI::_cm_share_clicked(void* data, Evas_Object*, void* )
     if (data != nullptr) {
         WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
+
+    std::string uri = webPageUI->getURI();
+    webPageUI->launch_share(uri.c_str());
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
@@ -821,6 +825,38 @@ Eina_Bool WebPageUI::_hideDelay(void *data)
     auto self = static_cast<WebPageUI*>(data);
     self->m_urlHistoryList->hideWidget();
     return ECORE_CALLBACK_CANCEL;
+}
+
+void WebPageUI:: launch_share(const char *uri)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    app_control_h app_control = NULL;
+    if (app_control_create(&app_control) < 0) {
+        BROWSER_LOGD("Fail to create app_control handle");
+        return ;
+    }
+
+    if (app_control_set_operation(app_control, APP_CONTROL_OPERATION_SHARE_TEXT) < 0) {
+        BROWSER_LOGD("Fail to set app_control operation");
+        app_control_destroy(app_control);
+        return ;
+    }
+
+    if (app_control_add_extra_data(app_control, APP_CONTROL_DATA_TEXT, uri) < 0) {
+        BROWSER_LOGD("Fail to set extra data : APP_CONTROL_DATA_TEXT");
+        app_control_destroy(app_control);
+        return ;
+    }
+
+    if (app_control_send_launch_request(app_control, NULL, NULL) < 0) {
+        BROWSER_LOGD("Fail to launch app_control operation");
+        app_control_destroy(app_control);
+        return ;
+    }
+
+    app_control_destroy(app_control);
+    return ;
 }
 
 }   // namespace tizen_browser
