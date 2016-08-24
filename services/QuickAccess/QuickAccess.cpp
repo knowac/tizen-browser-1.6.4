@@ -102,7 +102,7 @@ void QuickAccess::createItemClasses()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!m_quickAccess_item_class) {
         m_quickAccess_item_class = elm_gengrid_item_class_new();
-        m_quickAccess_item_class->item_style = "type2";
+        m_quickAccess_item_class->item_style = "quickAccess";
         m_quickAccess_item_class->func.text_get = _grid_bookmark_text_get;
         m_quickAccess_item_class->func.content_get =  _grid_bookmark_content_get;
         m_quickAccess_item_class->func.state_get = nullptr;
@@ -110,7 +110,7 @@ void QuickAccess::createItemClasses()
     }
     if (!m_mostVisited_item_class) {
         m_mostVisited_item_class = elm_gengrid_item_class_new();
-        m_mostVisited_item_class->item_style = "type2";
+        m_mostVisited_item_class->item_style = "mostVisited";
         m_mostVisited_item_class->func.text_get = _grid_mostVisited_text_get;
         m_mostVisited_item_class->func.content_get = _grid_mostVisited_content_get;
         m_mostVisited_item_class->func.state_get = nullptr;
@@ -118,7 +118,7 @@ void QuickAccess::createItemClasses()
     }
     if (!m_quickAccess_tile_class) {
         m_quickAccess_tile_class = elm_gengrid_item_class_new();
-        m_quickAccess_tile_class->item_style = "bookmark_manager";
+        m_quickAccess_tile_class->item_style = "quickAccessAdd";
         m_quickAccess_tile_class->func.text_get = nullptr;
         m_quickAccess_tile_class->func.content_get = nullptr;
         m_quickAccess_tile_class->func.state_get = nullptr;
@@ -443,10 +443,31 @@ Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object*, 
 
         if (!strcmp(part, "elm.swallow.icon")) {
             if (itemData->item->getThumbnail()) {
-                    Evas_Object * thumb = itemData->item->getFavicon()->getEvasImage(itemData->quickAccess->m_parent);
-                    return thumb;
-            } else
-                return nullptr;
+                // Favicon
+                Evas_Object * thumb = itemData->item->getFavicon()->getEvasImage(itemData->quickAccess->m_parent);
+                elm_image_resizable_set(thumb, EINA_TRUE, EINA_TRUE);
+                evas_object_size_hint_min_set(thumb, ELM_SCALE_SIZE(114), ELM_SCALE_SIZE(114));
+                evas_object_size_hint_max_set(thumb, ELM_SCALE_SIZE(114), ELM_SCALE_SIZE(114));
+                return thumb;
+            } else {
+                // Default color
+                Evas_Object *textblock = evas_object_textblock_add(itemData->quickAccess->m_parent);
+                Evas_Textblock_Style *st = evas_textblock_style_new();
+                evas_textblock_style_set(st, "DEFAULT='font=Sans font_size=45 color=#555 align=center valign=center'");
+                evas_object_textblock_style_set(textblock, st);
+                evas_object_textblock_valign_set(textblock, 0.5);
+                evas_textblock_style_free(st);
+                const char *fName = itemData->item->getTitle().substr(0, 1).c_str();
+                evas_object_textblock_text_markup_set(textblock, fName);
+
+
+                Evas_Object *button = elm_button_add(itemData->quickAccess->m_parent);
+                evas_object_color_set(button, 190, 190, 190, 255);
+                elm_object_content_set(button, textblock);
+
+                return button;
+
+            }
         }
     }
     return nullptr;

@@ -27,260 +27,6 @@
 
 #define DEVELOPMENT 1
 
-# define SMALL_TILE \
-    data.item: "texts" "page_title page_url";               \
-    data.item: "contents" "elm.thumbnail";      \
-    parts {     \
-        part { name: "bg";      \
-            type: RECT;     \
-            scale: 1;       \
-            mouse_events: 0;        \
-            description { state: "default" 0.0;     \
-                visible: 1;     \
-                color: 231 231 231 255;     \
-                align: 0.5 0.0;     \
-                rel1.relative: 0.0  0.0;     \
-                rel2.relative: 1.0  1.0;     \
-                min: SMALL_TILE_WIDTH SMALL_TILE_HEIGHT;   \
-                max: SMALL_TILE_WIDTH SMALL_TILE_HEIGHT;      \
-            }       \
-            description { state: "landscape" 0.0;   \
-                inherit: "default" 0.0;         \
-                min: SMALL_TILE_WIDTH_LANDSCAPE SMALL_TILE_HEIGHT_LANDSCAPE;    \
-                max: SMALL_TILE_WIDTH_LANDSCAPE SMALL_TILE_HEIGHT_LANDSCAPE;    \
-            }   \
-        }       \
-                \
-        part { name: "elm.thumbnail";       \
-            type: SWALLOW;      \
-            scale: 1;       \
-            description { state: "default" 0.0;     \
-                fixed: 1 0;     \
-                align: 0.0 0.0;     \
-                min: SMALL_TILE_WIDTH 114;   \
-                max: SMALL_TILE_WIDTH 114;      \
-                rel1 {      \
-                    relative: 0.0  0.0; to: "bg";       \
-                }       \
-                rel2 {      \
-                    relative: 1.0  1.0; to: "bg";       \
-                }       \
-            }       \
-            description { state: "selected";        \
-                inherit: "default" 0.0;     \
-            }       \
-            description { state: "landscape" 0.0;   \
-                inherit: "default" 0.0;         \
-                min: SMALL_TILE_WIDTH_LANDSCAPE 114;    \
-                max: SMALL_TILE_WIDTH_LANDSCAPE 114;    \
-            }   \
-        }       \
-                \
-        part { name: "border_top";      \
-            type: RECT;     \
-            scale: 1;       \
-            description { state: "default" 0.0;     \
-                color_class: focusBgColor;      \
-                min: 0 6;       \
-                max: -1 6;      \
-                align: 0 0;     \
-                rel1 {      \
-                    to: "elm.thumbnail";        \
-                    relative: 0.0 0.0;      \
-                }       \
-                rel2 {      \
-                    to: "elm.thumbnail";        \
-                    relative: 1.0  1.0;     \
-                }       \
-                visible: 0;     \
-            }       \
-            description { state: "selected";        \
-                inherit: "default" 0.0;     \
-                visible: 1;     \
-            }       \
-        }       \
-                \
-        part { name: "border_left";     \
-            type: RECT;     \
-            scale: 1;       \
-            description { state: "default" 0.0;     \
-                color_class: focusBgColor;      \
-                min: 6 0;       \
-                max: 6 -1;      \
-                align: 0 0;     \
-                rel1 {      \
-                    to: "elm.thumbnail";        \
-                    relative: 0.0 0.0;      \
-                }       \
-                rel2 {      \
-                    to: "elm.thumbnail";        \
-                    relative: 1.0  1.0;     \
-                }       \
-                visible: 0;     \
-            }       \
-            description { state: "selected";        \
-                inherit: "default" 0.0;     \
-                visible: 1;     \
-            }       \
-        }       \
-                \
-        part { name: "border_right";        \
-            type: RECT;     \
-            scale: 1;       \
-            description { state: "default" 0.0;     \
-                color_class: focusBgColor;      \
-                min: 6 0;       \
-                max: 6 -1;      \
-                align: 1 0;     \
-                rel1 {      \
-                    to: "elm.thumbnail";        \
-                    relative: 0.0 0.0;      \
-                }       \
-                rel2 {      \
-                    to: "elm.thumbnail";        \
-                    relative: 1.0  1.0;     \
-                }       \
-                visible: 0;     \
-            }       \
-            description { state: "selected";        \
-                inherit: "default" 0.0;     \
-                visible: 1;     \
-            }       \
-        }       \
-                \
-        part { name: "lb_bg";       \
-            type: RECT;     \
-            scale: 1;       \
-            description { state: "default" 0.0;     \
-                min: SMALL_TILE_WIDTH TILE_LABEL_BG_HEIGHT;      \
-                max: SMALL_TILE_WIDTH TILE_LABEL_BG_HEIGHT;      \
-                align: 0.0 0.0;     \
-                color_class: "lbBgColor";   \
-                visible: 1;     \
-                rel1 {      \
-                    to: "elm.thumbnail";       \
-                    relative: 0.0  1.0;     \
-                }               \
-                rel2 {          \
-                    to: "bg";   \
-                    relative: 1.0  1.0;     \
-                }       \
-            }       \
-            description { state: "selected" 0.0;        \
-                inherit: "default" 0.0;                 \
-                color_class: "focusBgColor";            \
-            }       \
-            description { state: "landscape" 0.0;   \
-                inherit: "default" 0.0;         \
-                min: SMALL_TILE_WIDTH_LANDSCAPE TILE_LABEL_BG_HEIGHT;   \
-                max: SMALL_TILE_WIDTH_LANDSCAPE TILE_LABEL_BG_HEIGHT;   \
-            }   \
-            description { state: "selected_landscape" 0.0;              \
-                inherit: "landscape" 0.0;                               \
-                color_class: "focusBgColor";                            \
-            }                                                           \
-        }       \
-                \
-        ADD_SPACER_OVER("title_spacer", "lb_bg", 36, 27) \
-                \
-        part { name: "page_title";      \
-            type: TEXT;     \
-            scale: 1;       \
-            description { state: "default" 0.0;     \
-                min: 138 32;        \
-                max: 138 32;        \
-                align: 0.0 0.0;     \
-                color: 80 80 80 255;     \
-                rel1 {      \
-                    to: "title_spacer";        \
-                    relative: 1.0 1.0;      \
-                }       \
-                rel2 {      \
-                    to: "lb_bg";        \
-                    relative: 1.0  1.0;     \
-                }       \
-                text {      \
-                    text: "Web page title";     \
-                    font: "Sans";       \
-                    size: 28;       \
-                    align: 0 0;       \
-                }       \
-            }       \
-        }       \
-                \
-        part { name: "over";        \
-            type: RECT;     \
-            scale: 1;       \
-            mouse_events: 1;        \
-            repeat_events: 1;       \
-            description { state: "default" 0.0;     \
-                color: 0 0 0 0;     \
-                rel1.to: "bg";      \
-                rel2.to: "lb_bg";       \
-            }       \
-        }       \
-    }       \
-                \
-    programs {      \
-        program { name: "mouse_in";                                     \
-            signal: "mouse,in";                                         \
-            source: "over";                                             \
-            script {                                                    \
-                new cur_state_helper[31];                               \
-                new Float:index;                                        \
-                get_state(PART:"lb_bg", cur_state_helper, 30, index);   \
-                if (!strcmp(cur_state_helper,"default")) {              \
-                    set_state(PART:"lb_bg", "selected", 0.0);           \
-                } else {                                                \
-                    set_state(PART:"lb_bg", "selected_landscape", 0.0); \
-            }                                                           \
-                set_state(PART:"border_top", "selected", 0.0);          \
-                set_state(PART:"border_left", "selected", 0.0);         \
-                set_state(PART:"border_right", "selected", 0.0);        \
-            }                                                           \
-        }                                                               \
-        program { name: "mouse_out";                                    \
-            signal: "mouse,out";                                        \
-            source: "over";                                             \
-            script {                                                    \
-                new cur_state_helper[31];                               \
-                new Float:index;                                        \
-                get_state(PART:"lb_bg", cur_state_helper, 30, index);   \
-                if(!strcmp(cur_state_helper,"selected")){               \
-                    set_state(PART:"lb_bg", "default", 0.0);            \
-                } else {                                                \
-                    set_state(PART:"lb_bg", "landscape", 0.0);          \
-                }                                                       \
-                set_state(PART:"border_top", "default", 0.0);           \
-                set_state(PART:"border_left", "default", 0.0);          \
-                set_state(PART:"border_right", "default", 0.0);         \
-            }                                                           \
-        }                                                               \
-        program {       \
-            name: "mouse_click";        \
-            signal: "mouse,clicked,1";      \
-            source: "over";     \
-            script {        \
-                emit("elm,action,click", "");       \
-            }       \
-        }       \
-        program { name: "set_landscape";            \
-            signal: "set,landscape";                \
-            source: "ui";                           \
-            action: STATE_SET "landscape" 0.0;      \
-            target: "bg";                           \
-            target: "elm.thumbnail";                \
-            target: "lb_bg";                        \
-        }                                           \
-        program { name: "set_portrait";             \
-            signal: "set,portrait";                 \
-            source: "ui";                           \
-            action: STATE_SET "default" 0.0;        \
-            target: "bg";                           \
-            target: "elm.thumbnail";                \
-            target: "lb_bg";                        \
-        }                                           \
-    }
 
 collections { base_scale: 2.6;
 
@@ -355,8 +101,8 @@ group {
                 color: 0 0 0 0;
                 state: "default" 0.0;
                 align: 0.0 0.0;
-                min: LAYOUT_WIDTH 116;
-                max: -1 116;
+                min: LAYOUT_WIDTH 80;
+                max: -1 80;
                 rel1.relative: 0 0;
                 rel2.relative: 1 1;
             }
@@ -369,7 +115,7 @@ group {
             description {
                 state: "default" 0.0;
                 fixed: 1 1;
-                color: 51 51 51 255;
+                color: 0 180 220 255;
                 rel1 {
                     to: "screen_title_area";  //TODO: ditto
                     relative: 0 0;
@@ -413,7 +159,7 @@ group {
             description {
                 color: 244 244 244 0;
                 state: "default" 0.0;
-                align: 0.0 1.0;
+                align: 0.5 1.0;
                 min: LAYOUT_WIDTH 132;
                 max: LAYOUT_WIDTH 132;
                 rel1 {
@@ -424,6 +170,11 @@ group {
                     to: "view";
                     relative: 1 1;
                 }
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 200 68;
+                max: 200 68;
             }
         }
 
@@ -448,8 +199,12 @@ group {
                     relative: 1 1;
                 }
             }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 200 68;
+                max: 200 68;
+            }
         }
-
     }
 }
 
@@ -567,149 +322,68 @@ group { name: "page_layout";
     }
 }
 
-group { name: "elm/button/base/small_tile";
-    SMALL_TILE
-}
-
-group { name: "elm/gengrid/item/grid_item/default";
-    SMALL_TILE
-}
-
-group { name: "elm/gengrid/item/bookmark_manager/default";
-    images {
-        image: "internet_ic_add.png" COMP;
-    }
+group {
+    name: "elm/gengrid/item/quickAccess/default";
+    data.item: "texts" "elm.text";
+    data.item: "contents" "elm.swallow.icon";
     parts {
         part { name: "bg";
             type: RECT;
             scale: 1;
+            mouse_events: 0;
             description { state: "default" 0.0;
-                min: SMALL_TILE_WIDTH SMALL_TILE_HEIGHT;
-                max: SMALL_TILE_WIDTH SMALL_TILE_HEIGHT;
-                visible: 1;
-                color: 180 180 240 255;
+                visible: 0;
                 align: 0.5 0.0;
-                rel1 {
-                    relative: 0.0  0.0;
-                }
-                rel2 {
-                    relative: 1.0  1.0;
-                }
+                rel1.relative: 0.0  0.0;
+                rel2.relative: 1.0  1.0;
+                min: 138 196;
+                max: 138 196;
             }
             description { state: "landscape" 0.0;
                 inherit: "default" 0.0;
-                min: SMALL_TILE_WIDTH_LANDSCAPE SMALL_TILE_HEIGHT_LANDSCAPE;
-                max: SMALL_TILE_WIDTH_LANDSCAPE SMALL_TILE_HEIGHT_LANDSCAPE;
+                min: 138 196;
+                max: 138 196;
             }
         }
 
-        part {
-            name: "img";
-            type: IMAGE;
-            scale: 1;
-            mouse_events: 1;
-            description {
-                min: 111 111;
-                max: 111 111;
-                state: "default" 0.0;
-                visible: 1;
-                align: 0.5 0.5;
-                image.normal: "internet_ic_add.png";
-                rel1 {
-                    to: "bg";
-                    relative: 0.0  0.0;
-                }
-                rel2 {
-                    to: "bg";
-                    relative: 1.0  1.0;
-                }
-            }
-        }
-
-        part { name: "border_top";
-            type: RECT;
+        part { name: "elm.swallow.icon";
+            type: SWALLOW;
             scale: 1;
             description { state: "default" 0.0;
-                color_class: focusBgColor;
-                min: 0 6;
-                max: -1 6;
-                align: 0 0;
+                fixed: 1 0;
+                align: 0.5 0.1;
+                min: 114 114;
+                max: 114 114;
                 rel1 {
-                    to: "bg";
-                    relative: 0.0 0.0;
+                    relative: 0.0  0.0; to: "bg";
                 }
                 rel2 {
-                    to: "bg";
-                    relative: 1.0  1.0;
+                    relative: 1.0  1.0; to: "bg";
                 }
-                visible: 0;
             }
             description { state: "selected";
                 inherit: "default" 0.0;
-                visible: 1;
             }
-        }
-
-        part { name: "border_left";
-            type: RECT;
-            scale: 1;
-            description { state: "default" 0.0;
-                color_class: focusBgColor;
-                min: 6 0;
-                max: 6 -1;
-                align: 0 0;
-                rel1 {
-                    to: "bg";
-                    relative: 0.0 0.0;
-                }
-                rel2 {
-                    to: "bg";
-                    relative: 1.0  1.0;
-                }
-                visible: 0;
-            }
-            description { state: "selected";
+            description { state: "landscape" 0.0;
                 inherit: "default" 0.0;
-                visible: 1;
+                min: 114 114;
+                max: 114 114;
             }
         }
 
-        part { name: "border_right";
-            type: RECT;
-            scale: 1;
-            description { state: "default" 0.0;
-                color_class: focusBgColor;
-                min: 6 0;
-                max: 6 -1;
-                align: 1 0;
-                rel1 {
-                    to: "bg";
-                    relative: 0.0 0.0;
-                }
-                rel2 {
-                    to: "bg";
-                    relative: 1.0  1.0;
-                }
-                visible: 0;
-            }
-            description { state: "selected";
-                inherit: "default" 0.0;
-                visible: 1;
-            }
-        }
+        ADD_SPACER_BELOW("title_spacer", "elm.swallow.icon", 0, 8)
 
-        part { name: "border_bottom";
+        part { name: "text_bg";
             type: RECT;
             scale: 1;
             description { state: "default" 0.0;
-                min: 0 6;
-                max: -1 6;
-                align: 0.0 1.0;
-                color_class: focusBgColor;
+                min: 114 64;
+                max: 114 64;
+                align: 0.0 0.0;
                 visible: 0;
                 rel1 {
-                    to: "bg";
-                    relative: 0.0  0.0;
+                    to: "title_spacer";
+                    relative: 0.0 1.0;
                 }
                 rel2 {
                     to: "bg";
@@ -718,90 +392,287 @@ group { name: "elm/gengrid/item/bookmark_manager/default";
             }
             description { state: "selected" 0.0;
                 inherit: "default" 0.0;
-                visible: 1;
+                color_class: "focusBgColor";
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 114 64;
+                max: 114 64;
+            }
+            description { state: "selected_landscape" 0.0;
+                inherit: "landscape" 0.0;
+                color_class: "focusBgColor";
             }
         }
 
-        rect { name: "bottom_spacer";
+        part { name: "elm.text";
+            type: TEXT;
             scale: 1;
-            description {
-                visible: DEVELOPMENT;
-                min: 0 72;
-                max: 0 72;
-                align: 1.0 1.0;
+            description { state: "default" 0.0;
+                min: 114 64;
+                max: 114 64;
+                align: 0.5 0.0;
+                color: 80 80 80 255;
                 rel1 {
-                    to: "bg";
-                    relative: 0.0  0.0;
+                    to: "text_bg";
+                    relative: 0.0 0.0;
+                }
+                rel2 {
+                    to: "text_bg";
+                    relative: 1.0  1.0;
+                }
+                text {
+                    font: "Sans";
+                    size: 26;
+                    align: 0.5 0;
+                }
+            }
+        }
+    }
+    programs {}
+}
+
+group {
+    name: "elm/gengrid/item/quickAccessAdd/default";
+    images {
+        image: "internet_ic_add.png" COMP;
+    }
+    parts {
+        part { name: "bg";
+            type: RECT;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                visible: 0;
+                align: 0.5 0.0;
+                rel1.relative: 0.0  0.0;
+                rel2.relative: 1.0  1.0;
+                min: 138 196;
+                max: 138 196;
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 138 196;
+                max: 138 196;
+            }
+        }
+
+        part { name: "img_bg";
+            type: RECT;
+            scale: 1;
+            description { state: "default" 0.0;
+                min: 114 114;
+                max: 114 114;
+                align: 0.0 0.0;
+                color: 160 200 240 255;
+                visible: 1;
+                rel1 {
+                    relative: 0.0 0.0; to: "bg";
+                }
+                rel2 {
+                    relative: 1.0  1.0; to: "bg";
+                }
+            }
+
+        part { name: "img";
+            type: IMAGE;
+            scale: 1;
+            mouse_events: 1;
+            description { state: "default" 0.0;
+                fixed: 1 0;
+                align: 0.5 0.1;
+                min: 114 114;
+                max: 114 114;
+                image.normal: "internet_ic_add.png";
+                rel1 {
+                    relative: 0.0  0.0; to: "img_bg";
+                }
+                rel2 {
+                    relative: 1.0  1.0; to: "img_bg";
+                }
+            }
+            description { state: "selected";
+                inherit: "default" 0.0;
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 114 114;
+                max: 114 114;
+            }
+        }
+
+        ADD_SPACER_BELOW("title_spacer", "img", 0, 8)
+
+        part { name: "text_bg";
+            type: RECT;
+            scale: 1;
+            description { state: "default" 0.0;
+                min: 114 64;
+                max: 114 64;
+                align: 0.0 0.0;
+                visible: 0;
+                rel1 {
+                    to: "title_spacer";
+                    relative: 0.0 1.0;
                 }
                 rel2 {
                     to: "bg";
                     relative: 1.0  1.0;
                 }
             }
+            description { state: "selected" 0.0;
+                inherit: "default" 0.0;
+                color_class: "focusBgColor";
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 114 64;
+                max: 114 64;
+            }
+            description { state: "selected_landscape" 0.0;
+                inherit: "landscape" 0.0;
+                color_class: "focusBgColor";
+            }
         }
 
-        part { name: "label";
+        part { name: "elm.text";
             type: TEXT;
             scale: 1;
             description { state: "default" 0.0;
-                min: 199 34;
-                max: 199 34;
-                align: 0.5 0.5;
-                color:  51 51 51 255;
+                min: 114 64;
+                max: 114 64;
+                align: 0.0 0.0;
+                color: 80 80 80 255;
                 rel1 {
-                    to: "bottom_spacer";
-                    relative: 0.0 1.0;
+                    to: "text_bg";
+                    relative: 0.0 0.0;
                 }
                 rel2 {
-                    to: "bottom_spacer";
-                    relative: 0.0 1.0;
+                    to: "text_bg";
+                    relative: 1.0  1.0;
                 }
                 text {
                     text: "Add";
                     font: "Sans";
-                    size: 34;
-                    align: 0.5 0.0;
+                    size: 26;
+                    align: 0.5 0;
+                }
+            }
+        }
+    }
+    programs {}
+    }
+}
+
+group {
+    name: "elm/gengrid/item/mostVisited/default";
+    data.item: "texts" "elm.text";
+    data.item: "contents" "elm.swallow.icon";
+    parts {
+        part { name: "bg";
+            type: RECT;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                visible: 0;
+                align: 0.5 0.0;
+                rel1.relative: 0.0  0.0;
+                rel2.relative: 1.0  1.0;
+                min: 218 208;
+                max: 218 208;
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 218 208;
+                max: 218 208;
+            }
+        }
+
+        part { name: "elm.swallow.icon";
+            type: SWALLOW;
+            scale: 1;
+            description { state: "default" 0.0;
+                fixed: 1 0;
+                align: 0.5 0.2;
+                min: 162 120;
+                max: 162 120;
+                rel1 {
+                    relative: 0.0  0.0; to: "bg";
+                }
+                rel2 {
+                    relative: 1.0  1.0; to: "bg";
+                }
+            }
+            description { state: "selected";
+                inherit: "default" 0.0;
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 162 120;
+                max: 162 120;
+            }
+        }
+
+        ADD_SPACER_BELOW("title_spacer", "elm.swallow.icon", 0, 2)
+
+        part { name: "text_bg";
+            type: RECT;
+            scale: 1;
+            description { state: "default" 0.0;
+                min: 162 66;
+                max: 162 66;
+                align: 0.0 0.0;
+                visible: 0;
+                rel1 {
+                    to: "title_spacer";
+                    relative: 0.0 1.0;
+                }
+                rel2 {
+                    to: "bg";
+                    relative: 1.0  1.0;
+                }
+            }
+            description { state: "selected" 0.0;
+                inherit: "default" 0.0;
+                color_class: "focusBgColor";
+            }
+            description { state: "landscape" 0.0;
+                inherit: "default" 0.0;
+                min: 162 66;
+                max: 162 66;
+            }
+            description { state: "selected_landscape" 0.0;
+                inherit: "landscape" 0.0;
+                color_class: "focusBgColor";
+            }
+        }
+
+        part { name: "elm.text";
+            type: TEXT;
+            scale: 1;
+            description { state: "default" 0.0;
+                min: 162 66;
+                max: 162 66;
+                align: 0.0 0.0;
+                color: 80 80 80 255;
+                rel1 {
+                    to: "text_bg";
+                    relative: 0.0 0.0;
+                }
+                rel2 {
+                    to: "text_bg";
+                    relative: 1.0  1.0;
+                }
+                text {
+                    font: "Sans";
+                    size: 26;
+                    align: 0.5 0;
                 }
             }
         }
 
-        part { name: "over";
-            type: RECT;
-            scale: 1;
-            mouse_events: 1;
-            repeat_events: 1;
-            description { state: "default" 0.0;
-                color: 0 0 0 0;
-                rel1.to: "bg";
-                rel2.to: "bg";
-            }
-        }
     }
-    programs {
-        program { name: "mouse_in";
-            signal: "mouse,in";
-            source: "over";
-            action: STATE_SET "selected" 0.0;
-            target: "border_top";
-            target: "border_left";
-            target: "border_right";
-            target: "border_bottom";
-        }
-        program { name: "mouse_out";
-            signal: "mouse,out";
-            source: "over";
-            action: STATE_SET "default" 0.0;
-            target: "border_top";
-            target: "border_left";
-            target: "border_right";
-            target: "border_bottom";
-        }
-        program { name: "set_landscape";
-            signal: "set,landscape";
-            source: "ui";
-            action: STATE_SET "landscape" 0.0;
-            target: "bg";
-        }
-    }
+    programs {}
+}
 }
 
