@@ -169,7 +169,7 @@ private:
     void onOpenURL(const std::string& url);
     void onOpenURL(const std::string& url, const std::string& title, bool desktopMode);
     void onClearHistoryAllClicked();
-    void onDeleteHistoryItems(std::shared_ptr<const std::vector<int>> itemIds);
+    void onDeleteHistoryItems(int id);
 
     void onMostVisitedClicked();
     void onQuickAccessClicked();
@@ -254,7 +254,7 @@ private:
     void closeTabUI();
     void switchToMobileMode();
     void switchToDesktopMode();
-    Evas_Object* showHistoryUI(Evas_Object* parent);
+    Evas_Object* showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode = false);
     void closeHistoryUI();
     void showSettings(unsigned);
     void closeSettingsUI();

@@ -257,11 +257,9 @@ void WebsiteHistoryItemVisitItemsMob::removeItem(
     }
 }
 
-std::shared_ptr<std::vector<int>> WebsiteHistoryItemVisitItemsMob::getVisitItemsIds()
+int WebsiteHistoryItemVisitItemsMob::getVisitItemsId()
 {
-    auto vec = std::make_shared<std::vector<int>>();
-    vec->push_back(m_websiteVisitItem.websiteVisitItemData->historyItem->getId());
-    return vec;
+    return m_websiteVisitItem.websiteVisitItemData->historyItem->getId();
 }
 
 }

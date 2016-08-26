@@ -313,8 +313,8 @@ void BookmarkManagerUI::_cancel_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
-        BookmarkManagerUI* bookmarkManagerUI = static_cast<BookmarkManagerUI*>(data);
-        bookmarkManagerUI->onBackPressed();
+        auto self = static_cast<BookmarkManagerUI*>(data);
+        self->onBackPressed();
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
@@ -336,7 +336,10 @@ void BookmarkManagerUI::_accept_clicked(void* data, Evas_Object*, void*)
             break;
         case BookmarkManagerState::SelectFolder:
             bookmarkManagerUI->folderSelected(bookmarkManagerUI->m_folder_path.back());
-        break;
+            break;
+        case BookmarkManagerState::HistoryDeleteView:
+            bookmarkManagerUI->removeHistoryItems();
+            break;
         default:
             break;
         }
@@ -345,6 +348,27 @@ void BookmarkManagerUI::_accept_clicked(void* data, Evas_Object*, void*)
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
 
+void BookmarkManagerUI::removeHistoryItems()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto historyListSize = elm_genlist_items_count(m_historyGenlist);
+
+    for (int i = historyListSize; i > 1; --i) {
+        auto it = elm_genlist_nth_item_get(m_historyGenlist, i);
+        auto check = elm_object_item_part_content_get(it, "elm.swallow.end");
+        if (!check)
+            continue;
+        auto state = elm_check_state_get(check);
+        if (state == EINA_TRUE) {
+            elm_object_item_del(it);
+        }
+    }
+    elm_genlist_realized_items_update(m_historyGenlist);
+    removeSelectedItemsFromHistory();
+    m_naviframe->setRightButtonEnabled(false);
+
+}
 void BookmarkManagerUI::_prev_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -465,9 +489,16 @@ void BookmarkManagerUI::addBookmarkItemCurrentFolder(services::SharedBookmarkIte
 void BookmarkManagerUI::addBookmarkItem(BookmarkData* item)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    Elm_Object_Item* bookmarkView = elm_genlist_item_append(m_genlist, m_bookmark_item_class,
-            item, nullptr, ELM_GENLIST_ITEM_NONE, _bookmarkItemClicked, item);
-    m_map_bookmark.insert(std::pair<unsigned int, Elm_Object_Item*>(item->bookmarkItem->getId(), bookmarkView));
+    Elm_Object_Item* bookmarkView = elm_genlist_item_append(
+        m_genlist,
+        m_bookmark_item_class,
+        item,
+        nullptr,
+        ELM_GENLIST_ITEM_NONE,
+        _bookmarkItemClicked,
+        item);
+    m_map_bookmark.insert(
+        std::pair<unsigned int, Elm_Object_Item*>(item->bookmarkItem->getId(), bookmarkView));
     elm_genlist_item_selected_set(bookmarkView, EINA_FALSE);
 }
 
@@ -482,6 +513,10 @@ void BookmarkManagerUI::onBackPressed()
     case BookmarkManagerState::Default:
         //TODO: We should go to the previous navigatorToolbar element if it exists.
         closeBookmarkManagerClicked();
+        break;
+    case BookmarkManagerState::HistoryDeleteView:
+        changeState(BookmarkManagerState::HistoryView);
+        prepareHistoryContent();
         break;
     case BookmarkManagerState::HistoryView:
         elm_toolbar_item_selected_set(
@@ -520,11 +555,23 @@ void BookmarkManagerUI::showContextMenu()
             alignContextMenu(*window);
         } else if (m_state == BookmarkManagerState::HistoryView) {
             createContextMenu(*window);
-            elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_REMOVE"), nullptr, nullptr, nullptr);
+            elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_REMOVE"), nullptr, _cm_history_remove_clicked, this);
             alignContextMenu(*window);
         }
     } else
         BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
+}
+
+void BookmarkManagerUI::_cm_history_remove_clicked(void* data, Evas_Object*, void*)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (data) {
+        auto bookmarkManagerUI = static_cast<BookmarkManagerUI*>(data);
+        _cm_dismissed(nullptr, bookmarkManagerUI->m_ctxpopup, nullptr);
+        bookmarkManagerUI->changeState(BookmarkManagerState::HistoryDeleteView);
+        bookmarkManagerUI->prepareHistoryContent();
+    } else
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
 
 void BookmarkManagerUI::_cm_delete_clicked(void* data, Evas_Object*, void* )
@@ -614,7 +661,9 @@ void BookmarkManagerUI::prepareHistoryContent()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    auto historyGenlist = getHistoryGenlistContent(m_box);
+    bool removeMode = (m_state == BookmarkManagerState::HistoryDeleteView);
+    auto historyGenlist = getHistoryGenlistContent(m_box, m_naviframe, removeMode);
+
     elm_box_unpack_all(m_box);
 
     if (historyGenlist && *historyGenlist) {
@@ -746,9 +795,20 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         elm_object_part_content_unset(m_content, "navigator_toolbar");
         elm_object_signal_emit(m_content, "hide_navigator_toolbar", "ui");
         evas_object_show(m_modulesToolbar);
-        elm_genlist_reorder_mode_set(m_genlist, EINA_FALSE);
         elm_box_unpack(m_box, m_select_all);
         evas_object_hide(m_select_all);
+        break;
+    case BookmarkManagerState::HistoryDeleteView:
+        updateNoBookmarkText();
+        m_naviframe->setTitle(_("IDS_BR_MBODY_HISTORY"));
+        m_naviframe->setPrevButtonVisible(false);
+        m_naviframe->setLeftButtonVisible(true);
+        m_naviframe->setRightButtonVisible(true);
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE"));
+        updateDeleteTopContent();
+        elm_object_signal_emit(m_content, "hide_toolbars", "ui");
+        evas_object_hide(m_modulesToolbar);
+        evas_object_hide(m_navigatorToolbar);
         break;
     case BookmarkManagerState::Default:
     default:
@@ -793,7 +853,8 @@ void BookmarkManagerUI::reoderBookmarkItems()
 
 void BookmarkManagerUI::updateNoBookmarkText()
 {
-    if (m_map_bookmark.size() || m_state == BookmarkManagerState::HistoryView) {
+    if (m_map_bookmark.size() ||
+        (m_state == BookmarkManagerState::HistoryView || m_state == BookmarkManagerState::HistoryDeleteView)) {
         evas_object_hide(m_empty_layout);
         elm_object_signal_emit(m_content, "hide_overlay", "ui");
     } else {
@@ -806,8 +867,9 @@ void BookmarkManagerUI::updateDeleteClick(int id)
 {
     m_delete_count -= m_map_delete[id] ? 1 : -1;
     m_map_delete[id] = !m_map_delete[id];
-    elm_check_state_set(elm_object_part_content_get(m_select_all, "elm.swallow.end"), m_delete_count
-                        == elm_genlist_items_count(m_genlist));
+    elm_check_state_set(
+        elm_object_part_content_get(m_select_all, "elm.swallow.end"),
+        m_delete_count == elm_genlist_items_count(m_genlist));
     updateDeleteTopContent();
 }
 

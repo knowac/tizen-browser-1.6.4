@@ -90,9 +90,9 @@ bool WebsiteHistoryItemMob::contains(WebsiteVisitItemDataPtrConst historyVisitIt
     return m_websiteHistoryItemVisitItems->contains(historyVisitItemData);
 }
 
-std::shared_ptr<std::vector<int>> WebsiteHistoryItemMob::getVisitItemsIds()
+int WebsiteHistoryItemMob::getVisitItemsId()
 {
-    return m_websiteHistoryItemVisitItems->getVisitItemsIds();
+    return m_websiteHistoryItemVisitItems->getVisitItemsId();
 }
 
 int WebsiteHistoryItemMob::sizeHistoryVisitItems() {

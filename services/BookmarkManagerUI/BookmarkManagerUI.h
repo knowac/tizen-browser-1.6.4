@@ -84,7 +84,8 @@ public:
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemOrderEdited;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkItemDeleted;
     boost::signals2::signal<void (int)> newFolderItemClicked;
-    boost::signals2::signal<Evas_Object* (Evas_Object*)> getHistoryGenlistContent;
+    boost::signals2::signal<Evas_Object* (Evas_Object*, SharedNaviframeWrapper, bool)> getHistoryGenlistContent;
+    boost::signals2::signal<void (void)> removeSelectedItemsFromHistory;
 
 private:
     using FolderData = struct
@@ -115,6 +116,7 @@ private:
     void updateNoBookmarkText();
     void updateDeleteClick(int id);
     void updateDeleteTopContent();
+    void removeHistoryItems();
 
     void prepareHistoryContent();
     void prepareBookmarksContent();
@@ -131,6 +133,7 @@ private:
     static void _genlist_bookmark_realized(void *, Evas_Object *, void *event_info);
     static void _select_all_down(void *data, Evas *, Evas_Object *, void *);
     static void _select_all_state_changed(void *data, Evas_Object *obj, void *);
+    static void _cm_history_remove_clicked(void*, Evas_Object*, void*);
     static void _cm_delete_clicked(void*, Evas_Object*, void*);
     static void _cm_share_clicked(void*, Evas_Object*, void*);
     static void _cm_reorder_clicked(void*, Evas_Object*, void*);

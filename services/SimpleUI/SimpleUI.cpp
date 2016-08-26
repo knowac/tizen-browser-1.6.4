@@ -376,7 +376,8 @@ void SimpleUI::connectUISignals()
     m_bookmarkManagerUI->bookmarkItemDeleted.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
     m_bookmarkManagerUI->newFolderItemClicked.connect(boost::bind(&SimpleUI::onNewFolderClicked, this, _1));
     m_bookmarkManagerUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-    m_bookmarkManagerUI->getHistoryGenlistContent.connect(boost::bind(&SimpleUI::showHistoryUI, this, _1));
+    m_bookmarkManagerUI->getHistoryGenlistContent.connect(boost::bind(&SimpleUI::showHistoryUI, this, _1, _2, _3));
+    m_bookmarkManagerUI->removeSelectedItemsFromHistory.connect(boost::bind(&HistoryUI::removeSelectedHistoryItems, m_historyUI.get()));
 #if PROFILE_MOBILE
     m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
 #else
@@ -750,12 +751,10 @@ void SimpleUI::onClearHistoryAllClicked()
     m_historyService->clearAllHistory();
 }
 
-void SimpleUI::onDeleteHistoryItems(
-        std::shared_ptr<const std::vector<int>> itemIds)
+void SimpleUI::onDeleteHistoryItems(int id)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    for (const int& id : *itemIds)
-        m_historyService->deleteHistoryItem(id);
+    m_historyService->deleteHistoryItem(id);
 }
 
 void SimpleUI::onMostVisitedClicked()
@@ -1441,10 +1440,11 @@ void SimpleUI::certPopupButtonClicked(PopupButtons button, std::shared_ptr<Popup
     }
 }
 
-Evas_Object* SimpleUI::showHistoryUI(Evas_Object* parent)
+Evas_Object* SimpleUI::showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto ret = m_historyUI->createDaysList(parent);
+    m_historyUI->setNaviframe(naviframe);
+    auto ret = m_historyUI->createDaysList(parent, removeMode);
     m_historyUI->addHistoryItems(
         m_historyService->getHistoryToday(), HistoryPeriod::HISTORY_TODAY);
     m_historyUI->addHistoryItems(

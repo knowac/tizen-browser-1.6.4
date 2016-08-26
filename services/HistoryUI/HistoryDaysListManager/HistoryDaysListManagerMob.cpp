@@ -26,7 +26,6 @@
 #include "app_i18n.h"
 #include <services/HistoryUI/HistoryDeleteManager.h>
 
-
 #include <GeneralTools.h>
 #include <EflTools.h>
 
@@ -42,6 +41,12 @@ HistoryDaysListManagerMob::HistoryDaysListManagerMob()
     , m_history_day_item_class(elm_genlist_item_class_new())
     , m_history_item_item_class(elm_genlist_item_class_new())
     , m_history_download_item_class(elm_genlist_item_class_new())
+    , m_isRemoveMode(false)
+    , m_delete_count(0)
+    , m_history_count(0)
+    , m_isSelectAllChecked(EINA_FALSE)
+    , m_downloadManagerItem(nullptr)
+    , m_selectAllItem(nullptr)
 {
     createGenlistItemClasses();
     connectSignals();
@@ -49,6 +54,9 @@ HistoryDaysListManagerMob::HistoryDaysListManagerMob()
 
 HistoryDaysListManagerMob::~HistoryDaysListManagerMob()
 {
+    for (auto& data : m_itemDataVector)
+        delete data;
+
     for (auto& dayItem : m_dayItems)
         dayItem->setEflObjectsAsDeleted();
 
@@ -72,7 +80,7 @@ void HistoryDaysListManagerMob::createGenlistItemClasses()
 
     m_history_download_item_class->item_style = "type1";
     m_history_download_item_class->func.text_get = _genlist_history_download_text_get;
-    m_history_download_item_class->func.content_get =  nullptr;
+    m_history_download_item_class->func.content_get =  _genlist_history_download_content_get;
     m_history_download_item_class->func.state_get = nullptr;
     m_history_download_item_class->func.del = nullptr;
     m_history_download_item_class->decorate_all_item_style = "edit_default";
@@ -88,18 +96,97 @@ void HistoryDaysListManagerMob::createGenlistItemClasses()
 char* HistoryDaysListManagerMob::_genlist_history_day_text_get(void* data, Evas_Object *, const char *part)
 {
     if (data && part) {
-        auto item = static_cast<HistoryDayItemData*>(data);
+        auto item(static_cast<HistoryDayItemData*>(data));
         if (!strcmp(part, "elm.text"))
             return strdup(item->day.c_str());
     }
     return nullptr;
 }
 
+Evas_Object* HistoryDaysListManagerMob::_genlist_history_download_content_get(void* data, Evas_Object* obj, const char *part)
+{
+    if (data && part && !strcmp(part, "elm.swallow.end")) {
+        auto id(static_cast<ItemData*>(data));
+        if (id->self->m_isRemoveMode) {
+            auto check(elm_check_add(obj));
+            evas_object_smart_callback_add(check, "changed", _check_state_changed, id);
+            return check;
+        }
+    }
+    return nullptr;
+}
+
+void HistoryDaysListManagerMob::countItemsToDelete()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_delete_count = 0;
+    auto it(elm_genlist_first_item_get(m_genlist));
+    while ((it = elm_genlist_item_next_get(it))) {
+        auto check(elm_object_item_part_content_get(it, "elm.swallow.end"));
+        if (!check)
+            continue;
+        auto state(elm_check_state_get(check));
+        m_itemsToDelete[it] = state;
+        if (state == EINA_TRUE)
+            ++m_delete_count;
+        if (m_delete_count == m_history_count) {
+            auto first(elm_genlist_first_item_get(m_genlist));
+            auto firstCheck(elm_object_item_part_content_get(first, "elm.swallow.end"));
+            elm_check_state_set(firstCheck, EINA_TRUE);
+        }
+        if (it == elm_genlist_last_item_get(m_genlist) &&
+            m_delete_count == 0) {
+            auto first(elm_genlist_first_item_get(m_genlist));
+            auto firstCheck(elm_object_item_part_content_get(first, "elm.swallow.end"));
+            elm_check_state_set(firstCheck, EINA_FALSE);
+        }
+    }
+    setSelectedItemsCount(m_delete_count);
+    setRightButtonEnabledForHistory(m_delete_count);
+}
+
+void HistoryDaysListManagerMob::selectAllCheckboxes()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    auto it(elm_genlist_first_item_get(m_genlist));
+    auto firstCheck(elm_object_item_part_content_get(it, "elm.swallow.end"));
+    m_isSelectAllChecked = elm_check_state_get(firstCheck);
+
+    while ((it = elm_genlist_item_next_get(it))) {
+        auto check(elm_object_item_part_content_get(it, "elm.swallow.end"));
+        if (!check)
+            continue;
+        elm_check_state_set(check, m_isSelectAllChecked);
+    }
+    if (m_isSelectAllChecked == EINA_TRUE && elm_genlist_items_count(m_genlist) > 1)
+        m_delete_count = m_history_count;
+    if (m_isSelectAllChecked == EINA_FALSE)
+        m_delete_count = 0;
+    setSelectedItemsCount(m_delete_count);
+    setRightButtonEnabledForHistory(m_delete_count);
+}
+
+void HistoryDaysListManagerMob::_check_state_changed(void* data, Evas_Object* obj, void*)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (data) {
+        auto id(static_cast<ItemData*>(data));
+        auto first(elm_genlist_first_item_get(id->self->m_genlist));
+        auto check(elm_object_item_part_content_get(first, "elm.swallow.end"));
+
+        if (check == obj)
+            id->self->selectAllCheckboxes();
+        else
+            id->self->countItemsToDelete();
+    } else
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+}
+
 char* HistoryDaysListManagerMob::_genlist_history_download_text_get(void* data, Evas_Object*, const char *part)
 {
     if (data && part && !strcmp(part, "elm.text")) {
-        auto str = static_cast<const char*>(data);
-        return strdup(str);
+        auto id(static_cast<ItemData*>(data));
+        return strdup(id->str);
     }
     return nullptr;
 }
@@ -107,7 +194,7 @@ char* HistoryDaysListManagerMob::_genlist_history_download_text_get(void* data, 
 char* HistoryDaysListManagerMob::_genlist_history_item_text_get(void* data, Evas_Object *, const char *part)
 {
     if (data && part) {
-        auto item = static_cast<WebsiteHistoryItemData*>(data);
+        auto item(static_cast<ItemData*>(data));
         if (!strcmp(part, "elm.text"))
             return strdup(item->websiteVisitItem->historyItem->getTitle().c_str());
         if (!strcmp(part, "elm.text.sub"))
@@ -118,17 +205,16 @@ char* HistoryDaysListManagerMob::_genlist_history_item_text_get(void* data, Evas
 
 Evas_Object* HistoryDaysListManagerMob::_genlist_history_day_content_get(void* data, Evas_Object* obj, const char *part)
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data && part && !strcmp(part, "elm.swallow.end")) {
-        auto dayData = static_cast<HistoryDayItemData*>(data);
+        auto dayData(static_cast<HistoryDayItemData*>(data));
 
-        auto arrow_layout = elm_layout_add(obj);
-        auto edjeDir = EDJE_DIR + std::string("HistoryUI/HistoryDaysList.edj");
+        auto arrow_layout(elm_layout_add(obj));
+        auto edjeDir(EDJE_DIR + std::string("HistoryUI/HistoryDaysList.edj"));
         elm_layout_file_set(arrow_layout, edjeDir.c_str(), "arrow-layout");
 
-        auto edje = elm_layout_edje_get(arrow_layout);
+        auto edje(elm_layout_edje_get(arrow_layout));
         edje_object_signal_emit(edje, "state,contracted,signal", "");
-        if(dayData->expanded)
+        if (dayData->expanded)
             edje_object_signal_emit(edje, "state,expanded,signal", "");
 
         return arrow_layout;
@@ -139,8 +225,20 @@ Evas_Object* HistoryDaysListManagerMob::_genlist_history_day_content_get(void* d
 Evas_Object* HistoryDaysListManagerMob::_genlist_history_item_content_get(void *data, Evas_Object* obj, const char *part)
 {
     if (data && !strcmp(part, "elm.swallow.icon")) {
-        auto item = static_cast<WebsiteHistoryItemData*>(data);
-        auto icon = item->favIcon->getEvasImage(obj);
+        auto item(static_cast<ItemData*>(data));
+        auto favicon(item->websiteHistoryItemData->favIcon);
+        if (!favicon) {
+            auto no_icon(elm_icon_add(obj));
+            elm_image_resizable_set(no_icon, EINA_TRUE, EINA_TRUE);
+            evas_object_size_hint_min_set(no_icon,
+                ELM_SCALE_SIZE(64),
+                ELM_SCALE_SIZE(64));
+            evas_object_size_hint_max_set(no_icon,
+                ELM_SCALE_SIZE(64),
+                ELM_SCALE_SIZE(64));
+            return no_icon;
+        }
+        auto icon(favicon->getEvasImage(obj));
         elm_image_resizable_set(icon, EINA_TRUE, EINA_TRUE);
         evas_object_size_hint_min_set(icon,
             ELM_SCALE_SIZE(64),
@@ -150,7 +248,7 @@ Evas_Object* HistoryDaysListManagerMob::_genlist_history_item_content_get(void *
             ELM_SCALE_SIZE(64));
         return icon;
     } else if (!data && !strcmp(part, "elm.swallow.icon")) {
-        auto icon = elm_icon_add(obj);
+        auto icon(elm_icon_add(obj));
         elm_image_resizable_set(icon, EINA_TRUE, EINA_TRUE);
         evas_object_size_hint_min_set(icon,
             ELM_SCALE_SIZE(64),
@@ -160,14 +258,40 @@ Evas_Object* HistoryDaysListManagerMob::_genlist_history_item_content_get(void *
             ELM_SCALE_SIZE(64));
         return icon;
     }
+    if (data && !strcmp(part, "elm.swallow.end")) {
+        auto check(elm_check_add(obj));
+        auto item(static_cast<ItemData*>(data));
+        if (item->self->m_isRemoveMode){
+            elm_genlist_select_mode_set(obj, ELM_OBJECT_SELECT_MODE_NONE);
+            evas_object_smart_callback_add(check, "changed", _check_state_changed, data);
+            if (item->self->m_selectAllItem &&
+                item->self->m_isSelectAllChecked == EINA_TRUE) {
+                auto firstCheck(elm_object_item_part_content_get(item->self->m_selectAllItem, "elm.swallow.end"));
+                elm_check_state_set(firstCheck, item->self->m_isSelectAllChecked);
+            }
+            elm_check_state_set(check, item->self->m_isSelectAllChecked);
+            return check;
+        } else {
+            evas_object_smart_callback_del(check, "changed", _check_state_changed);
+            elm_genlist_select_mode_set(obj, ELM_OBJECT_SELECT_MODE_ALWAYS);
+        }
+    }
     return nullptr;
 }
 
 Evas_Object* HistoryDaysListManagerMob::createDaysList(
-    Evas_Object* parent)
+    Evas_Object* parent, bool isRemoveMode)
 {
+    // TODO Download history is planed for the 2nd phase
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_parent = parent;
+
+    m_isRemoveMode = isRemoveMode;
+    if (m_genlist) {
+        elm_genlist_clear(m_genlist);
+        evas_object_del(m_genlist);
+        m_genlist = nullptr;
+    }
     m_genlist = elm_genlist_add(m_parent);
     tools::EflTools::setExpandHints(m_genlist);
     elm_scroller_policy_set(m_genlist, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
@@ -177,17 +301,29 @@ Evas_Object* HistoryDaysListManagerMob::createDaysList(
     evas_object_smart_callback_add(m_genlist, "expanded", _tree_item_expanded, this);
     evas_object_smart_callback_add(m_genlist, "contracted", _tree_item_contracted, this);
     evas_object_smart_callback_add(m_genlist, "pressed", _tree_item_pressed, this);
-
-    // TODO Download history is planed for the 2nd phase
-    auto el = elm_genlist_item_append(
-        m_genlist, m_history_download_item_class,
-        _("IDS_BR_BODY_DOWNLOAD_HISTORY"),
-        nullptr, ELM_GENLIST_ITEM_NONE,
-        nullptr, nullptr);
-    elm_object_item_disabled_set(el, EINA_TRUE);
-
-    evas_object_show(m_genlist);
-
+    m_history_count = 0;
+    auto id(new ItemData);
+    id->self = this;
+    id->websiteVisitItem = nullptr;
+    id->websiteHistoryItemData = nullptr;
+    id->str = nullptr;
+    if (!m_isRemoveMode) {
+        id->str = _("IDS_BR_BODY_DOWNLOAD_HISTORY");
+        m_downloadManagerItem = elm_genlist_item_append(
+            m_genlist, m_history_download_item_class,
+            id,
+            nullptr, ELM_GENLIST_ITEM_NONE,
+            nullptr, nullptr);
+        elm_object_item_disabled_set(m_downloadManagerItem, EINA_TRUE);
+    } else {
+        id->str = _("IDS_BR_OPT_SELECT_ALL");
+        m_selectAllItem = elm_genlist_item_append(
+            m_genlist, m_history_download_item_class,
+            id,
+            nullptr, ELM_GENLIST_ITEM_NONE,
+            nullptr, nullptr);
+    }
+    m_itemDataVector.push_back(id);
     return m_genlist;
 }
 
@@ -198,8 +334,8 @@ void HistoryDaysListManagerMob::addHistoryItems(
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     std::vector<WebsiteHistoryItemDataPtr> historyItems;
     for (auto& item : *items) {
-        auto pageViewItem = std::make_shared<WebsiteVisitItemData>(item);
-        std::shared_ptr<tools::BrowserImage> websiteFavicon = item->getFavIcon();
+        auto pageViewItem(std::make_shared<WebsiteVisitItemData>(item));
+        auto websiteFavicon(item->getFavIcon());
         if (!websiteFavicon || websiteFavicon->getSize() == 0)
             websiteFavicon = nullptr;
         historyItems.push_back(
@@ -208,6 +344,7 @@ void HistoryDaysListManagerMob::addHistoryItems(
                 item->getUrl(),
                 websiteFavicon,
                 pageViewItem));
+        ++m_history_count;
     }
     auto dayItem(std::make_shared<HistoryDayItemData>(toString(period), historyItems));
     appendDayItem(dayItem);
@@ -234,12 +371,6 @@ HistoryDayItemMobPtr HistoryDaysListManagerMob::getItem(
 
 void HistoryDaysListManagerMob::connectSignals()
 {
-    HistoryDayItemMob::signaButtonClicked.connect(
-        boost::bind(&HistoryDaysListManagerMob::onHistoryDayItemButtonClicked,
-            this, _1, _2));
-    WebsiteHistoryItemTitleMob::signalButtonClicked.connect(
-        boost::bind(&HistoryDaysListManagerMob::onWebsiteHistoryItemClicked,
-            this, _1, _2));
     WebsiteHistoryItemVisitItemsMob::signalButtonClicked.connect(
         boost::bind(
             &HistoryDaysListManagerMob::onWebsiteHistoryItemVisitItemClicked,
@@ -253,25 +384,31 @@ void HistoryDaysListManagerMob::_tree_item_expanded(void* data, Evas_Object* gen
         BROWSER_LOGD("[%s:%d] data is null", __PRETTY_FUNCTION__, __LINE__);
         return;
     }
-    auto it = static_cast<Elm_Object_Item*>(event_info);
-    auto self = static_cast<HistoryDaysListManagerMob*>(data);
-
+    auto it(static_cast<Elm_Object_Item*>(event_info));
+    auto self(static_cast<HistoryDaysListManagerMob*>(data));
     for (auto& el : self->m_itemData[it]->websiteHistoryItems) {
-        auto itData = new ItemData;
-        itData->historyDaysListManager = self;
+        auto itData(new ItemData);
+        itData->self = self;
         itData->websiteVisitItem = el->websiteVisitItem;
-        elm_genlist_item_append(
-            genlist,
-            self->m_history_item_item_class,
-            el.get(),
-            it,
-            ELM_GENLIST_ITEM_NONE,
-            _item_selected,
-            itData);
+        itData->websiteHistoryItemData = el;
+        itData->str = nullptr;
+        auto listItem(
+            elm_genlist_item_append(
+                genlist,
+                self->m_history_item_item_class,
+                itData,
+                it,
+                ELM_GENLIST_ITEM_NONE,
+                _item_selected,
+                itData));
+        self->m_itemsToDelete[listItem] = EINA_FALSE;
+        self->m_visitItemData[listItem] = el->websiteVisitItem;
+        self->m_itemDataVector.push_back(itData);
     }
     self->m_itemData[it]->expanded = true;
-    auto arrow_layout = elm_object_item_part_content_get(it, "elm.swallow.end");
-    auto edje = elm_layout_edje_get(arrow_layout);
+    auto arrow_layout(
+        elm_object_item_part_content_get(it, "elm.swallow.end"));
+    auto edje(elm_layout_edje_get(arrow_layout));
     edje_object_signal_emit(edje, "state,expanded,signal", "");
     elm_genlist_realized_items_update(genlist);
 }
@@ -279,9 +416,8 @@ void HistoryDaysListManagerMob::_tree_item_expanded(void* data, Evas_Object* gen
 void HistoryDaysListManagerMob::_item_selected(void* data, Evas_Object *, void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto iD = static_cast<ItemData*>(data);
-    BROWSER_LOGD("[%s:%d] %s", __PRETTY_FUNCTION__, __LINE__, iD->websiteVisitItem->historyItem->getUrl().c_str());
-    iD->historyDaysListManager->signalHistoryItemClicked(
+    auto iD(static_cast<ItemData*>(data));
+    iD->self->signalHistoryItemClicked(
         iD->websiteVisitItem->historyItem->getUrl().c_str(),
         iD->websiteVisitItem->historyItem->getTitle().c_str());
     delete iD;
@@ -290,15 +426,15 @@ void HistoryDaysListManagerMob::_item_selected(void* data, Evas_Object *, void *
 void HistoryDaysListManagerMob::_tree_item_pressed(void* data, Evas_Object*, void* event_info)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto it = static_cast<Elm_Object_Item*>(event_info);
-    auto self = static_cast<HistoryDaysListManagerMob*>(data);
+    auto it(static_cast<Elm_Object_Item*>(event_info));
+    auto self(static_cast<HistoryDaysListManagerMob*>(data));
 
-    if (self->m_itemState[it] == EINA_FALSE) {
+    if (self->m_expandedState[it] == EINA_FALSE) {
         elm_genlist_item_expanded_set(it, EINA_TRUE);
-        self->m_itemState[it] = EINA_TRUE;
-    } else if (self->m_itemState[it] == EINA_TRUE) {
+        self->m_expandedState[it] = EINA_TRUE;
+    } else if (self->m_expandedState[it] == EINA_TRUE) {
         elm_genlist_item_expanded_set(it, EINA_FALSE);
-        self->m_itemState[it] = EINA_FALSE;
+        self->m_expandedState[it] = EINA_FALSE;
     }
     return;
 }
@@ -306,30 +442,30 @@ void HistoryDaysListManagerMob::_tree_item_pressed(void* data, Evas_Object*, voi
 void HistoryDaysListManagerMob::_tree_item_contracted(void* data, Evas_Object*, void* event_info)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto it = static_cast<Elm_Object_Item*>(event_info);
-    auto self = static_cast<HistoryDaysListManagerMob*>(data);
+    auto it(static_cast<Elm_Object_Item*>(event_info));
+    auto self(static_cast<HistoryDaysListManagerMob*>(data));
     elm_genlist_item_subitems_clear(it);
     self->m_itemData[it]->expanded = false;
 
-    auto arrow_layout = elm_object_item_part_content_get(it, "elm.swallow.end");
-    auto edje = elm_layout_edje_get(arrow_layout);
+    auto arrow_layout(elm_object_item_part_content_get(it, "elm.swallow.end"));
+    auto edje(elm_layout_edje_get(arrow_layout));
     edje_object_signal_emit(edje, "state,contracted,signal", "");
 }
 
 void HistoryDaysListManagerMob::appendDayItem(HistoryDayItemDataPtr dayItemData)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto item = std::make_shared<HistoryDayItemMob>(dayItemData);
+    auto item(std::make_shared<HistoryDayItemMob>(dayItemData));
     m_dayItems.push_back(item);
     dayItemData->expanded = false;
-    auto el = elm_genlist_item_append(
+    auto el(elm_genlist_item_append(
         m_genlist, m_history_day_item_class,
         dayItemData.get(),
         nullptr, ELM_GENLIST_ITEM_TREE,
-        nullptr, nullptr);
+        nullptr, nullptr));
 
     m_itemData[el] = dayItemData;
-    m_itemState[el] = EINA_FALSE;
+    m_expandedState[el] = EINA_FALSE;
 }
 
 void HistoryDaysListManagerMob::showNoHistoryMessage(bool show)
@@ -341,35 +477,39 @@ void HistoryDaysListManagerMob::showNoHistoryMessage(bool show)
         elm_object_signal_emit(m_layoutScrollerDays, "hide_empty_message", "ui");
 }
 
-void HistoryDaysListManagerMob::onHistoryDayItemButtonClicked(
-    const HistoryDayItemDataPtrConst clickedItem, bool remove)
-{
-    if (remove)
-        removeItem(clickedItem);
-}
-
-void HistoryDaysListManagerMob::onWebsiteHistoryItemClicked(
-    const WebsiteHistoryItemDataPtrConst clickedItem, bool remove)
-{
-    if (remove)
-        removeItem(clickedItem);
-    else
-        signalHistoryItemClicked(
-            tools::PROTOCOL_DEFAULT + clickedItem->websiteDomain,
-            clickedItem->websiteTitle);
-}
-
 void HistoryDaysListManagerMob::onWebsiteHistoryItemVisitItemClicked(
     const WebsiteVisitItemDataPtrConst clickedItem, bool remove)
 {
     if (remove) {
         removeItem(clickedItem);
-        signalDeleteHistoryItems(
-            std::make_shared<std::vector<int>>(std::initializer_list<int> {
-            clickedItem->historyItem->getId() }));
+        signalDeleteHistoryItems(clickedItem->historyItem->getId());
     } else
-        signalHistoryItemClicked(clickedItem->historyItem->getUrl(),
+        signalHistoryItemClicked(
+            clickedItem->historyItem->getUrl(),
             clickedItem->historyItem->getTitle());
+}
+
+void HistoryDaysListManagerMob::removeSelectedItems()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (m_isSelectAllChecked == EINA_TRUE) {
+        m_visitItemData.clear();
+        m_expandedState.clear();
+        m_itemsToDelete.clear();
+        m_history_count = 0;
+        return;
+    }
+    for (auto& x : m_itemsToDelete) {
+        if (x.second == EINA_TRUE) {
+            onWebsiteHistoryItemVisitItemClicked(
+                m_visitItemData[x.first], true);
+            x.second = EINA_FALSE;
+            m_visitItemData.erase(x.first);
+            m_expandedState.erase(x.first);
+            m_itemsToDelete.erase(x.first);
+            --m_history_count;
+        }
+    }
 }
 
 void HistoryDaysListManagerMob::removeItem(
@@ -379,7 +519,7 @@ void HistoryDaysListManagerMob::removeItem(
         BROWSER_LOGE("%s remove error", __PRETTY_FUNCTION__);
         return;
     }
-    auto item = getItem(historyDayItemData);
+    auto item(getItem(historyDayItemData));
     if (!item)
         return;
     // remove day item from vector, destructor will clear efl objects
@@ -396,9 +536,9 @@ void HistoryDaysListManagerMob::removeItem(
         return;
     }
     for (auto& dayItem : m_dayItems) {
-        auto websiteHistoryItem = dayItem->getItem(websiteHistoryItemData);
+        auto websiteHistoryItem(dayItem->getItem(websiteHistoryItemData));
         if (websiteHistoryItem) {
-            signalDeleteHistoryItems(websiteHistoryItem->getVisitItemsIds());
+            signalDeleteHistoryItems(websiteHistoryItem->getVisitItemsId());
             dayItem->removeItem(websiteHistoryItemData);
             return;
         }

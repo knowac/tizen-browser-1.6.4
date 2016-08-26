@@ -59,7 +59,7 @@ public:
 
     bool contains(WebsiteVisitItemDataPtrConst websiteVisitItemData);
     void removeItem(WebsiteVisitItemDataPtrConst websiteVisitItemData);
-    std::shared_ptr<std::vector<int>> getVisitItemsIds();
+    int getVisitItemsId();
     int size() {return eina_list_count(elm_box_children_get(m_boxMainVertical));}
 
 private:

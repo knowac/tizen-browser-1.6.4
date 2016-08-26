@@ -52,40 +52,29 @@ public:
     Evas_Object* getContent();
     void showUI();
     void hideUI();
-    Evas_Object* createDaysList(Evas_Object* history_layout);
+    Evas_Object* createDaysList(Evas_Object* history_layout, bool isRemoveMode = false);
+    void removeSelectedHistoryItems();
     virtual std::string getName();
     void addHistoryItems(std::shared_ptr<services::HistoryItemVector>,
             HistoryPeriod period = HistoryPeriod::HISTORY_TODAY);
-    void removeHistoryItem(const std::string& uri);
     void addItems();
+    void setNaviframe(SharedNaviframeWrapper naviframe) { m_naviframe = naviframe;}
 
     //AbstractContextMenu interface implementation
-    virtual void showContextMenu() override;
+    virtual void showContextMenu() override {};
 
     boost::signals2::signal<void ()> closeHistoryUIClicked;
     boost::signals2::signal<void ()> clearHistoryClicked;
-    boost::signals2::signal<void (std::shared_ptr<const std::vector<int>> itemIds)> signalDeleteHistoryItems;
+    boost::signals2::signal<void (int)> signalDeleteHistoryItems;
     boost::signals2::signal<void (std::string url, std::string title)> signalHistoryItemClicked;
 private:
     void clearItems();
     void createHistoryUILayout();
     void createTopContent();
-    void createModulesToolbar();
-
-    HistoryDeleteManagerPtr getHistoryDeleteManager() {return m_historyDeleteManager;}
-
-    /**
-     * @brief Groups history items by domain
-     *
-     * @return key: domain, value: domain's history items
-     */
-    services::HistoryItemVectorMap
-    groupItemsByDomain(const services::HistoryItemVector& historyItems);
+    void setRightButtonEnabled(bool);
 
     static Evas_Object* _listActionBarContentGet(void *data, Evas_Object *obj, const char *part);
-    static void _clearHistory_clicked(void *data, Evas_Object *obj, void *event_info);
     static void _close_clicked_cb(void *data, Evas_Object *obj, void *event_info);
-    static void _cm_delete_clicked(void*, Evas_Object*, void*);
 
     std::string m_edjFilePath;
     Evas_Object *m_parent;

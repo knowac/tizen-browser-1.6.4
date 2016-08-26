@@ -46,7 +46,7 @@ public:
     void removeItem(WebsiteVisitItemDataPtrConst historyVisitItemData);
     bool contains(WebsiteVisitItemDataPtrConst websiteVisitItemData);
 
-    std::shared_ptr<std::vector<int>> getVisitItemsIds();
+    int getVisitItemsId();
 
     /**
      * @brief invoked when main layout is already removed.
