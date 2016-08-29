@@ -324,7 +324,8 @@ void SimpleUI::connectUISignals()
     m_webPageUI->getURIEntry().stopLoadingPage.connect(
         boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::stopLoading, m_webEngine.get()));
     m_webPageUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-
+    m_webPageUI->switchToMobileMode.connect(boost::bind(&SimpleUI::switchToMobileMode, this));
+    m_webPageUI->switchToDesktopMode.connect(boost::bind(&SimpleUI::switchToDesktopMode, this));
     // WPA
     m_webPageUI->requestCurrentPageForWebPageUI.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
 

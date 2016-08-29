@@ -382,7 +382,11 @@ void WebPageUI::showContextMenu()
 
             //TODO: "dont add this item if it is already in a quick access
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_ADD_TO_QUICK_ACCESS"), nullptr, _cm_add_to_qa_clicked, this);
-            elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_DESKTOP_VIEW"), nullptr, _cm_desktop_view_page_clicked, this);
+
+            if (!getDesktopMode())
+                elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_DESKTOP_VIEW"), nullptr, _cm_desktop_view_page_clicked, this);
+            else
+                elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_MOBILE_VIEW"), nullptr, _cm_mobile_view_page_clicked, this);
         } else {
             BROWSER_LOGW("[%s] State not handled, context menu not shown", __PRETTY_FUNCTION__);
             return;
@@ -467,6 +471,20 @@ void WebPageUI::_cm_desktop_view_page_clicked(void* data, Evas_Object*, void* )
     if (data != nullptr) {
         WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
+        webPageUI->switchToDesktopMode();
+        webPageUI->setDesktopMode(true);
+    } else
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+}
+
+void WebPageUI::_cm_mobile_view_page_clicked(void* data, Evas_Object*, void* )
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (data != nullptr) {
+        WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
+        _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
+        webPageUI->switchToMobileMode();
+        webPageUI->setDesktopMode(false);
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }

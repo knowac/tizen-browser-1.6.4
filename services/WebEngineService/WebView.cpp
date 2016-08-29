@@ -50,10 +50,10 @@
 #endif
 
 #define certificate_crt_path CERTS_DIR
-#define APPLICATION_NAME_FOR_USER_AGENT "Mozilla/5.0 (SMART-TV; Linux; Tizen 2.4.0; hawkp) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.69 TV safari/537.36"
+#define APPLICATION_NAME_FOR_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.69 safari/537.36 "
 
 //TODO: temporary user agent for mobile display, change to proper one
-#define APPLICATION_NAME_FOR_USER_AGENT_MOBILE "Mozilla/5.0 (Linux; Tizen 3.0; tm1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.69 Mobile safari/537.36"
+#define APPLICATION_NAME_FOR_USER_AGENT_MOBILE "Mozilla/5.0 (Linux; Tizen 3.0; SAMSUNG TM1) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/1.0 Chrome/47.0.2526.69 Mobile safari/537.36"
 
 #if PROFILE_MOBILE
 Ecore_Timer* m_haptic_timer_id =NULL;

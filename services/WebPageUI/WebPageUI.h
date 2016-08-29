@@ -116,6 +116,8 @@ public:
     void mobileEntryUnfocused();
     void setContentFocus();
     static Eina_Bool _hideDelay(void *data);
+    void setDesktopMode(bool desktopMode) {m_desktopMode = desktopMode;}
+    bool getDesktopMode() { return m_desktopMode; }
 
     std::string getURI();
 
@@ -138,6 +140,8 @@ public:
     boost::signals2::signal<void ()> showBookmarkFlowUI;
     boost::signals2::signal<void ()> showFindOnPageUI;
     boost::signals2::signal<void ()> showSettingsUI;
+    boost::signals2::signal<void ()> switchToMobileMode;
+    boost::signals2::signal<void ()> switchToDesktopMode;
 
     boost::signals2::signal<std::string ()> requestCurrentPageForWebPageUI;
 
@@ -159,6 +163,7 @@ private:
     static void _cm_bookmark_flow_clicked(void*, Evas_Object*, void*);
     static void _cm_add_to_qa_clicked(void*, Evas_Object*, void*);
     static void _cm_desktop_view_page_clicked(void*, Evas_Object*, void*);
+    static void _cm_mobile_view_page_clicked(void*, Evas_Object*, void*);
     static void _cm_settings_clicked(void*, Evas_Object*, void*);
     static void _cm_add_to_hs_clicked(void*, Evas_Object*, void*);
     static int result_cb(int ret, void *data);
@@ -202,6 +207,7 @@ private:
     UrlHistoryPtr m_urlHistoryList;
     bool m_webviewLocked;
     bool m_WebPageUIvisible;
+    bool m_desktopMode;
 
     sharedAction m_back;
     sharedAction m_forward;
@@ -211,6 +217,7 @@ private:
     sharedAction m_tabs;
 
     std::shared_ptr<pwaInfo> m_pwaInfo;
+
 #if GESTURE
     Evas_Object* m_gestureLayer;
     bool m_uriBarHidden;
