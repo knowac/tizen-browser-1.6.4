@@ -23,6 +23,7 @@
 #include "AbstractContextMenu.h"
 #include "AbstractUIComponent.h"
 #include "AbstractService.h"
+#include "AbstractWebEngine/State.h"
 #include "ServiceFactory.h"
 #include "service_macros.h"
 #include "TabIdTypedef.h"
@@ -55,10 +56,14 @@ public:
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
 
+    void setState(basic_webengine::State state);
+
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> tabClicked;
     boost::signals2::signal<void ()> newTabClicked;
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> closeTabsClicked;
     boost::signals2::signal<void ()> closeTabUIClicked;
+    boost::signals2::signal<void ()> changeEngineState;
+    boost::signals2::signal<void ()> refetchTabUIData;
 
 private:
     struct TabData

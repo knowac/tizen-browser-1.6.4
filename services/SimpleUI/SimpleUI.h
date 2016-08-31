@@ -104,7 +104,6 @@ private:
     void loadFinished();
     void progressChanged(double progress);
     void loadStarted();
-    void loadError();
 
     void setErrorButtons();
 
@@ -116,6 +115,7 @@ private:
     void switchViewToIncognitoPage();
     void switchViewToWebPage();
     void updateView();
+    void changeEngineState();
     void windowCreated();
     void minimizeBrowser();
 
@@ -252,6 +252,7 @@ private:
 
     void showTabUI();
     void closeTabUI();
+    void refetchTabUIData();
     void switchToMobileMode();
     void switchToDesktopMode();
     Evas_Object* showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode = false);
@@ -322,7 +323,7 @@ private:
     std::vector<interfaces::AbstractPopup*> m_popupVector;
 
     std::shared_ptr<WebPageUI> m_webPageUI;
-    std::shared_ptr<basic_webengine::AbstractWebEngine<Evas_Object>>  m_webEngine;
+    std::shared_ptr<basic_webengine::AbstractWebEngine>  m_webEngine;
     std::shared_ptr<interfaces::AbstractFavoriteService> m_favoriteService;
     std::shared_ptr<services::HistoryService> m_historyService;
     services::TabServicePtr m_tabService;

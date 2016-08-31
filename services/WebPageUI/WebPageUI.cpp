@@ -90,6 +90,25 @@ UrlHistoryPtr WebPageUI::getUrlHistoryList()
 void WebPageUI::showUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto state = getEngineState();
+    if (state) {
+        switch (*state) {
+            case basic_webengine::State::NORMAL:
+                elm_object_signal_emit(m_mainLayout, "set_normal_mode", "ui");
+                break;
+            case basic_webengine::State::SECRET:
+                elm_object_signal_emit(m_mainLayout, "set_secret_mode", "ui");
+                break;
+            default:
+                BROWSER_LOGE("[%s:%d] Unknown state!", __PRETTY_FUNCTION__, __LINE__);
+        }
+        m_bottomButtonBar->setButtonsColor(*state == basic_webengine::State::SECRET);
+        m_rightButtonBar->setButtonsColor(*state == basic_webengine::State::SECRET);
+    } else {
+        BROWSER_LOGE("[%s:%d] Wrong state value!", __PRETTY_FUNCTION__, __LINE__);
+    }
+
     M_ASSERT(m_mainLayout);
     evas_object_show(m_mainLayout);
 
@@ -568,6 +587,15 @@ void WebPageUI::createLayout()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_parent);
+
+    // set white base background for button
+    edje_color_class_set("elm/widget/button/default/bg-default", 255, 255, 255, 255,
+                    255, 255, 255, 255,
+                    255, 255, 255, 255);
+    edje_color_class_set("elm/widget/button/default/bg-disabled", 255, 255, 255, 255,
+                        255, 255, 255, 255,
+                        255, 255, 255, 255);
+
     // create web layout
     m_mainLayout = elm_layout_add(m_parent);
     evas_object_size_hint_weight_set(m_mainLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);

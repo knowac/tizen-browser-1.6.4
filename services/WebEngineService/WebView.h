@@ -76,7 +76,7 @@ class WebView
 public:
     WebView(Evas_Object *, TabId, const std::string& title, bool incognitoMode);
     virtual ~WebView();
-    void init(bool desktopMode, TabOrigin origin, Evas_Object * view = NULL);
+    void init(bool desktopMode, TabOrigin origin);
 
 #if PROFILE_MOBILE
     virtual void orientationChanged() override;
@@ -111,13 +111,6 @@ public:
     Evas_Object * getLayout();
 
     void confirmationResult(WebConfirmationPtr);
-
-    /**
-     * @brief Get the state of private mode
-     *
-     * @return state of private mode
-     */
-    bool isPrivateMode() {return m_private;}
 
     std::shared_ptr<tizen_browser::tools::BrowserImage> captureSnapshot(int width, int height, bool async,
             tizen_browser::tools::SnapshotType snapshot_type);

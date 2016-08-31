@@ -64,14 +64,15 @@ public:
     void createBottomBar(Evas_Object* layout = nullptr,
         std::string swallow_name = "elm.swallow.content");
     void addButtonToBottomBar(std::string text, Evas_Smart_Cb callback, void* data);
-    void setEnableButtonInBottomBar(std::string text, bool enabled);
+    void setEnableButtonInBottomBar(int number, bool enabled);
+    void setBottomButtonText(int number, const std::string& text);
     void setVisibleBottomBar(bool visible);
 
 protected:
     Evas_Object *m_parent;
     Evas_Object *m_layout;
     Evas_Object *m_bottom_box;
-    std::map<std::string, Evas_Object*> m_map_bottom_box;
+    std::vector<Evas_Object*> m_bottom_buttons;
 };
 
 using SharedNaviframeWrapper = std::shared_ptr<NaviframeWrapper>;

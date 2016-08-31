@@ -92,7 +92,11 @@ public:
 
     void updateTabItemSnapshot(const basic_webengine::TabId& tabId,
             tools::BrowserImagePtr imagePtr);
-
+    /**
+     * Cache given thumb image with given tab id.
+     */
+    void saveThumbCache(const basic_webengine::TabId& tabId,
+        tools::BrowserImagePtr imagePtr);
 private:
     /**
      * Help method printing last bp_tab_error_defs error.
@@ -112,11 +116,6 @@ private:
      */
     boost::optional<tools::BrowserImagePtr> getThumbCache(
             const basic_webengine::TabId& tabId);
-    /**
-     * Cache given thumb image with given tab id.
-     */
-    void saveThumbCache(const basic_webengine::TabId& tabId,
-            tools::BrowserImagePtr imagePtr);
     /**
      * Check if thumb for given id is in a map.
      */

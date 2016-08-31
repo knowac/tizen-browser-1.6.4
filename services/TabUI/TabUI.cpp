@@ -137,10 +137,10 @@ void TabUI::createBottomContent()
     m_naviframe->setVisibleBottomBar(true);
     //TODO: Missing translation
     m_naviframe->addButtonToBottomBar("Enable Secret", _enable_secret_clicked, this);
-    m_naviframe->setEnableButtonInBottomBar("Enable Secret", true);
+    m_naviframe->setEnableButtonInBottomBar(0, true);
     //TODO: _("IDS_BR_OPT_NEW_TAB") when it works
     m_naviframe->addButtonToBottomBar("New tab", _new_tab_clicked, this);
-    m_naviframe->setEnableButtonInBottomBar("New tab", true);
+    m_naviframe->setEnableButtonInBottomBar(1, true);
 }
 
 void TabUI::createEmptyLayout()
@@ -235,6 +235,20 @@ void TabUI::showContextMenu()
     }
 }
 
+void TabUI::setState(basic_webengine::State state)
+{
+    switch(state) {
+        case basic_webengine::State::NORMAL:
+            m_naviframe->setBottomButtonText(0, "Enable Secret");
+            break;
+        case basic_webengine::State::SECRET:
+            m_naviframe->setBottomButtonText(0, "Disable Secret");
+            break;
+        default:
+            BROWSER_LOGE("[%s:%d] Unknown state!", __PRETTY_FUNCTION__, __LINE__);
+    }
+}
+
 void TabUI::_cm_sync_clicked(void* data, Evas_Object*, void* )
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -309,6 +323,9 @@ void TabUI::_enable_secret_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
+        auto self = static_cast<TabUI*>(data);
+        self->changeEngineState();
+        self->refetchTabUIData();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
@@ -344,6 +361,7 @@ void TabUI::addTabItem(basic_webengine::TabContentPtr hi)
 void TabUI::addTabItems(std::vector<basic_webengine::TabContentPtr>& items)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    elm_gengrid_clear(m_gengrid);
     for (auto it = items.begin(); it < items.end(); ++it)
         addTabItem(*it);
     updateNoTabsText();

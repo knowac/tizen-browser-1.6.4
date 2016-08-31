@@ -32,6 +32,7 @@
 #include "TabOrigin.h"
 #include "WebConfirmation.h"
 #include "WebEngineSettings.h"
+#include "State.h"
 
 namespace tizen_browser {
 namespace basic_webengine {
@@ -40,9 +41,8 @@ namespace basic_webengine {
  * It is designed for multiple tabs operations.
  * It is designed to be only way for communication with WebEngine. It should NOT return WebEngine object.
  */
-template<typename T>
 #ifndef NDEBUG
-class AbstractWebEngine : public tizen_browser::core::AbstractService, ShowLifeCycle<AbstractWebEngine<T>>
+class AbstractWebEngine: public tizen_browser::core::AbstractService, ShowLifeCycle<AbstractWebEngine>
 #else
 class AbstractWebEngine: public tizen_browser::core::AbstractService
 #endif
@@ -53,14 +53,13 @@ public:
      * Remember that there must be at least 1 tab created to return layout
      * @return pointer Evas_Object for current WebView.
      */
-    virtual T * getLayout() = 0;
+    virtual Evas_Object* getLayout() = 0;
 
     /**
      * Initialize WebEngine.
-     * @param guiParent GUI parent object (now should pass Evas_Object)
-     * \todo make guiParent nonEFL object
+     * @param guiParent GUI parent object
      */
-    virtual void init(void * guiParent) = 0;
+    virtual void init(Evas_Object* guiParent) = 0;
 
     /**
      * Preinitialize WebView parameters.
@@ -176,23 +175,20 @@ public:
      * @param tabId Tab id of the new tab. If boost::none, tab's id will be
      * generated
      * @param desktopMode true if desktop mode, false if mobile mode
-     * @param incognitoMode true if incognito mode, false if not
      * @return TabId of created tab
      */
     virtual TabId addTab(
             const std::string& uri = std::string(),
-            const TabId* openerId = NULL,
             const boost::optional<int> tabId = boost::none,
             const std::string& title = std::string(),
             bool desktopMode = true,
-            bool incognitoMode = false,
             TabOrigin origin = TabOrigin::UNKNOWN) = 0;
 
     /**
      * @param tab id
      * @return returns underlaying UI component
      */
-    virtual T* getTabView(TabId id) = 0;
+    virtual Evas_Object* getTabView(TabId id) = 0;
 
     /**
      * Switch current tab for tab with tabId
@@ -234,12 +230,12 @@ public:
             bool async, tizen_browser::tools::SnapshotType snapshot_type) = 0;
 
     /**
-     * Get the state of private mode for a specific tab
+     * Get the state of secret mode
      *
      * /param id of snapshot
      * /return state of private mode
      */
-    virtual bool isPrivateMode(const TabId&) = 0;
+    virtual bool isSecretMode() = 0;
 
     virtual bool isLoadError() const = 0;
 
@@ -366,7 +362,6 @@ public:
      */
     virtual void onTabIdCreated(int tabId) = 0;
 
-#if PROFILE_MOBILE
     /**
      * @brief Searches for word in the current page.
      *
@@ -396,7 +391,16 @@ public:
      * @brief Informs WebEngine that device orientation is changed.
      */
     virtual void orientationChanged() = 0;
-#endif
+
+    /**
+     * @brief set next state
+     */
+    virtual void changeState() = 0;
+
+    /**
+     * @brief Get current state of the engine
+     */
+    virtual State getState() = 0;
 
     /**
      * Ask browser to minimize itself

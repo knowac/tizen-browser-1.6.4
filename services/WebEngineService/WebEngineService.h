@@ -29,6 +29,7 @@
 #include "AbstractWebEngine/TabIdTypedef.h"
 #include "AbstractWebEngine/WebConfirmation.h"
 #include "AbstractWebEngine/TabOrigin.h"
+#include "AbstractWebEngine/State.h"
 #include "SnapshotType.h"
 #include "BrowserImage.h"
 #include "DownloadControl/DownloadControl.h"
@@ -39,9 +40,10 @@ namespace webengine_service {
 
 class WebView;
 
-typedef std::shared_ptr<WebView> WebViewPtr;
+using WebViewPtr = std::shared_ptr<WebView>;
+using TabsMapPtr = std::shared_ptr<std::map<TabId, WebViewPtr > >;
 
-class BROWSER_EXPORT WebEngineService : public AbstractWebEngine<Evas_Object>, boost::noncopyable
+class BROWSER_EXPORT WebEngineService : public AbstractWebEngine, boost::noncopyable
 {
 public:
     WebEngineService();
@@ -49,7 +51,7 @@ public:
     virtual std::string getName();
 
     Evas_Object * getLayout();
-    void init(void * guiParent);
+    void init(Evas_Object* guiParent);
     void preinitializeWebViewCache();
 
     void setURI(const std::string &);
@@ -97,11 +99,9 @@ public:
      */
     TabId addTab(
             const std::string & uri = std::string(),
-            const TabId* tabInitId = NULL,
             const boost::optional<int> tabId = boost::none,
             const std::string& title = std::string(),
             bool desktopMode = true,
-            bool incognitoMode = false,
             TabOrigin origin = TabOrigin::UNKNOWN);
     Evas_Object* getTabView(TabId id);
     bool switchToTab(TabId);
@@ -122,15 +122,10 @@ public:
     std::shared_ptr<tizen_browser::tools::BrowserImage> getSnapshotData(TabId id, int width, int height, bool async, tizen_browser::tools::SnapshotType snapshot_type);
 
     /**
-     * @brief Get the state of private mode for a specific tab
+     * @brief Get the state of secret mode
      *
-     * @param id of snapshot
-     * @return state of private mode where:
-     *     -1 is "Not set"
-     *      0 is "False"
-     *      1 is "True"
      */
-    bool isPrivateMode(const TabId& id);
+    bool isSecretMode();
 
 
     /**
@@ -194,7 +189,6 @@ public:
 
     void onTabIdCreated(int tabId) override;
 
-#if PROFILE_MOBILE
     /**
      * @brief Searches for word in the current page.
      *
@@ -219,7 +213,16 @@ public:
      * @brief Reset WebView settings
      */
     virtual void resetSettingsParam() override;
-#endif
+
+    /**
+     * @brief set next state
+     */
+    void changeState() override;
+
+    /**
+     * @brief Get current state of the engine
+     */
+    State getState() override { return m_state; }
 private:
     // callbacks from WebView
     void _favIconChanged(std::shared_ptr<tizen_browser::tools::BrowserImage> bi);
@@ -264,8 +267,14 @@ private:
     int createTabId();
 
 private:
+    struct StateStruct {
+        std::map<TabId, WebViewPtr > tabs;
+        std::vector<TabId> mostRecentTab;
+    };
+
+    State m_state;
     bool m_initialised;
-    void* m_guiParent;
+    Evas_Object* m_guiParent;
     bool m_stopped;
     bool m_webViewCacheInitialized;
 
@@ -273,16 +282,14 @@ private:
     TabId m_currentTabId;
     // current WebView
     WebViewPtr m_currentWebView;
-
-    // map of all tabs (WebViews)
-    std::map<TabId, WebViewPtr > m_tabs;
-    // Most recent tab list
-    std::vector<TabId> m_mostRecentTab;
+    StateStruct m_normalStateStruct;
+    StateStruct m_secretStateStruct;
+    StateStruct* m_stateStruct;
     int m_tabIdCreated;
-#if PROFILE_MOBILE
+    int m_tabIdSecret;
+
     std::map<WebEngineSettings, bool>  m_settings;
     DownloadControl *m_downloadControl;
-#endif
 };
 
 } /* end of webengine_service */

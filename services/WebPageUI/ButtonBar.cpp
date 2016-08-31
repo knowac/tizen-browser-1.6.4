@@ -51,32 +51,25 @@ void ButtonBar::addAction(sharedAction action, const std::string& buttonName)
     actionButton.eAction = eAction;
     Evas_Object* button = elm_button_add(m_layout);
 
-    edje_color_class_set("elm/widget/button/default/bg-default", 240, 240, 240, 255,
-                        255, 255, 255, 255,
-                        255, 255, 255, 255);
-
-    edje_color_class_set("elm/widget/button/default/bg-disabled", 240, 240, 240, 255,
-                        255, 255, 255, 255,
-                        255, 255, 255, 255);
-
-    Evas_Object* m_box = elm_box_add(button);
-    evas_object_size_hint_weight_set(m_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_box_homogeneous_set(m_box, EINA_FALSE);
+    Evas_Object* box = elm_box_add(button);
+    evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_box_homogeneous_set(box, EINA_FALSE);
 
     // Set a source file to fetch pixel data
-    Evas_Object *img = elm_image_add(m_box);
-    elm_image_file_set(img, m_edjFilePath.c_str(), action->getIcon().c_str());
+    Evas_Object *img = elm_layout_add(box);
+    elm_layout_file_set(img, m_edjFilePath.c_str(), action->getIcon().c_str());
     evas_object_size_hint_min_set(img, 0, BUTTON_WITH_ICON_HEIGHT);
-    elm_box_pack_end(m_box, img);
+    elm_box_pack_end(box, img);
     evas_object_show(img);
+    m_imgMap[buttonName] = img;
 
-    Evas_Object *label = elm_label_add(m_box);
+    Evas_Object *label = elm_label_add(box);
     elm_object_text_set(label, action->getText().c_str());
-    elm_box_pack_end(m_box, label);
+    elm_box_pack_end(box, label);
     evas_object_show(label);
-    evas_object_show(m_box);
-    elm_object_part_content_set(button, "elm.swallow.content", m_box);
+    evas_object_show(box);
+    elm_object_part_content_set(button, "elm.swallow.content", box);
 
     elm_object_disabled_set(button, action->isEnabled() ? EINA_FALSE : EINA_TRUE);
     evas_object_smart_callback_add(button, "clicked", EAction::callbackFunction, eAction.get());
@@ -108,8 +101,6 @@ void ButtonBar::setActionForButton(const std::string& buttonName, sharedAction n
     ActionButton actionButton;
     Evas_Object* button = m_buttonsMap[buttonName].button;
     std::shared_ptr<EAction> eAction = std::make_shared<EAction>(newAction);
-
-    elm_object_style_set(button, newAction->getIcon().c_str());
 
     evas_object_smart_callback_del(button, "clicked", EAction::callbackFunction);
     evas_object_smart_callback_add(button, "clicked", EAction::callbackFunction, eAction.get());
@@ -155,6 +146,21 @@ void ButtonBar::setDisabled(bool disabled)
         clearFocus();
     }
     elm_object_disabled_set(getContent(), disabled ? EINA_TRUE : EINA_FALSE);
+}
+
+void ButtonBar::setButtonsColor(bool secretMode)
+{
+    for (const auto& it : m_buttonsMap) {
+        if (secretMode) {
+            //TODO works, state is changed but get gray scale only, why?
+            //elm_object_signal_emit(m_imgMap[it.first], "set_secret_mode", "ui");
+            evas_object_color_set(it.second.button, 97, 97, 97, 255);
+        } else {
+            evas_object_color_set(it.second.button, 240, 240, 240, 255);
+            elm_object_signal_emit(m_imgMap[it.first], "set_normal_mode", "ui");
+        }
+    }
+
 }
 
 }

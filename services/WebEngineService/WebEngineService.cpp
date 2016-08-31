@@ -35,19 +35,20 @@ namespace webengine_service {
 EXPORT_SERVICE(WebEngineService, "org.tizen.browser.webengineservice")
 
 WebEngineService::WebEngineService()
-    : m_initialised(false)
+    : m_state(State::NORMAL)
+    , m_initialised(false)
     , m_guiParent(nullptr)
     , m_stopped(false)
     , m_webViewCacheInitialized(false)
     , m_currentTabId(TabId::NONE)
     , m_currentWebView(nullptr)
+    , m_stateStruct(&m_normalStateStruct)
     , m_tabIdCreated(-1)
-    #if PROFILE_MOBILE
+    , m_tabIdSecret(0)
     , m_downloadControl(nullptr)
-    #endif
 {
-    m_mostRecentTab.clear();
-    m_tabs.clear();
+    m_stateStruct->mostRecentTab.clear();
+    m_stateStruct->tabs.clear();
 
 #if PROFILE_MOBILE
     // init settings
@@ -72,7 +73,7 @@ WebEngineService::~WebEngineService()
 void WebEngineService::destroyTabs()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_tabs.clear();
+    m_stateStruct->tabs.clear();
     if (m_currentWebView)
         m_currentWebView.reset();
 }
@@ -88,7 +89,7 @@ Evas_Object * WebEngineService::getLayout()
     return m_currentWebView->getLayout();
 }
 
-void WebEngineService::init(void * guiParent)
+void WebEngineService::init(Evas_Object* guiParent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!m_initialised) {
@@ -109,8 +110,7 @@ void WebEngineService::preinitializeWebViewCache()
     if (!m_webViewCacheInitialized) {
         m_webViewCacheInitialized = true;
         Ewk_Context* context = ewk_context_default_get();
-        Evas_Object* ewk_view = ewk_view_add_with_context(evas_object_evas_get(
-                reinterpret_cast<Evas_Object *>(m_guiParent)), context);
+        Evas_Object* ewk_view = ewk_view_add_with_context(evas_object_evas_get(m_guiParent), context);
         ewk_context_cache_model_set(context, EWK_CACHE_MODEL_PRIMARY_WEBBROWSER);
         ewk_view_orientation_send(ewk_view, 0);
         evas_object_del(ewk_view);
@@ -145,6 +145,7 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
 
 void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(webView);
     webView->favIconChanged.disconnect(boost::bind(&WebEngineService::_favIconChanged, this));
     webView->titleChanged.disconnect(boost::bind(&WebEngineService::_titleChanged, this, _1));
@@ -276,12 +277,10 @@ void WebEngineService::suspend()
         BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__,"m_currentWebView is null");
         return;
     }
-    if (tabsCount()>0) {
-        m_currentWebView->suspend();
+    m_currentWebView->suspend();
 #if PROFILE_MOBILE
         unregisterHWKeyCallback();
 #endif
-    }
 }
 
 void WebEngineService::resume()
@@ -292,13 +291,10 @@ void WebEngineService::resume()
         BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__,"m_currentWebView is null");
         return;
     }
-    if (tabsCount()>0) {
-        M_ASSERT(m_currentWebView);
-        m_currentWebView->resume();
+    m_currentWebView->resume();
 #if PROFILE_MOBILE
         registerHWKeyCallback();
 #endif
-    }
 }
 
 bool WebEngineService::isSuspended() const
@@ -458,7 +454,7 @@ void WebEngineService::_confirmationRequest(WebConfirmationPtr c)
 
 int WebEngineService::tabsCount() const
 {
-    return m_tabs.size();
+    return m_stateStruct->tabs.size();
 }
 
 TabId WebEngineService::currentTabId() const
@@ -468,41 +464,43 @@ TabId WebEngineService::currentTabId() const
 
 std::vector<TabContentPtr> WebEngineService::getTabContents() const {
     std::vector<TabContentPtr> result;
-    for (auto const& tab : m_tabs) {
+    for (auto const& tab : m_stateStruct->tabs) {
         auto tabContent = std::make_shared<TabContent>(tab.first, tab.second->getURI(), tab.second->getTitle(), tab.second->getOrigin());
         result.push_back(tabContent);
     }
     return result;
 }
 
-TabId WebEngineService::addTab(const std::string & uri,
-        const TabId * tabInitId, const boost::optional<int> tabId,
-        const std::string& title, bool desktopMode, bool incognitoMode, TabOrigin origin)
+TabId WebEngineService::addTab(const std::string & uri, const boost::optional<int> tabId,
+        const std::string& title, bool desktopMode, TabOrigin origin)
 {
     if (!(*AbstractWebEngine::checkIfCreate()))
         return currentTabId();
 
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    int newAdaptorId = -1;
-    if (tabId) {
-        newAdaptorId = *tabId;
+    TabId newTabId(0);
+    if (m_state == State::NORMAL) {
+        int newAdaptorId = -1;
+        if (tabId) {
+            newAdaptorId = *tabId;
+        } else {
+            // searching for next available tabId
+            newAdaptorId = createTabId();
+            if (newAdaptorId < 0)
+                return TabId(TabId::NONE);
+        }
+        newTabId = TabId(newAdaptorId);
     } else {
-        // searching for next available tabId
-        newAdaptorId = createTabId();
-        if (newAdaptorId < 0)
-            return TabId(TabId::NONE);
+        ++m_tabIdSecret;
+        newTabId = TabId(m_tabIdSecret);
     }
-    TabId newTabId(newAdaptorId);
 
     m_webViewCacheInitialized = true;
-    WebViewPtr p = std::make_shared<WebView>(reinterpret_cast<Evas_Object *>(m_guiParent), newTabId, title, incognitoMode);
-    if (tabInitId)
-        p->init(desktopMode, origin, getTabView(*tabInitId));
-    else
-        p->init(desktopMode, origin);
+    WebViewPtr p = std::make_shared<WebView>(m_guiParent, newTabId, title, m_state == State::SECRET);
+    p->init(desktopMode, origin);
 
-    m_tabs[newTabId] = p;
+    m_stateStruct->tabs[newTabId] = p;
 
 #if PROFILE_MOBILE
     setWebViewSettings(p);
@@ -518,11 +516,11 @@ TabId WebEngineService::addTab(const std::string & uri,
 }
 
 Evas_Object* WebEngineService::getTabView(TabId id){
-    if (m_tabs.find(id) == m_tabs.end()) {
+    if (m_stateStruct->tabs.find(id) == m_stateStruct->tabs.end()) {
         BROWSER_LOGW("[%s:%d] there is no tab of id %d", __PRETTY_FUNCTION__, __LINE__, id.get());
         return nullptr;
     }
-    return m_tabs[id]->getLayout();
+    return m_stateStruct->tabs[id]->getLayout();
 }
 
 bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabId)
@@ -535,17 +533,21 @@ bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabI
         suspend();
     }
 
-    if (m_tabs.find(newTabId) == m_tabs.end()) {
+    if (m_stateStruct->tabs.find(newTabId) == m_stateStruct->tabs.end()) {
         BROWSER_LOGW("[%s:%d] there is no tab of id %d", __PRETTY_FUNCTION__, __LINE__, newTabId.get());
         return false;
     }
 #if PROFILE_MOBILE
     closeFindOnPage();
 #endif
-    m_currentWebView = m_tabs[newTabId];
+    m_currentWebView = m_stateStruct->tabs[newTabId];
     m_currentTabId = newTabId;
-    m_mostRecentTab.erase(std::remove(m_mostRecentTab.begin(), m_mostRecentTab.end(), newTabId), m_mostRecentTab.end());
-    m_mostRecentTab.push_back(newTabId);
+    m_stateStruct->mostRecentTab.erase(
+        std::remove(m_stateStruct->mostRecentTab.begin(),
+            m_stateStruct->mostRecentTab.end(),
+            newTabId),
+        m_stateStruct->mostRecentTab.end());
+    m_stateStruct->mostRecentTab.push_back(newTabId);
 
     connectSignals(m_currentWebView);
     resume();
@@ -577,18 +579,22 @@ bool WebEngineService::closeTab(TabId id) {
     if (closingTabId == TabId::NONE){
         return res;
     }
-    m_tabs.erase(closingTabId);
-    m_mostRecentTab.erase(std::remove(m_mostRecentTab.begin(), m_mostRecentTab.end(), closingTabId), m_mostRecentTab.end());
+    m_stateStruct->tabs.erase(closingTabId);
+    m_stateStruct->mostRecentTab.erase(
+        std::remove(m_stateStruct->mostRecentTab.begin(),
+            m_stateStruct->mostRecentTab.end(),
+            closingTabId),
+        m_stateStruct->mostRecentTab.end());
 
     if (closingTabId == m_currentTabId) {
         if (m_currentWebView)
             m_currentWebView.reset();
     }
-    if (m_tabs.size() == 0) {
+    if (m_stateStruct->tabs.size() == 0) {
         m_currentTabId = TabId::NONE;
     }
-    else if (closingTabId == m_currentTabId && m_mostRecentTab.size()){
-        res = switchToTab(m_mostRecentTab.back());
+    else if (closingTabId == m_currentTabId && m_stateStruct->mostRecentTab.size()){
+        res = switchToTab(m_stateStruct->mostRecentTab.back());
     }
 
     tabClosed(closingTabId);
@@ -602,21 +608,17 @@ void WebEngineService::confirmationResult(WebConfirmationPtr c)
     M_ASSERT(c && c->getTabId() != TabId());
 
     // check if still exists
-    if (m_tabs.find(c->getTabId()) == m_tabs.end()) {
+    if (m_stateStruct->tabs.find(c->getTabId()) == m_stateStruct->tabs.end()) {
         return;
     }
 
-    m_tabs[c->getTabId()]->confirmationResult(c);
+    m_stateStruct->tabs[c->getTabId()]->confirmationResult(c);
 }
 
-bool WebEngineService::isPrivateMode(const TabId& id)
+bool WebEngineService::isSecretMode()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (m_tabs.find(id) == m_tabs.end()) {
-        BROWSER_LOGW("[%s:%d] there is no tab of id %d", __PRETTY_FUNCTION__, __LINE__, id.get());
-        return false;
-    }
-    return m_tabs[id]->isPrivateMode();
+    return m_state == State::SECRET;
 }
 
 std::shared_ptr<tizen_browser::tools::BrowserImage> WebEngineService::getSnapshotData(int width, int height,
@@ -631,11 +633,11 @@ std::shared_ptr<tizen_browser::tools::BrowserImage> WebEngineService::getSnapsho
 
 std::shared_ptr<tizen_browser::tools::BrowserImage> WebEngineService::getSnapshotData(TabId id, int width, int height, bool async,
         tizen_browser::tools::SnapshotType snapshot_type){
-    if (m_tabs.find(id) == m_tabs.end()) {
+    if (m_stateStruct->tabs.find(id) == m_stateStruct->tabs.end()) {
         BROWSER_LOGW("[%s:%d] there is no tab of id %d", __PRETTY_FUNCTION__, __LINE__, id.get());
         return std::shared_ptr<tizen_browser::tools::BrowserImage>();
     }
-   return m_tabs[id]->captureSnapshot(width, height, async, snapshot_type);
+   return m_stateStruct->tabs[id]->captureSnapshot(width, height, async, snapshot_type);
 }
 
 void WebEngineService::setFocus()
@@ -734,29 +736,29 @@ void WebEngineService::setZoomFactor(int zoomFactor)
 
 void WebEngineService::clearCache()
 {
-    for(std::map<TabId, WebViewPtr>::const_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it){
-            it->second->clearCache();
-        }
+    for(const auto& it: m_stateStruct->tabs) {
+        it.second->clearCache();
+    }
 }
 
 void WebEngineService::clearCookies()
 {
-    for(std::map<TabId, WebViewPtr>::const_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it){
-            it->second->clearCookies();
-        }
+    for(const auto& it: m_stateStruct->tabs) {
+        it.second->clearCookies();
+    }
 }
 
 void WebEngineService::clearPrivateData()
 {
-    for(std::map<TabId, WebViewPtr>::const_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it){
-            it->second->clearPrivateData();
-        }
+    for(const auto& it: m_stateStruct->tabs) {
+        it.second->clearPrivateData();
+    }
 }
 void WebEngineService::clearPasswordData()
 {
-    for(std::map<TabId, WebViewPtr>::const_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it){
-            it->second->clearPasswordData();
-        }
+    for(const auto& it: m_stateStruct->tabs) {
+        it.second->clearPasswordData();
+    }
 }
 
 void WebEngineService::clearFormData()
@@ -773,8 +775,8 @@ void WebEngineService::clearFormData()
         }
     }
     ewk_context_form_candidate_data_delete_all(ewk_context_default_get());
-    for (std::map<TabId, WebViewPtr>::const_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
-        it->second->clearFormData();
+    for(const auto& it: m_stateStruct->tabs)
+        it.second->clearFormData();
 }
 
 void WebEngineService::searchOnWebsite(const std::string & searchString, int flags)
@@ -893,9 +895,8 @@ void WebEngineService::backButtonClicked()
 
     if (isBackEnabled()) {
         m_currentWebView->back();
-    } else if (m_currentWebView->isPrivateMode()) {
-        closeTab();
-    } else if (m_currentWebView->getOrigin().isFromWebView() && m_tabs.find(m_currentWebView->getOrigin().getValue()) != m_tabs.end()) {
+    } else if (m_currentWebView->getOrigin().isFromWebView() &&
+        m_stateStruct->tabs.find(m_currentWebView->getOrigin().getValue()) != m_stateStruct->tabs.end()) {
         int switchTo = m_currentWebView->getOrigin().getValue();
         closeTab();
         switchToTab(switchTo);
@@ -951,7 +952,6 @@ void WebEngineService::scrollView(const int& dx, const int& dy)
     m_currentWebView->scrollView(dx, dy);
 }
 
-#if PROFILE_MOBILE
 void WebEngineService::findWord(const char *word, Eina_Bool forward, Evas_Smart_Cb found_cb, void *data)
 {
     if (m_currentWebView)
@@ -964,7 +964,7 @@ bool WebEngineService::getSettingsParam(WebEngineSettings param) {
 
 void WebEngineService::setSettingsParam(WebEngineSettings param, bool value) {
     m_settings[param] = value;
-    for(auto it = m_tabs.cbegin(); it != m_tabs.cend(); ++it) {
+    for(auto it = m_stateStruct->tabs.cbegin(); it != m_stateStruct->tabs.cend(); ++it) {
         switch (param) {
         case WebEngineSettings::PAGE_OVERVIEW:
             it->second->ewkSettingsAutoFittingSet(value);
@@ -1010,7 +1010,17 @@ void WebEngineService::resetSettingsParam()
     setSettingsParam(WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES, boost::any_cast<bool>(
             tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_SCRIPTS_CAN_OPEN_PAGES)));
 }
-#endif
+
+void WebEngineService::changeState()
+{
+    if (m_state == State::NORMAL) {
+        m_state = State::SECRET;
+        m_stateStruct = &m_secretStateStruct;
+    } else {
+        m_state = State::NORMAL;
+        m_stateStruct = &m_normalStateStruct;
+    }
+}
 
 } /* end of webengine_service */
 } /* end of basic_webengine */

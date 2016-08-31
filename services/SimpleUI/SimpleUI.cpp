@@ -295,16 +295,16 @@ void SimpleUI::connectUISignals()
 //    m_webPageUI->getUrlHistoryList()->openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1));
 //    m_webPageUI->getUrlHistoryList()->uriChanged.connect(boost::bind(&SimpleUI::filterURL, this, _1));
     m_webPageUI->backPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
-    m_webPageUI->backPage.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::back, m_webEngine.get()));
+    m_webPageUI->backPage.connect(boost::bind(&basic_webengine::AbstractWebEngine::back, m_webEngine.get()));
     m_webPageUI->showTabUI.connect(boost::bind(&SimpleUI::showTabUI, this));
     m_webPageUI->showBookmarksUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
         m_favoriteService->getRoot(), BookmarkManagerState::Default));
     m_webPageUI->showHomePage.connect(boost::bind(&SimpleUI::showHomePage, this));
-    m_webPageUI->forwardPage.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::forward, m_webEngine.get()));
+    m_webPageUI->forwardPage.connect(boost::bind(&basic_webengine::AbstractWebEngine::forward, m_webEngine.get()));
     m_webPageUI->showQuickAccess.connect(boost::bind(&SimpleUI::showQuickAccess, this));
     m_webPageUI->hideQuickAccess.connect(boost::bind(&QuickAccess::hideUI, m_quickAccess));
-    m_webPageUI->focusWebView.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::setFocus, m_webEngine.get()));
-    m_webPageUI->unfocusWebView.connect(boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::clearFocus, m_webEngine.get()));
+    m_webPageUI->focusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::setFocus, m_webEngine.get()));
+    m_webPageUI->unfocusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::clearFocus, m_webEngine.get()));
     m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
         m_favoriteService->getRoot(), BookmarkManagerState::Default));
     m_webPageUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
@@ -320,12 +320,13 @@ void SimpleUI::connectUISignals()
     m_webPageUI->getURIEntry().secureIconClicked.connect(boost::bind(&SimpleUI::showCertificatePopup, this));
     m_webPageUI->getURIEntry().isValidCert.connect(boost::bind(&services::CertificateContents::isValidCertificate, m_certificateContents, _1));
     m_webPageUI->getURIEntry().reloadPage.connect(
-        boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::reload, m_webEngine.get()));
+        boost::bind(&basic_webengine::AbstractWebEngine::reload, m_webEngine.get()));
     m_webPageUI->getURIEntry().stopLoadingPage.connect(
-        boost::bind(&tizen_browser::basic_webengine::AbstractWebEngine<Evas_Object>::stopLoading, m_webEngine.get()));
+        boost::bind(&basic_webengine::AbstractWebEngine::stopLoading, m_webEngine.get()));
     m_webPageUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
     m_webPageUI->switchToMobileMode.connect(boost::bind(&SimpleUI::switchToMobileMode, this));
     m_webPageUI->switchToDesktopMode.connect(boost::bind(&SimpleUI::switchToDesktopMode, this));
+    m_webPageUI->getEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::getState, m_webEngine.get()));
     // WPA
     m_webPageUI->requestCurrentPageForWebPageUI.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
 
@@ -345,6 +346,9 @@ void SimpleUI::connectUISignals()
     m_tabUI->closeTabsClicked.connect(boost::bind(&SimpleUI::closeTabsClicked, this,_1));
     m_tabUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_tabUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
+    m_tabUI->changeEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::changeState, m_webEngine.get()));
+    m_tabUI->changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
+    m_tabUI->refetchTabUIData.connect(boost::bind(&SimpleUI::refetchTabUIData, this));
 
     M_ASSERT(m_historyUI.get());
     m_historyUI->clearHistoryClicked.connect(boost::bind(&SimpleUI::onClearHistoryAllClicked, this));
@@ -394,7 +398,7 @@ void SimpleUI::loadModelServices()
 
     m_webEngine =
         std::dynamic_pointer_cast
-        <basic_webengine::AbstractWebEngine<Evas_Object>,tizen_browser::core::AbstractService>
+        <basic_webengine::AbstractWebEngine,tizen_browser::core::AbstractService>
         (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.webengineservice"));
 
     m_storageService =
@@ -442,7 +446,7 @@ void SimpleUI::connectSettingsSignals()
         boost::bind(&SimpleUI::showSettings, this,_1));
     SPSC.getWebEngineSettingsParam.connect(
         boost::bind(
-            &basic_webengine::AbstractWebEngine<Evas_Object>::getSettingsParam,
+            &basic_webengine::AbstractWebEngine::getSettingsParam,
             m_webEngine.get(),
             _1));
     SPSC. getWebEngineSettingsParamString.connect(
@@ -453,7 +457,7 @@ void SimpleUI::connectSettingsSignals()
 
     SPSC.setWebEngineSettingsParam.connect(
         boost::bind(
-            &basic_webengine::AbstractWebEngine<Evas_Object>::setSettingsParam,
+            &basic_webengine::AbstractWebEngine::setSettingsParam,
             m_webEngine.get(),
             _1,
             _2));
@@ -559,7 +563,6 @@ void SimpleUI::connectModelSignals()
     m_webEngine->loadProgress.connect(boost::bind(&SimpleUI::progressChanged,this,_1));
     m_webEngine->loadFinished.connect(boost::bind(&SimpleUI::loadFinished, this));
     m_webEngine->loadStop.connect(boost::bind(&SimpleUI::loadFinished, this));
-    m_webEngine->loadError.connect(boost::bind(&SimpleUI::loadError, this));
     m_webEngine->tabCreated.connect(boost::bind(&SimpleUI::tabCreated, this));
     m_webEngine->checkIfCreate.connect(boost::bind(&SimpleUI::checkIfCreate, this));
     m_webEngine->tabClosed.connect(boost::bind(&SimpleUI::tabClosed,this,_1));
@@ -597,7 +600,7 @@ void SimpleUI::connectModelSignals()
     m_certificateContents->addOrUpdateCertificateEntry.connect(boost::bind(&storage::CertificateStorage::addOrUpdateCertificateEntry, &m_storageService->getCertificateStorage(), _1, _2, _3));
 
 #if PROFILE_MOBILE
-    m_storageService->getSettingsStorage().setWebEngineSettingsParam.connect(boost::bind(&basic_webengine::AbstractWebEngine<Evas_Object>::setSettingsParam, m_webEngine.get(), _1, _2));
+    m_storageService->getSettingsStorage().setWebEngineSettingsParam.connect(boost::bind(&basic_webengine::AbstractWebEngine::setSettingsParam, m_webEngine.get(), _1, _2));
     m_platformInputManager->menuButtonPressed.connect(boost::bind(&SimpleUI::onMenuButtonPressed, this));
     m_platformInputManager->XF86BackPressed.connect(boost::bind(&SimpleUI::onXF86BackPressed, this));
     m_webEngine->registerHWKeyCallback.connect(boost::bind(&SimpleUI::registerHWKeyCallback, this));
@@ -627,22 +630,14 @@ void SimpleUI::switchViewToWebPage()
         m_webEngine->resume();
     m_webEngine->connectCurrentWebViewSignals();
     m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), m_webEngine->getURI(), m_webEngine->isLoading());
-    m_webPageUI->toIncognito(m_webEngine->isPrivateMode(m_webEngine->currentTabId()));
 }
 
 void SimpleUI::switchToTab(const tizen_browser::basic_webengine::TabId& tabId)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if(m_webEngine->currentTabId() != tabId) {
-        BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
         m_webEngine->switchToTab(tabId);
     }
-    if(m_webEngine->isLoadError()){
-        BROWSER_LOGD("[%s:%d] LOAD ERROR!", __PRETTY_FUNCTION__, __LINE__);
-        loadError();
-    return;
-    }
-    BROWSER_LOGD("[%s:%d] swiching to web_view ", __PRETTY_FUNCTION__, __LINE__);
     switchViewToWebPage();
 }
 
@@ -674,13 +669,12 @@ void SimpleUI::openNewTab(const std::string &uri, const std::string& title,
 {
     BROWSER_LOGD("[%s:%d] uri =%s", __PRETTY_FUNCTION__, __LINE__, uri.c_str());
     tizen_browser::basic_webengine::TabId tab = m_webEngine->addTab(uri,
-            nullptr, adaptorId, title, desktopMode, incognitoMode, origin);
+            adaptorId, title, desktopMode, origin);
     if (tab == basic_webengine::TabId::NONE) {
         BROWSER_LOGW("[%s:%d] New tab is not created!", __PRETTY_FUNCTION__, __LINE__);
         return;
     }
     switchToTab(tab);
-    m_webPageUI->toIncognito(incognitoMode);
     if (incognitoMode)
         switchViewToIncognitoPage();
 }
@@ -929,8 +923,12 @@ void SimpleUI::onSnapshotCaptured(std::shared_ptr<tools::BrowserImage> snapshot,
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     switch (snapshot_type) {
     case tools::SnapshotType::ASYNC_LOAD_FINISHED:
-        m_historyService->updateHistoryItemSnapshot(m_webEngine->getURI(), snapshot);
-        m_tabService->updateTabItemSnapshot(m_webEngine->currentTabId(), snapshot);
+        if (m_webEngine->isSecretMode()) {
+            m_tabService->saveThumbCache(m_webEngine->currentTabId(), snapshot);
+        } else {
+            m_historyService->updateHistoryItemSnapshot(m_webEngine->getURI(), snapshot);
+            m_tabService->updateTabItemSnapshot(m_webEngine->currentTabId(), snapshot);
+        }
         break;
     case tools::SnapshotType::ASYNC_TAB:
         m_tabService->updateTabItemSnapshot(m_webEngine->currentTabId(), snapshot);
@@ -1157,7 +1155,7 @@ void SimpleUI::loadFinished()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_webPageUI->loadFinished();
 #if PROFILE_MOBILE
-    if (!m_webEngine->isPrivateMode(m_webEngine->currentTabId())) {
+    if (!m_webEngine->isSecretMode()) {
         m_tabService->updateTabItem(m_webEngine->currentTabId(),
                 m_webEngine->getURI(),
                 m_webEngine->getTitle(),
@@ -1166,14 +1164,6 @@ void SimpleUI::loadFinished()
                                                  m_webEngine->getTitle(),
                                                  m_webEngine->getFavicon());
     }
-#endif
-}
-
-void SimpleUI::loadError()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-#if !PROFILE_MOBILE
-    m_webPageUI->switchViewToErrorPage();
 #endif
 }
 
@@ -1199,7 +1189,7 @@ void SimpleUI::filterURL(const std::string& url)
         else
             m_webEngine->setURI(url);
 
-        if (m_webEngine->isPrivateMode(m_webEngine->currentTabId()) ||
+        if (m_webEngine->isSecretMode() ||
                 m_webPageUI->stateEquals(WPUState::MAIN_ERROR_PAGE))
             switchViewToWebPage();
     }
@@ -1309,6 +1299,14 @@ void SimpleUI::closeTabUI()
         m_viewManager.popTheStack();
 }
 
+void SimpleUI::refetchTabUIData() {
+    m_tabUI->setState(m_webEngine->getState());
+    std::vector<basic_webengine::TabContentPtr> tabsContents =
+            m_webEngine->getTabContents();
+    m_tabService->fillThumbs(tabsContents);
+    m_tabUI->addTabItems(tabsContents);
+}
+
 void SimpleUI::newTabClicked()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -1321,9 +1319,8 @@ void SimpleUI::newTabClicked()
 void SimpleUI::tabClicked(const tizen_browser::basic_webengine::TabId& tabId)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_viewManager.popStackTo(m_webPageUI.get());
-    m_webPageUI->toIncognito(m_webEngine->isPrivateMode(tabId));
     switchToTab(tabId);
+    m_viewManager.popStackTo(m_webPageUI.get());
 }
 
 void SimpleUI::closeTabsClicked(const tizen_browser::basic_webengine::TabId& tabId)
@@ -1788,6 +1785,13 @@ void SimpleUI::updateView()
     int tabs = m_webEngine->tabsCount();
     BROWSER_LOGD("[%s] Opened tabs: %d", __func__, tabs);
     m_webPageUI->setTabsNumber(tabs);
+}
+
+void SimpleUI::changeEngineState()
+{
+    m_webEngine->disconnectCurrentWebViewSignals();
+    m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
+    updateView();
 }
 
 void SimpleUI::windowCreated()

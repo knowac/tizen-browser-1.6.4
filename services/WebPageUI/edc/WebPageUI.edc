@@ -9,6 +9,7 @@
 #define FINDONPAGE_WIDTH 720
 #define SPACER_SIZE 16
 #include "../../../core/Tools/edc/Spacer.edc"
+#include "../../../core/Tools/edc/ColorClasses.edc"
 
 #define PROGRESS_DESCRIPTIONS\
     PROGRESS_DESCRIPTION(0.00)\
@@ -79,6 +80,12 @@ collections { base_scale: 2.6;
             image: PROGRESS_BG_IMAGE COMP;
             image: PROGRESS_BAR_IMAGE COMP;
         }
+        color_classes{
+            color_class{
+                name: "defaultBg";
+                color: 240 240 240 255;
+            }
+        }
         parts {
             part {
                 name: "bg";
@@ -101,12 +108,11 @@ collections { base_scale: 2.6;
                 scale: 1;
                 description {
                     state: "default" 0.0;
-                    visible: 1;
+                    visible: 0;
                     fixed: 0 1;
                     align: 0 0;
                     min: 0 URI_BG_HEIGHT;
                     max: -1 URI_BG_HEIGHT;
-                    color: 240 240 240 255;
                     rel1 {relative: 0.0 0.0; to:"bg";}
                     rel2 {relative: 1.0 1.0; to:"bg";}
                 }
@@ -119,6 +125,24 @@ collections { base_scale: 2.6;
                     state: "hidden_landscape" 0.0;
                     inherit: "default" 0.0;
                     rel1 {relative: 0.0 -URI_BG_HEIGHT/668; to:"bg";}
+                }
+            }
+
+            rect {
+                name: "uri_bar_bg_color";
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    visible: 1;
+                    align: 0 0;
+                    color_class: "defaultBg";
+                    rel1 {relative: 0.0 0.0; to:"uri_bar_bg";}
+                    rel2 {relative: 1.0 1.0; to:"uri_bar_bg";}
+                }
+                description {
+                    state: "secret" 0.0;
+                    inherit: "default" 0.0;
+                    color_class: "secret";
                 }
             }
             ADD_SPACER_OVER("left_spacer", "uri_bar_bg", SPACER_SIZE, SPACER_SIZE)
@@ -223,11 +247,11 @@ collections { base_scale: 2.6;
                 scale: 1;
                 description {
                     state: "default" 0.0;
-                    visible: 1;
+                    visible: 0;
                     align: 0.0 1.0;
                     min: 0 0;
                     max: -1 BOTTOM_TOOLBAR_HEIGHT;
-                    color: 240 240 240 255;
+                    color_class: "defaultBg";
                     rel1 { relative: 0.0 0.0; to: "bg"; }
                     rel2 { relative: 1.0 1.0; to: "bg"; }
                 }
@@ -240,6 +264,23 @@ collections { base_scale: 2.6;
                     state: "hidden_landscape" 0.0;
                     inherit: "default" 0.0;
                     rel1 {relative: 0.0 1.0; to:"bg";}
+                }
+            }
+            rect {
+                name: "bottom_toolbar_bg_color";
+                scale: 1;
+                description {
+                    state: "default" 0.0;
+                    visible: 1;
+                    align: 0.0 0.0;
+                    color_class: "defaultBg";
+                    rel1 { relative: 0.0 0.0; to: "bottom_toolbar"; }
+                    rel2 { relative: 1.0 1.0; to: "bottom_toolbar"; }
+                }
+                description {
+                    state: "secret" 0.0;
+                    inherit: "default" 0.0;
+                    color_class: "secret";
                 }
             }
             part {
@@ -449,6 +490,22 @@ collections { base_scale: 2.6;
                 source: "ui";
                 action: STATE_SET "visible" 0.0;
                 target: "findonpage";
+            }
+            program {
+                name: "set_normal_mode";
+                signal: "set_normal_mode";
+                source: "ui";
+                action: STATE_SET "default" 0.0;
+                target: "uri_bar_bg_color";
+                target: "bottom_toolbar_bg_color";
+            }
+            program {
+                name: "set_secret_mode";
+                signal: "set_secret_mode";
+                source: "ui";
+                action: STATE_SET "secret" 0.0;
+                target: "uri_bar_bg_color";
+                target: "bottom_toolbar_bg_color";
             }
         }
     }

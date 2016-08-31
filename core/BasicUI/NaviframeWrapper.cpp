@@ -207,17 +207,23 @@ void NaviframeWrapper::addButtonToBottomBar(std::string text, Evas_Smart_Cb call
     evas_object_smart_callback_add(button, "clicked", callback, data);
 
     elm_box_pack_end(m_bottom_box, button);
-    m_map_bottom_box.insert(std::pair<std::string, Evas_Object*>(text, button));
+    m_bottom_buttons.push_back(button);
     evas_object_show(button);
 
 }
 
-void NaviframeWrapper::setEnableButtonInBottomBar(std::string text, bool enabled)
+void NaviframeWrapper::setEnableButtonInBottomBar(int number, bool enabled)
 {
     if (enabled)
-        elm_object_signal_emit(m_map_bottom_box[text], "elm,state,enabled", "elm");
+        elm_object_signal_emit(m_bottom_buttons[number], "elm,state,enabled", "elm");
     else
-        elm_object_signal_emit(m_map_bottom_box[text], "elm,state,disabled", "elm");
+        elm_object_signal_emit(m_bottom_buttons[number], "elm,state,disabled", "elm");
+}
+
+void NaviframeWrapper::setBottomButtonText(int number, const std::string& text)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    elm_object_part_text_set(m_bottom_buttons[number], "elm.text", text.c_str());
 }
 
 void NaviframeWrapper::setVisibleBottomBar(bool visible)

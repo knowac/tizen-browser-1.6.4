@@ -108,7 +108,7 @@ WebView::~WebView()
 #endif
 }
 
-void WebView::init(bool desktopMode, TabOrigin origin, Evas_Object*)
+void WebView::init(bool desktopMode, TabOrigin origin)
 {
     m_ewkView = m_private ? ewk_view_add_in_incognito_mode(evas_object_evas_get(m_parent)) :
                             ewk_view_add_with_context(evas_object_evas_get(m_parent), ewk_context_default_get());
@@ -849,10 +849,10 @@ void WebView::__newWindowRequest(void *data, Evas_Object *, void *out)
     WebView * self = reinterpret_cast<WebView *>(data);
     BROWSER_LOGD("[%s:%d] self=%p", __PRETTY_FUNCTION__, __LINE__, self);
     BROWSER_LOGD("Window creating in tab: %s", self->getTabId().toString().c_str());
-    std::shared_ptr<basic_webengine::AbstractWebEngine<Evas_Object>>  m_webEngine;
+    std::shared_ptr<basic_webengine::AbstractWebEngine>  m_webEngine;
     m_webEngine = std::dynamic_pointer_cast
     <
-        basic_webengine::AbstractWebEngine<Evas_Object>,tizen_browser::core::AbstractService
+        basic_webengine::AbstractWebEngine,tizen_browser::core::AbstractService
     >
     (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.webengineservice"));
     M_ASSERT(m_webEngine);
@@ -861,11 +861,9 @@ void WebView::__newWindowRequest(void *data, Evas_Object *, void *out)
     TabId id(TabId::NONE);
     TabId currentTabId = m_webEngine->currentTabId();
     if (currentTabId != (id = m_webEngine->addTab(std::string(),
-                                                                 &self->getTabId(),
                                                                  boost::none,
                                                                  std::string(),
                                                                  self->isDesktopMode(),
-                                                                 self->isPrivateMode(),
                                                                  currentTabId.get()))) {
         BROWSER_LOGD("Created tab: %s", id.toString().c_str());
         Evas_Object* tab_ewk_view = m_webEngine->getTabView(id);
@@ -881,9 +879,9 @@ void WebView::__closeWindowRequest(void *data, Evas_Object *, void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     WebView * self = reinterpret_cast<WebView *>(data);
-    std::shared_ptr<AbstractWebEngine<Evas_Object>> m_webEngine =
+    std::shared_ptr<AbstractWebEngine> m_webEngine =
                 std::dynamic_pointer_cast
-                <basic_webengine::AbstractWebEngine<Evas_Object>,tizen_browser::core::AbstractService>
+                <basic_webengine::AbstractWebEngine,tizen_browser::core::AbstractService>
                 (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.webengineservice"));
     m_webEngine->closeTab(self->getTabId());
 }

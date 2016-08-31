@@ -51,6 +51,7 @@ public:
     Evas_Object* getButton(const std::string& buttonName);
     void clearFocus();
     void setDisabled(bool disabled);
+    void setButtonsColor(bool secretMode);
 
 private:
     std::string m_edjFilePath;
@@ -58,6 +59,7 @@ private:
     std::map<std::string, sharedAction> m_actionsMap;
     //map button name to struct ActionButton which contains Evas_Object of button
     std::map<std::string, ActionButton> m_buttonsMap;
+    std::map<std::string, Evas_Object*> m_imgMap;
     Evas_Object* m_layout;
     void refreshButton(const std::string& buttonName);
     void onEnabledChanged(const std::string& buttonName, sharedAction action);

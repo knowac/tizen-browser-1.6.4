@@ -27,6 +27,7 @@
 #include "service_macros.h"
 #include "ButtonBar.h"
 #include "URIEntry.h"
+#include "AbstractWebEngine/State.h"
 
 namespace tizen_browser {
 namespace base_ui {
@@ -144,6 +145,7 @@ public:
     boost::signals2::signal<void ()> switchToDesktopMode;
 
     boost::signals2::signal<std::string ()> requestCurrentPageForWebPageUI;
+    boost::signals2::signal<basic_webengine::State ()> getEngineState;
 
 private:
     static void faviconClicked(void* data, Evas_Object* obj, const char* emission, const char* source);
