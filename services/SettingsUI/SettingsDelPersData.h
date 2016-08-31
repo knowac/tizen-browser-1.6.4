@@ -47,8 +47,6 @@ public:
     static void __delete_button_cb(void* data, Evas_Object*, void*);
 protected:
     std::map<unsigned, ItemData> m_buttonsMap;
-    Evas_Object* m_cancelButton;
-    Evas_Object* m_deleteButton;
 };
 
 }

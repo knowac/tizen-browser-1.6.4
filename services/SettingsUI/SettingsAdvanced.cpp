@@ -109,7 +109,10 @@ void SettingsAdvanced::notifyStorageChange(keynode_t* /*key*/, void* data)
 
 bool SettingsAdvanced::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsAdvancedTitle.c_str());
+    m_naviframe->setLeftButtonVisible(false);
+    m_naviframe->setRightButtonVisible(false);
+    m_naviframe->setPrevButtonVisible(true);
+    m_naviframe->setTitle(Translations::SettingsAdvancedTitle.c_str());
 
     m_genlistItems[SettingsAdvancedOptions::ENABLE_JS] =
         appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS], _enable_js_cb);

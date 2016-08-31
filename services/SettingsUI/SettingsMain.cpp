@@ -88,7 +88,11 @@ void SettingsMain::updateButtonMap()
 
 bool SettingsMain::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsMainTitle.c_str());
+    m_naviframe->setLeftButtonVisible(false);
+    m_naviframe->setRightButtonVisible(false);
+    m_naviframe->setPrevButtonVisible(true);
+    m_naviframe->setTitle(Translations::SettingsMainTitle.c_str());
+
     updateButtonMap();
     m_genlistItems[SettingsMainOptions::HOME] =
         appendGenlist(genlist, m_setting_double_item_class, &m_buttonsMap[SettingsMainOptions::HOME], _home_page_cb);

@@ -80,31 +80,15 @@ void SettingsDelPersData::updateButtonMap()
 
 bool SettingsDelPersData::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsDelPersDataTitle.c_str());
+    m_naviframe->setTitle(Translations::SettingsDelPersDataTitle.c_str());
 
-    elm_object_signal_emit(m_actionBar, "show,buttons,signal", "but_vis");
-    elm_object_signal_emit(m_actionBar, "hide,close,icon", "del_but");
-
-    m_cancelButton = elm_button_add(m_actionBar);
-    if (!m_cancelButton) {
-        BROWSER_LOGE("Failed to create m_cancelButton");
-        return false;
-    }
-    elm_object_style_set(m_cancelButton, "basic_button");
-    evas_object_smart_callback_add(m_cancelButton, "clicked", __cancel_button_cb, this);
-    elm_object_translatable_part_text_set(m_actionBar, "cancel_text", Translations::SettingsDelPersDataCancel.c_str());
-    elm_object_part_content_set(m_actionBar, "cancel_button", m_cancelButton);
-
-    m_deleteButton = elm_button_add(m_actionBar);
-    if (!m_deleteButton) {
-        BROWSER_LOGE("Failed to create m_doneButton");
-        return false;
-    }
-    elm_object_style_set(m_deleteButton, "basic_button");
-    evas_object_smart_callback_add(m_deleteButton, "clicked", __delete_button_cb, this);
-    elm_object_part_content_set(m_actionBar, "done_button", m_deleteButton);
-    elm_object_translatable_part_text_set(m_actionBar, "done_text", Translations::SettingsDelPersDataDelete.c_str());
-    elm_object_signal_emit(m_actionBar, "dim,done,button,signal", "");
+    m_naviframe->addLeftButton(__cancel_button_cb, this);
+    m_naviframe->addRightButton(__delete_button_cb, this);
+    m_naviframe->setPrevButtonVisible(false);
+    m_naviframe->setLeftButtonVisible(true);
+    m_naviframe->setRightButtonVisible(true);
+    m_naviframe->setRightButtonText(Translations::SettingsDelPersDataDelete.c_str());
+    m_naviframe->setLeftButtonText(Translations::SettingsDelPersDataCancel.c_str());
 
     appendGenlist(genlist, m_setting_check_normal_item_class, &m_buttonsMap[SettingsDelPersDataOptions::SELECT_ALL], nullptr);
     appendGenlist(genlist, m_setting_check_normal_item_class, &m_buttonsMap[SettingsDelPersDataOptions::BROWSING_HISTORY], nullptr);

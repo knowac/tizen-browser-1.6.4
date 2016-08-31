@@ -35,7 +35,7 @@ typedef struct _genlistCallbackData
 } genlistCallbackData;
 
 SettingsUI::SettingsUI()
-    : m_actionBar(nullptr)
+    : m_naviframe(nullptr)
     , m_genlist(nullptr)
     , m_settings_layout(nullptr)
     , m_items_layout(nullptr)
@@ -64,6 +64,7 @@ Elm_Gengrid_Item_Class* SettingsUI::createItemClass(
     ic->func.content_get = con_cb;
     ic->func.state_get = nullptr;
     ic->func.del = nullptr;
+    ic->decorate_all_item_style = "edit_default";
     return ic;
 }
 
@@ -95,35 +96,36 @@ Evas_Object* SettingsUI::getContent()
     M_ASSERT(m_parent);
     if (!m_settings_layout)
         m_settings_layout = createSettingsUILayout(m_parent);
-    return m_settings_layout;
+    return m_naviframe->getLayout();
 }
 
 void SettingsUI::showUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_naviframe->show();
     updateButtonMap();
-    evas_object_show(m_settings_layout);
-    evas_object_show(m_actionBar);
 }
 
 void SettingsUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    evas_object_hide(m_settings_layout);
-    evas_object_hide(m_actionBar);
+    m_naviframe->hide();
 }
 
 Evas_Object* SettingsUI::createSettingsUILayout(Evas_Object* parent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(parent);
-    Evas_Object* settings_layout = elm_layout_add(parent);
-    elm_layout_file_set(settings_layout, m_edjFilePath.c_str(), "settings-layout");
-    evas_object_size_hint_weight_set(settings_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(settings_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
-    m_actionBar = createActionBar(settings_layout);
+    m_naviframe = std::make_shared<NaviframeWrapper>(parent);
+    m_naviframe->addPrevButton(close_clicked_cb, this);
+
+    Evas_Object* settings_layout = elm_layout_add(m_naviframe->getLayout());
+    elm_layout_file_set(settings_layout, m_edjFilePath.c_str(), "settings-layout");
+    tools::EflTools::setExpandHints(settings_layout);
+
     m_items_layout = createSettingsMobilePage(settings_layout);
+    m_naviframe->setContent(settings_layout);
 
     orientationChanged();
 
@@ -134,14 +136,10 @@ void SettingsUI::orientationChanged()
 {
     auto rot = isLandscape();
     if (rot && *rot) {
-        if (m_actionBar)
-            elm_object_signal_emit(m_actionBar,"rotation,landscape", "rot");
         if (m_items_layout) {
             elm_object_signal_emit(m_items_layout, "rotation,landscape,main", "rot");
         }
     } else {
-        if (m_actionBar)
-            elm_object_signal_emit(m_actionBar,"rotation,portrait", "rot");
         if (m_items_layout) {
             elm_object_signal_emit(m_items_layout,"rotation,portrait,main", "rot");
         }
@@ -258,8 +256,6 @@ Evas_Object* SettingsUI::createSettingsMobilePage(Evas_Object* settings_layout)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     Evas_Object* layout = createMainView(settings_layout);
-
-    elm_object_focus_set(elm_object_part_content_get(m_actionBar, "close_click"), EINA_TRUE);
 
     m_genlist = elm_genlist_add(layout);
     m_radio = elm_radio_add(m_genlist);

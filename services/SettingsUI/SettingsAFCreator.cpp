@@ -31,10 +31,7 @@ inline std::string _trim(std::string& s, const std::string& drop = TRIM_SPACE)
 }
 
 SettingsAFCreator::SettingsAFCreator(Evas_Object* parent, bool profile_exists)
-    : m_mainLayout(nullptr)
-    , m_scroller(nullptr)
-    , m_doneButton(nullptr)
-    , m_cancelButton(nullptr)
+    : m_scroller(nullptr)
     , m_editErrorcode(update_error_none)
     , m_saveErrorcode(save_error_none)
     , m_editFieldItemClass(nullptr)
@@ -104,55 +101,26 @@ bool SettingsAFCreator::populateLayout(Evas_Object* parent)
     m_edjFilePath = EDJE_DIR;
     m_edjFilePath.append("SettingsUI/AutoFillMobileUI.edj");
 
-    elm_object_signal_emit(m_actionBar, "show,buttons,signal", "but_vis");
-    elm_object_signal_emit(m_actionBar, "hide,close,icon", "del_but");
-
-    m_mainLayout = elm_layout_add(parent);
-    elm_object_tree_focus_allow_set(m_mainLayout, EINA_TRUE);
-    if (!m_mainLayout) {
-        BROWSER_LOGE("createMainLayout failed");
-        return nullptr;
-    }
-    elm_layout_file_set(m_mainLayout, m_edjFilePath.c_str(), "affcv-layout");
-    evas_object_size_hint_weight_set(m_mainLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_mainLayout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-    elm_object_translatable_part_text_set(m_mainLayout, "cancel_text", "IDS_BR_SK_CANCEL");
-    elm_object_translatable_part_text_set(m_mainLayout, "done_text", "IDS_BR_SK_DONE");
-
-    m_scroller = createScroller(m_mainLayout);
+    m_scroller = createScroller(parent);
     evas_object_show(m_scroller);
-    elm_object_part_content_set(m_mainLayout, "affcv_genlist", m_scroller);
-    evas_object_show(m_mainLayout);
 
     if (m_item->getItemComposeMode() == profile_edit)
-        elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Edit info");
+        m_naviframe->setTitle("Edit info");
     else
-        elm_object_translatable_part_text_set(m_actionBar, "settings_title", "Add info");
+        m_naviframe->setTitle("Add info");
 
-    m_cancelButton = elm_button_add(m_actionBar);
-    if (!m_cancelButton) {
-        BROWSER_LOGE("Failed to create m_cancelButton");
-        return nullptr;
-    }
-    elm_object_style_set(m_cancelButton, "basic_button");
-    evas_object_smart_callback_add(m_cancelButton, "clicked", __cancel_button_cb, this);
-    elm_object_part_content_set(m_actionBar, "cancel_button", m_cancelButton);
-
-    m_doneButton = elm_button_add(m_actionBar);
-    if (!m_doneButton) {
-        BROWSER_LOGE("Failed to create m_doneButton");
-        return nullptr;
-    }
-    elm_object_style_set(m_doneButton, "basic_button");
-    evas_object_smart_callback_add(m_doneButton, "clicked", __done_button_cb, this);
-    elm_object_part_content_set(m_actionBar, "done_button", m_doneButton);
-    elm_object_signal_emit(m_actionBar, "dim,done,button,signal", "");
+    m_naviframe->addLeftButton(__cancel_button_cb, this);
+    m_naviframe->addRightButton(__done_button_cb, this);
+    m_naviframe->setPrevButtonVisible(false);
+    m_naviframe->setLeftButtonVisible(true);
+    m_naviframe->setRightButtonVisible(true);
+    m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
+    m_naviframe->setLeftButtonText(_("IDS_BR_SK_CANCEL"));
 
     if (m_item->getItemComposeMode() == profile_create)
-        elm_object_disabled_set(m_doneButton, EINA_TRUE);
+        m_naviframe->setRightButtonEnabled(true);
 
-    m_layout = m_mainLayout;
+    m_layout = m_scroller;
     return true;
 }
 
@@ -355,7 +323,6 @@ Eina_Bool SettingsAFCreator::applyEntryData(void)
     if (full_name && strlen(full_name) && !isEntryHasOnlySpace(full_name))
         m_item->setName(full_name);
     else {
-        elm_object_focus_set(m_cancelButton, EINA_TRUE); // Closing virtual keyboard by changing the focus*/
         return EINA_FALSE;
     }
     const char *company_name = elm_entry_entry_get(m_companyNameItemCallbackData.entry);
@@ -438,21 +405,13 @@ void SettingsAFCreator::__entry_changed_cb(void* data, Evas_Object* obj, void*)
     genlistCallbackData *cb_data = static_cast<genlistCallbackData*>(data);
     SettingsAFCreator *view = static_cast<SettingsAFCreator*>(cb_data->user_data);
     const char* text = elm_entry_entry_get(obj);
-    if (text && strlen(text) > 0) {
+    if (text && strlen(text) > 0)
         elm_object_signal_emit(cb_data->editfield, "show,clear,button,signal", "");
-    }
-    else {
+    else
         elm_object_signal_emit(cb_data->editfield, "hide,clear,button,signal", "");
-    }
 
-    if (!elm_entry_is_empty(view->m_fullNameItemCallbackData.entry)) {
-        elm_object_signal_emit(view->m_actionBar, "show,buttons,signal", "but_vis");
-        elm_object_disabled_set(view->m_doneButton, EINA_FALSE);
-    } else {
-        elm_object_signal_emit(view->m_actionBar, "dim,done,button,signal", "but_vis");
-        elm_object_disabled_set(view->m_doneButton, EINA_TRUE);
-    }
-
+    auto isEmpty(elm_entry_is_empty(view->m_fullNameItemCallbackData.entry) == EINA_TRUE);
+    view->m_naviframe->setRightButtonEnabled(isEmpty);
 }
 
 void SettingsAFCreator::__entry_clicked_cb(void* data, Evas_Object*, void*)

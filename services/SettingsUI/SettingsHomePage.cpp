@@ -122,7 +122,11 @@ void SettingsHomePage::setRadioOnChange()
 bool SettingsHomePage::populateList(Evas_Object* genlist)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsHomePageTitle.c_str());
+    m_naviframe->setLeftButtonVisible(false);
+    m_naviframe->setRightButtonVisible(false);
+    m_naviframe->setPrevButtonVisible(true);
+    m_naviframe->setTitle(Translations::SettingsHomePageTitle.c_str());
+
     updateButtonMap();
     m_itemsMap[SettingsHomePageOptions::DEFAULT] =
         appendGenlist(genlist, m_setting_check_radio_item_class, &m_buttonsMap[SettingsHomePageOptions::DEFAULT], _default_cb);

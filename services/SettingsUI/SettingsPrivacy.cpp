@@ -61,7 +61,10 @@ void SettingsPrivacy::updateButtonMap()
 
 bool SettingsPrivacy::populateList(Evas_Object* genlist)
 {
-    elm_object_translatable_part_text_set(m_actionBar, "settings_title", Translations::SettingsPrivacyTitle.c_str());
+    m_naviframe->setLeftButtonVisible(false);
+    m_naviframe->setRightButtonVisible(false);
+    m_naviframe->setPrevButtonVisible(true);
+    m_naviframe->setTitle(Translations::SettingsPrivacyTitle.c_str());
 
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::COOKIES], _cookies_cb);
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::SUGGESTIONS], _suggestions_cb);

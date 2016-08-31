@@ -26,6 +26,7 @@
 #include "ServiceFactory.h"
 #include "service_macros.h"
 #include "SettingsPrettySignalConnector.h"
+#include "NaviframeWrapper.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -55,6 +56,7 @@ public:
     virtual Evas_Object* createOnOffCheckBox(Evas_Object* obj, ItemData*);
     virtual Evas_Object* createNormalCheckBox(Evas_Object* obj, ItemData*);
     virtual Evas_Object* createRadioButton(Evas_Object*, ItemData*) { return nullptr; }
+    virtual void showContextMenu(){};
 
     void init(Evas_Object* parent);
     Evas_Object* getContent();
@@ -80,6 +82,7 @@ public:
     void setOption(const SettingsDelPersDataOptions& option, bool value) { m_option[option] = value; }
     void setCheckboxes(const SettingsDelPersDataOptions& option, Evas_Object* check) { m_checkboxes[option] = check; }
     Evas_Object* getRadioGroup() { return m_radio; }
+
 private:
     Evas_Object* createSettingsUILayout(Evas_Object* parent);
     static void close_clicked_cb(void* data, Evas_Object* obj, void* event_info);
@@ -96,7 +99,7 @@ private:
     static void _language_changed(void *data, Evas_Object*obj , void*);
 
 protected:
-    Evas_Object* m_actionBar;
+    SharedNaviframeWrapper m_naviframe;
     Evas_Object* m_genlist;
     std::string m_edjFilePath;
     Evas_Object* m_settings_layout;
