@@ -29,6 +29,7 @@
 #include "TabIdTypedef.h"
 #include "AbstractRotatable.h"
 #include "NaviframeWrapper.h"
+#include "PasswordUI.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -56,7 +57,7 @@ public:
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
 
-    void setState(basic_webengine::State state);
+    PasswordUI& getPasswordUI() { return m_passwordUI; };
 
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> tabClicked;
     boost::signals2::signal<void ()> newTabClicked;
@@ -64,12 +65,24 @@ public:
     boost::signals2::signal<void ()> closeTabUIClicked;
     boost::signals2::signal<void ()> changeEngineState;
     boost::signals2::signal<void ()> refetchTabUIData;
+    boost::signals2::signal<bool (std::string)> checkIfParamExistsInDB;
+    boost::signals2::signal<void (std::string, bool)> setDBBoolParamValue;
+    boost::signals2::signal<void (std::string, std::string)> setDBStringParamValue;
+    boost::signals2::signal<bool (std::string)> getDBBoolParamValue;
+    boost::signals2::signal<std::string (std::string)> getDBStringParamValue;
+    boost::signals2::signal<void ()> showPasswordUI;
 
 private:
     struct TabData
     {
         basic_webengine::TabContentPtr item;
         std::shared_ptr<tizen_browser::base_ui::TabUI> tabUI;
+    };
+
+    enum class State {
+        NORMAL,
+        SECRET,
+        PASSWORD_DECISION
     };
 
     static char* _gengrid_text_get(void *data, Evas_Object *obj, const char *part);
@@ -79,12 +92,11 @@ private:
     static void _gengrid_tab_released(void * data, Evas_Object * obj, void * event_info);
     static void _gengrid_tab_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _close_clicked(void *data, Evas_Object *obj, void *event_info);
-    void updateNoTabsText();
+    void updateNoTabsText(bool forceShow=false);
 
     static void _openedtabs_clicked(void * data, Evas_Object * obj, void * event_info);
-    static void _new_tab_clicked(void * data, Evas_Object * obj, void * event_info);
-    static void _newincognitotab_clicked(void * data, Evas_Object * obj, void * event_info);
-    static void _enable_secret_clicked(void * data, Evas_Object * obj, void * event_info);
+    static void _right_button_clicked(void * data, Evas_Object * obj, void * event_info);
+    static void _left_button_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _close_all_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _close_tab_clicked(void *data, Evas_Object*, void*);
     static void _cm_sync_clicked(void*, Evas_Object*, void*);
@@ -101,6 +113,7 @@ private:
     void createTabItemClass();
     void closeAllTabs();
     void addTabItem(basic_webengine::TabContentPtr);
+    void setStateButtons();
 
     Evas_Object *m_parent;
     Evas_Object *m_content;
@@ -113,11 +126,15 @@ private:
     Elm_Gengrid_Item_Class * m_item_class;
     std::string m_edjFilePath;
 
+    State m_state;
+    PasswordUI m_passwordUI;
+
     const unsigned int GENGRID_ITEM_WIDTH = 700;
     const unsigned int GENGRID_ITEM_HEIGHT = 312;
     const unsigned int GENGRID_ITEM_WIDTH_LANDSCAPE = 636;
     const unsigned int GENGRID_ITEM_HEIGHT_LANDSCAPE = 274;
     const unsigned int GESTURE_MOMENTUM_MIN = 2000;
+    static const std::string PASSWORD_DECISION_MADE;
 };
 }
 }

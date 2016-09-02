@@ -31,6 +31,8 @@ namespace base_ui{
 
 EXPORT_SERVICE(TabUI, "org.tizen.browser.tabui")
 
+const std::string TabUI::PASSWORD_DECISION_MADE = "password_decision";
+
 TabUI::TabUI()
     : m_parent(nullptr)
     , m_content(nullptr)
@@ -39,6 +41,7 @@ TabUI::TabUI()
     , m_itemToShow(nullptr)
     , m_last_pressed_gengrid_item(nullptr)
     , m_item_class(nullptr)
+    , m_state(State::NORMAL)
 {
     m_edjFilePath = EDJE_DIR;
     m_edjFilePath.append("TabUI/TabUI.edj");
@@ -76,6 +79,12 @@ void TabUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
+    if (m_state == State::PASSWORD_DECISION) {
+        m_state = State::NORMAL;
+        createEmptyLayout();
+        setStateButtons();
+        updateNoTabsText();
+    }
     elm_gengrid_clear(m_gengrid);
     m_naviframe->hide();
 }
@@ -85,6 +94,16 @@ void TabUI::init(Evas_Object* parent)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(parent);
     m_parent = parent;
+    auto paramExists = checkIfParamExistsInDB(PASSWORD_DECISION_MADE);
+    if (paramExists) {
+        if (!*paramExists) {
+            setDBBoolParamValue(PASSWORD_DECISION_MADE, false);
+        }
+    } else {
+        BROWSER_LOGE("[%s:%d] unknow checkIfParamExistsInDB value!", __PRETTY_FUNCTION__, __LINE__);
+    }
+
+    m_passwordUI.init(parent);
 }
 
 Evas_Object* TabUI::getContent()
@@ -136,10 +155,10 @@ void TabUI::createBottomContent()
     m_naviframe->createBottomBar(layout);
     m_naviframe->setVisibleBottomBar(true);
     //TODO: Missing translation
-    m_naviframe->addButtonToBottomBar("Enable Secret", _enable_secret_clicked, this);
+    m_naviframe->addButtonToBottomBar("Enable Secret", _left_button_clicked, this);
     m_naviframe->setEnableButtonInBottomBar(0, true);
     //TODO: _("IDS_BR_OPT_NEW_TAB") when it works
-    m_naviframe->addButtonToBottomBar("New tab", _new_tab_clicked, this);
+    m_naviframe->addButtonToBottomBar("New tab", _right_button_clicked, this);
     m_naviframe->setEnableButtonInBottomBar(1, true);
 }
 
@@ -153,10 +172,18 @@ void TabUI::createEmptyLayout()
     evas_object_size_hint_align_set(m_empty_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
     //TODO: Add translations
-    elm_object_translatable_part_text_set(m_empty_layout, "elm.text", "No tabs");
+    if (m_state != State::PASSWORD_DECISION)
+        elm_object_translatable_part_text_set(m_empty_layout, "elm.text", "No tabs");
     //TODO: _("IDS_BR_BODY_AFTER_YOU_VIEW_WEBPAGES_THEY_WILL_BE_SHOWN_HERE") when it works
-    elm_object_translatable_part_text_set(m_empty_layout, "elm.help.text",
-        "After you view webpages, they will be shown here.");
+    if (m_state == State::SECRET || m_state == State::PASSWORD_DECISION)
+        elm_object_translatable_part_text_set(m_empty_layout, "elm.help.text",
+            "Any webpages viewed while Secret mode is enabled will not appear "
+            "in your browser or search history while Secret mode is "
+            "disabled. Any bookmarks and webpages saved while Secretmode "
+            "is enabled will not be shown while it is disabled.");
+    else
+        elm_object_translatable_part_text_set(m_empty_layout, "elm.help.text",
+            "After you view webpages, they will be shown here.");
 
     elm_layout_signal_emit(m_empty_layout, "text,disabled", "");
     elm_layout_signal_emit(m_empty_layout, "align.center", "elm");
@@ -235,20 +262,6 @@ void TabUI::showContextMenu()
     }
 }
 
-void TabUI::setState(basic_webengine::State state)
-{
-    switch(state) {
-        case basic_webengine::State::NORMAL:
-            m_naviframe->setBottomButtonText(0, "Enable Secret");
-            break;
-        case basic_webengine::State::SECRET:
-            m_naviframe->setBottomButtonText(0, "Disable Secret");
-            break;
-        default:
-            BROWSER_LOGE("[%s:%d] Unknown state!", __PRETTY_FUNCTION__, __LINE__);
-    }
-}
-
 void TabUI::_cm_sync_clicked(void* data, Evas_Object*, void* )
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -308,24 +321,77 @@ Evas_Event_Flags TabUI::_gesture_occured(void * data, void * event_info)
     return flag;
 }
 
-void TabUI::_new_tab_clicked(void * data, Evas_Object*, void*)
+void TabUI::_right_button_clicked(void * data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
-        TabUI* tabUI = static_cast<TabUI*>(data);
-        tabUI->newTabClicked();
+        auto self = static_cast<TabUI*>(data);
+        switch (self->m_state) {
+        case State::NORMAL:
+            self->newTabClicked();
+            break;
+        case State::SECRET:
+            self->newTabClicked();
+            break;
+        case State::PASSWORD_DECISION:
+            self->showPasswordUI();
+            break;
+        default:
+            BROWSER_LOGW("[%s] Unknown state!", __PRETTY_FUNCTION__);
+        }
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
 }
 
-void TabUI::_enable_secret_clicked(void* data, Evas_Object*, void*)
+void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
         auto self = static_cast<TabUI*>(data);
-        self->changeEngineState();
-        self->refetchTabUIData();
+
+        switch (self->m_state) {
+        case State::NORMAL: {
+            auto decisionMade = self->getDBBoolParamValue(PASSWORD_DECISION_MADE);
+            if (decisionMade) {
+                if(*decisionMade) {
+                    //TODO check password
+                    auto password = self->getDBStringParamValue(PasswordUI::PASSWORD_FIELD);
+                    if (password) {
+                        if (password->empty()) {    // password is not used
+                            self->m_state = State::SECRET;
+                            self->changeEngineState();
+                            self->refetchTabUIData();
+                        } else {    // check password validity
+                            //TODO open screen with password confirm
+                        }
+                    } else {
+                        BROWSER_LOGW("[%s] cannot read password from DB", __PRETTY_FUNCTION__);
+                    }
+                } else {    // decison not taken
+                    self->m_state = State::PASSWORD_DECISION;
+                    self->updateNoTabsText(true);
+                }
+            } else {
+                BROWSER_LOGW("[%s] cannot read decision flag from DB", __PRETTY_FUNCTION__);
+            }
+        }  break;
+        case State::SECRET:     // disable secret
+            self->m_state = State::NORMAL;
+            self->changeEngineState();
+            self->refetchTabUIData();
+            break;
+        case State::PASSWORD_DECISION:      // do not use password
+            self->m_state = State::SECRET;
+            self->setDBStringParamValue(PasswordUI::PASSWORD_FIELD, "");
+            self->setDBBoolParamValue(PASSWORD_DECISION_MADE, true);
+            self->changeEngineState();
+            self->refetchTabUIData();
+            break;
+        }
+
+        self->setStateButtons();
+        self->createEmptyLayout();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
@@ -365,6 +431,24 @@ void TabUI::addTabItems(std::vector<basic_webengine::TabContentPtr>& items)
     for (auto it = items.begin(); it < items.end(); ++it)
         addTabItem(*it);
     updateNoTabsText();
+}
+
+void TabUI::setStateButtons()
+{
+        switch (m_state) {
+        case State::NORMAL:
+            m_naviframe->setBottomButtonText(0, "Enable Secret");
+            m_naviframe->setBottomButtonText(1, "New tab");
+            break;
+        case State::SECRET:
+            m_naviframe->setBottomButtonText(0, "Disable Secret");
+            m_naviframe->setBottomButtonText(1, "New tab");
+            break;
+        case State::PASSWORD_DECISION:
+            m_naviframe->setBottomButtonText(0, "Do not use password");
+            m_naviframe->setBottomButtonText(1, "Create password");
+            break;
+        }
 }
 
 char* TabUI::_gengrid_text_get(void *data, Evas_Object*, const char *part)
@@ -507,15 +591,15 @@ void TabUI::closeAllTabs()
     closeTabUIClicked();
 }
 
-void TabUI::updateNoTabsText()
+void TabUI::updateNoTabsText(bool forceShow)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (elm_gengrid_items_count(m_gengrid)) {
-        evas_object_hide(m_empty_layout);
-        elm_object_signal_emit(m_content, "hide_overlay", "ui");
-    } else {
+    if (forceShow || elm_gengrid_items_count(m_gengrid) == 0) {
         evas_object_show(m_empty_layout);
         elm_object_signal_emit(m_content, "show_overlay", "ui");
+    } else {
+        evas_object_hide(m_empty_layout);
+        elm_object_signal_emit(m_content, "hide_overlay", "ui");
     }
 }
 

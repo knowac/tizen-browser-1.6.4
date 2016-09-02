@@ -317,6 +317,8 @@ private:
     void onBackPressed();
 
     void searchWebPage(std::string &text, int flags);
+    void showPasswordUI();
+    void closeTopView();
 
     std::string edjePath(const std::string &);
 

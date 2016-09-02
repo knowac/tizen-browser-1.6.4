@@ -754,6 +754,7 @@ void WebEngineService::clearPrivateData()
         it.second->clearPrivateData();
     }
 }
+
 void WebEngineService::clearPasswordData()
 {
     for(const auto& it: m_stateStruct->tabs) {

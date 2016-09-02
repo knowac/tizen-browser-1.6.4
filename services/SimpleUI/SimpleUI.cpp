@@ -349,6 +349,14 @@ void SimpleUI::connectUISignals()
     m_tabUI->changeEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::changeState, m_webEngine.get()));
     m_tabUI->changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
     m_tabUI->refetchTabUIData.connect(boost::bind(&SimpleUI::refetchTabUIData, this));
+    m_tabUI->checkIfParamExistsInDB.connect(boost::bind(&storage::SettingsStorage::isDBParamPresent, &m_storageService->getSettingsStorage(), _1));
+    m_tabUI->setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool, &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString, &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool, &m_storageService->getSettingsStorage(), _1, false));
+    m_tabUI->getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText, &m_storageService->getSettingsStorage(), _1, ""));
+    m_tabUI->showPasswordUI.connect(boost::bind(&SimpleUI::showPasswordUI, this));
+    m_tabUI->getPasswordUI().closeUI.connect(boost::bind(&SimpleUI::closeTopView, this));
+    m_tabUI->getPasswordUI().setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString, &m_storageService->getSettingsStorage(), _1, _2));
 
     M_ASSERT(m_historyUI.get());
     m_historyUI->clearHistoryClicked.connect(boost::bind(&SimpleUI::onClearHistoryAllClicked, this));
@@ -1300,7 +1308,6 @@ void SimpleUI::closeTabUI()
 }
 
 void SimpleUI::refetchTabUIData() {
-    m_tabUI->setState(m_webEngine->getState());
     std::vector<basic_webengine::TabContentPtr> tabsContents =
             m_webEngine->getTabContents();
     m_tabService->fillThumbs(tabsContents);
@@ -1816,6 +1823,18 @@ void SimpleUI::tabClosed(const tizen_browser::basic_webengine::TabId& id)
 void SimpleUI::searchWebPage(std::string &text, int flags)
 {
     m_webEngine->searchOnWebsite(text, flags);
+}
+
+void SimpleUI::showPasswordUI()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_viewManager.pushViewToStack(&(m_tabUI->getPasswordUI()));
+}
+
+void SimpleUI::closeTopView()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_viewManager.popTheStack();
 }
 
 void SimpleUI::addBookmark(BookmarkUpdate bookmark_update)

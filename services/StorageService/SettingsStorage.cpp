@@ -194,15 +194,19 @@ void SettingsStorage::setParamString(basic_webengine::WebEngineSettings param, s
     setSettingsString(paramName,value);
 }
 
+bool SettingsStorage::isDBParamPresent(const std::string& key) const
+{
+    auto con = storage::DriverManager::getDatabase(DB_SETTINGS);
+    storage::SQLQuery select(con->prepare(SQL_CHECK_IF_PARAM_EXISTS));
+    select.bindText(1, key);
+    select.exec();
+    return select.hasNext();
+}
+
 bool SettingsStorage::isParamPresent(basic_webengine::WebEngineSettings param) const
 {
     const std::string& paramName = basic_webengine::PARAMS_NAMES.at(param);
-    auto con = storage::DriverManager::getDatabase(DB_SETTINGS);
-
-    storage::SQLQuery select(con->prepare(SQL_CHECK_IF_PARAM_EXISTS));
-    select.bindText(1, paramName);
-    select.exec();
-    return select.hasNext();
+    return isDBParamPresent(paramName);
 }
 
 bool SettingsStorage::getParamVal(basic_webengine::WebEngineSettings param) const
@@ -276,6 +280,16 @@ const std::string SettingsStorage::getSettingsText(const std::string & key, cons
     return defaultValue;
 }
 
+bool SettingsStorage::getSettingsBool(const std::string & key, const bool defaultValue) const
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    int value = getSettingsInt(key, -1);
+    if (value < 0)
+        return defaultValue;
+    else
+        return static_cast<bool>(value);
+}
+
 /**
  * @throws StorageException on error
  */
@@ -334,6 +348,15 @@ void SettingsStorage::setSettingsString(const std::string & key, std::string val
 {
     storage::FieldPtr field = std::make_shared<storage::Field>(value);
     setSettingsValue(key, field);
+}
+
+/**
+ * @throws StorageException on error
+ */
+void SettingsStorage::setSettingsBool(const std::string & key, bool value) const
+{
+    BROWSER_LOGD("[%s:%d:%d] ", __PRETTY_FUNCTION__, __LINE__, value);
+    setSettingsInt(key, static_cast<int>(value));
 }
 
 }
