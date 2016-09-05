@@ -64,6 +64,7 @@
 #include "WebConfirmation.h"
 #include "ViewManager.h"
 #include "MenuButton.h"
+#include "ProgressiveWebApp.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -83,8 +84,14 @@ public:
     virtual std::string getName();
     void suspend();
     void resume();
-
     void destroyUI();
+
+    enum class rotationLock {
+        noLock = 0,
+        portrait,
+        landscape,
+    };
+
 private:
     // setup functions
     void loadUIServices();
@@ -285,6 +292,7 @@ private:
     void onRotation();
     bool isLandscape();
     int getRotation();
+    void rotationType(rotationLock lock);
     void connectSettingsSignals();
     static void __orientation_changed(void* data, Evas_Object*, void*);
 #endif
@@ -358,6 +366,7 @@ private:
     //helper object used to view management
     ViewManager m_viewManager;
     Evas_Object *main_window;
+    ProgressiveWebApp m_pwa;
 #if PROFILE_MOBILE
     Evas_Object *m_conformant;
     int m_current_angle;

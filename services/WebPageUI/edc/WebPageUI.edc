@@ -304,6 +304,12 @@ collections { base_scale: 2.6;
                     rel1 { relative: 0.0 1.0; to: "uri_bar_bg"; }
                     rel2 { relative: 1.0 0.0; to: "bottom_toolbar"; }
                 }
+                description {
+                    state: "fullscreen" 0.0;
+                    inherit: "default" 0.0;
+                    rel1 { relative: 0.0 0.0; to: "bg"; }
+                    rel2 { relative: 1.0 1.0; to: "bg"; }
+                }
             }
             part {
                 name: "web_view_dummy_button";
@@ -511,6 +517,20 @@ collections { base_scale: 2.6;
                 action: STATE_SET "secret" 0.0;
                 target: "uri_bar_bg_color";
                 target: "bottom_toolbar_bg_color";
+            }
+            program {
+                name: "webview_fullscreen";
+                signal: "webview_fullscreen";
+                source: "ui";
+                action: STATE_SET "fullscreen" 0.0;
+                target: "web_view";
+            }
+            program {
+                name: "webview_default";
+                signal: "webview_default";
+                source: "ui";
+                action: STATE_SET "default" 0.0;
+                target: "web_view";
             }
         }
     }

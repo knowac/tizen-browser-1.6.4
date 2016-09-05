@@ -120,6 +120,7 @@ public:
     static Eina_Bool _hideDelay(void *data);
     void setDesktopMode(bool desktopMode) {m_desktopMode = desktopMode;}
     bool getDesktopMode() { return m_desktopMode; }
+    void setDisplayMode(WebDisplayMode mode);
 
     std::string getURI();
 

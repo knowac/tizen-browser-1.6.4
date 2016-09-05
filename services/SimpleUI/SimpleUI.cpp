@@ -81,6 +81,7 @@ SimpleUI::SimpleUI()
     , m_tabLimit(0)
     , m_favoritesLimit(0)
     , m_wvIMEStatus(false)
+    , m_pwa()
 #if PROFILE_MOBILE
     , m_current_angle(0)
     , m_temp_angle(0)
@@ -108,8 +109,7 @@ SimpleUI::SimpleUI()
     evas_object_show(main_window);
 #if PROFILE_MOBILE
     if (elm_win_wm_rotation_supported_get(main_window)) {
-        static const int rots[] = {0, 90, 180, 270};
-        elm_win_wm_rotation_available_rotations_set(main_window, rots, (sizeof(rots) / sizeof(int)));
+        rotationType(rotationLock::noLock);
         evas_object_smart_callback_add(main_window, "wm,rotation,changed", __orientation_changed, this);
     } else
         BROWSER_LOGW("[%s:%d] Device does not support rotation.", __PRETTY_FUNCTION__, __LINE__);
@@ -174,7 +174,6 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             m_tabLimit = boost::any_cast <int> (tizen_browser::config::Config::getInstance().get("TAB_LIMIT"));
             m_favoritesLimit = boost::any_cast <int> (tizen_browser::config::Config::getInstance().get("FAVORITES_LIMIT"));
 
-
             loadUIServices();
             loadModelServices();
 
@@ -191,6 +190,21 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             // Register H/W back key callback
             m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
 #endif
+        }
+
+        // Progressive web app
+        if (!strncmp(url.c_str(), "browser_shortcut:", strlen("browser_shortcut:"))) {
+            BROWSER_LOGD("Progressive web app");
+            m_pwa.preparePWAParameters(url);
+            url = m_pwa.getPWAinfo().uri;
+            m_webPageUI->setDisplayMode(
+                static_cast<WebPageUI::WebDisplayMode>(
+                    m_pwa.getPWAinfo().displayMode));
+
+            if (m_pwa.getPWAinfo().orientation ==  WebPageUI::portrait_primary)
+                rotationType(rotationLock::portrait);
+            else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
+                rotationType(rotationLock::landscape);
         }
 
         if (url.empty())
@@ -1125,6 +1139,30 @@ int SimpleUI::getRotation()
 {
     return elm_win_rotation_get(main_window);
 }
+
+void SimpleUI::rotationType(rotationLock lock)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    int *rots;
+    size_t size = 1;
+    switch (lock)
+    {
+        case rotationLock::portrait:
+            rots = new int[1] {0};
+            break;
+        case rotationLock::landscape:
+            rots = new int[1] {90};
+            break;
+        case rotationLock::noLock:
+        default:
+            rots = new int[4] {0, 90, 180, 270};
+            size = 4;
+            break;
+    }
+
+    elm_win_wm_rotation_available_rotations_set( main_window, const_cast<const int*>(rots), size);
+}
+
 #endif
 
 Evas_Object* SimpleUI::getMainWindow()

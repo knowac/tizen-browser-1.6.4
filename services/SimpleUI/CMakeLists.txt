@@ -7,6 +7,7 @@ set(SimpleUI_SRCS
     NotificationPopup.cpp
     ViewManager.cpp
     RadioPopup.cpp
+    ProgressiveWebApp.cpp
     )
 
 if (${PROFILE} MATCHES "mobile")
