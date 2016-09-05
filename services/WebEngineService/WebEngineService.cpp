@@ -465,7 +465,8 @@ TabId WebEngineService::currentTabId() const
 std::vector<TabContentPtr> WebEngineService::getTabContents() const {
     std::vector<TabContentPtr> result;
     for (auto const& tab : m_stateStruct->tabs) {
-        auto tabContent = std::make_shared<TabContent>(tab.first, tab.second->getURI(), tab.second->getTitle(), tab.second->getOrigin());
+        auto tabContent = std::make_shared<TabContent>(tab.first, tab.second->getURI(),
+            tab.second->getTitle(), tab.second->getOrigin(), m_state == State::SECRET);
         result.push_back(tabContent);
     }
     return result;

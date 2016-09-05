@@ -53,17 +53,19 @@ TabContent::TabContent(TabId id,
         const std::string& url,
         const std::string& title,
         const TabOrigin& origin,
-        tools::BrowserImagePtr thumbnail)
+        tools::BrowserImagePtr thumbnail,
+        bool isSecret)
     : m_id(id)
     , m_url(url)
     , m_title(title)
     , m_origin(origin)
     , m_thumbnail(thumbnail)
+    , m_isSecret(isSecret)
 {
 }
 
-TabContent::TabContent(const TabId& id, const std::string& url, const std::string& title, const TabOrigin& origin) :
-        TabContent(id, url, title, origin, std::make_shared<tools::BrowserImage>())
+TabContent::TabContent(const TabId& id, const std::string& url, const std::string& title, const TabOrigin& origin, bool isSecret) :
+        TabContent(id, url, title, origin, std::make_shared<tools::BrowserImage>(), isSecret)
 {
 }
 
@@ -95,6 +97,11 @@ void TabContent::setThumbnail(tools::BrowserImagePtr thumbnail)
 tools::BrowserImagePtr TabContent::getThumbnail() const
 {
     return m_thumbnail;
+}
+
+bool TabContent::getIsSecret() const
+{
+    return m_isSecret;
 }
 
 } /* end of basic_webengine */

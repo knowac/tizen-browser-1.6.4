@@ -189,6 +189,9 @@ collections { base_scale: 2.6;
 
     group { name: "favicon_image";
         images.image: "internet_tabs_ic_default.png" COMP;
+        script {
+            public secret_mode = 0;
+        }
         parts {
             part { name: "image";
                 type: IMAGE;
@@ -217,8 +220,28 @@ collections { base_scale: 2.6;
             program { name: "on_mouse_up";
                 signal: "on_mouse_up";
                 source: "ui";
-                action: STATE_SET "default" 0.0;
-                target: "image";
+                script {
+                    if (get_int(secret_mode))
+                        set_state(PART:"image", "selected", 0.0);
+                    else
+                        set_state(PART:"image", "default", 0.0);
+                }
+            }
+            program { name: "state_secret";
+                signal: "state_secret";
+                source: "ui";
+                script {
+                    set_int(secret_mode, 1);
+                    set_state(PART:"image", "selected", 0.0);
+                }
+            }
+            program { name: "state_normal";
+                signal: "state_normal";
+                source: "ui";
+                script {
+                    set_int(secret_mode, 0);
+                    set_state(PART:"image", "default", 0.0);
+                }
             }
         }
     }
@@ -246,6 +269,9 @@ collections { base_scale: 2.6;
         images.image: "internet_tabs_img_mask.#.png" COMP;
         data.item: "texts" "elm.text";
         data.item: "contents" "elm.icon elm.button elm.thumbnail elm.overlay";
+        script {
+            public secret_mode = 0;
+        }
         parts {
             rect { "top_left_spacer"; scale;
                 description { "default";
@@ -307,9 +333,17 @@ collections { base_scale: 2.6;
                     }
                     color_class: "AO026";
                 }
+                description { "secret_default";
+                    inherit: "default";
+                    color_class: "tabs_secret_bg";
+                }
                 description { "selected";
                     inherit: "default";
                     color_class: "AO027";
+                }
+                description { "secret_selected";
+                    inherit: "default";
+                    color_class: "AO028";
                 }
             }
             rect { "icon_spacer"; scale;
@@ -420,6 +454,10 @@ collections { base_scale: 2.6;
                     visible: 1;
                     image.normal: "internet_tabs_img_mask.#.png";
                 }
+                description { state: "secret" 0.0;
+                    inherit: "default";
+                    color_class: "AO033";
+                }
             }
             swallow { "elm.thumbnail"; scale;
                 description { "default";
@@ -483,7 +521,7 @@ collections { base_scale: 2.6;
                 target: "top_left_spacer";
                 target: "bottom_right_spacer";
             }
-            program {  name: "state_default";
+            program { name: "state_default";
                 signal: "state_default";
                 source: "ui";
                 action: STATE_SET "default" 0.0;
@@ -491,20 +529,48 @@ collections { base_scale: 2.6;
                 target: "bottom_right_spacer";
             }
             program { name: "selected";
-               signal: "elm,state,selected";
-               source: "elm";
-               action: STATE_SET "selected" 0.0;
-               target: "elm.text";
-               target: "top_bg";
-               target: "press_effect";
+                signal: "elm,state,selected";
+                source: "elm";
+                script {
+                    if (get_int(secret_mode))
+                        set_state(PART:"top_bg", "secret_selected", 0.0);
+                    else
+                        set_state(PART:"top_bg", "selected", 0.0);
+                    set_state(PART:"elm.text", "selected", 0.0);
+                }
             }
             program { name: "unselected";
-               signal: "elm,state,unselected";
-               source: "elm";
-               action: STATE_SET "default" 0.0;
-               target: "elm.text";
-               target: "top_bg";
-               target: "press_effect";
+                signal: "elm,state,unselected";
+                source: "elm";
+                script {
+                    if (get_int(secret_mode)) {
+                        set_state(PART:"elm.text", "selected", 0.0);
+                        set_state(PART:"top_bg", "secret_default", 0.0);
+                    } else {
+                        set_state(PART:"elm.text", "default", 0.0);
+                        set_state(PART:"top_bg", "default", 0.0);
+                    }
+                }
+            }
+            program { name: "state_secret";
+                signal: "state_secret";
+                source: "ui";
+                script {
+                    set_int(secret_mode, 1);
+                    set_state(PART:"elm.text", "selected", 0.0);
+                    set_state(PART:"top_bg", "secret_default", 0.0);
+                    set_state(PART:"image_mask", "secret", 0.0);
+                }
+            }
+            program { name: "state_normal";
+                signal: "state_normal";
+                source: "ui";
+                script {
+                    set_int(secret_mode, 0);
+                    set_state(PART:"elm.text", "default", 0.0);
+                    set_state(PART:"top_bg", "default", 0.0);
+                    set_state(PART:"image_mask", "default", 0.0);
+                }
             }
         }
     }

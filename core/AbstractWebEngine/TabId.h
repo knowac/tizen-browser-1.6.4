@@ -70,14 +70,20 @@ public:
             const std::string& url,
             const std::string& title,
             const TabOrigin& origin,
-            tools::BrowserImagePtr thumbnail);
-    TabContent(const TabId& id, const std::string& url, const std::string& title, const TabOrigin& origin);
+            tools::BrowserImagePtr thumbnail,
+            bool isSecret = false);
+    TabContent(const TabId& id,
+               const std::string& url,
+               const std::string& title,
+               const TabOrigin& origin,
+               bool isSecret = false);
     TabId getId() const;
     std::string getUrl() const;
     std::string getTitle() const;
     TabOrigin getOrigin() const;
     void setThumbnail(tools::BrowserImagePtr thumbnail);
     tools::BrowserImagePtr getThumbnail() const;
+    bool getIsSecret() const;
 
 private:
     TabId m_id;
@@ -85,6 +91,7 @@ private:
     std::string m_title;
     TabOrigin m_origin;
     tools::BrowserImagePtr m_thumbnail;
+    bool m_isSecret;
 
 };
 } /* end of basic_webengine */

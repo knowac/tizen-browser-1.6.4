@@ -211,6 +211,7 @@ void TabUI::createGengrid()
     elm_gengrid_align_set(m_gengrid, 0.5, 0.0);
     evas_object_smart_callback_add(m_gengrid, "pressed", _gengrid_tab_pressed, this);
     evas_object_smart_callback_add(m_gengrid, "released", _gengrid_tab_released, this);
+    evas_object_smart_callback_add(m_gengrid, "realized", _gengrid_tab_realized, this);
 
     elm_object_part_content_set(m_content, "elm.swallow.content", m_gengrid);
     evas_object_show(m_gengrid);
@@ -232,12 +233,20 @@ void TabUI::orientationChanged()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     boost::optional<bool> landscape = isLandscape();
     if (landscape) {
+        std::string state;
         if (*landscape) {
             elm_gengrid_item_size_set(m_gengrid, ELM_SCALE_SIZE(GENGRID_ITEM_WIDTH_LANDSCAPE), ELM_SCALE_SIZE(GENGRID_ITEM_HEIGHT_LANDSCAPE));
             elm_object_signal_emit(m_content, "switch_landscape", "ui");
+            state = "state_landscape";
         } else {
             elm_gengrid_item_size_set(m_gengrid, ELM_SCALE_SIZE(GENGRID_ITEM_WIDTH), ELM_SCALE_SIZE(GENGRID_ITEM_HEIGHT));
             elm_object_signal_emit(m_content, "switch_vertical", "ui");
+            state = "state_default";
+        }
+        Elm_Object_Item *it = elm_gengrid_first_item_get(m_gengrid);
+        while (it) {
+            elm_object_item_signal_emit(it, state.c_str(), "ui");
+            it = elm_gengrid_item_next_get(it);
         }
     } else {
         BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
@@ -538,6 +547,25 @@ void TabUI::_gengrid_tab_clicked(void *data, Evas_Object*, void*)
         itemData->tabUI->tabClicked(itemData->item->getId());
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+    }
+}
+
+void TabUI::_gengrid_tab_realized(void *, Evas_Object *, void *event_info)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (event_info) {
+        auto tabItem = static_cast<Elm_Object_Item*>(event_info);
+        auto tabData = static_cast<TabData*>(elm_object_item_data_get(tabItem));
+        auto favicon = elm_object_item_part_content_get(tabItem, "elm.icon");
+        if (tabData->item->getIsSecret()) {
+            elm_object_item_signal_emit(tabItem, "state_secret", "ui");
+            elm_object_signal_emit(favicon, "state_secret", "ui");
+        } else {
+            elm_object_item_signal_emit(tabItem, "state_normal", "ui");
+            elm_object_signal_emit(favicon, "state_normal", "ui");
+        }
+    } else {
+        BROWSER_LOGW("[%s] event_info = nullptr", __PRETTY_FUNCTION__);
     }
 }
 
