@@ -256,12 +256,7 @@ collections { base_scale: 2.6;
                     rel2 { relative: 1.0 1.0; to: "bg"; }
                 }
                 description {
-                    state: "hidden_vertical" 0.0;
-                    inherit: "default" 0.0;
-                    rel1 {relative: 0.0 1.0; to:"bg";}
-                }
-                description {
-                    state: "hidden_landscape" 0.0;
+                    state: "hidden" 0.0;
                     inherit: "default" 0.0;
                     rel1 {relative: 0.0 1.0; to:"bg";}
                 }
@@ -384,6 +379,16 @@ collections { base_scale: 2.6;
                     transition: DECELERATE 0.05;
                     action: STATE_SET "progress" 1.00;
                     target: "progress_bar";
+                }
+                program { name: "hide,bottom";
+                    signal: "hide,bottom";
+                    action: STATE_SET "hidden" 0.0;
+                    target: "bottom_toolbar";
+                }
+                program { name: "show,bottom";
+                    signal: "show,bottom";
+                    action: STATE_SET "default" 0.0;
+                    target: "bottom_toolbar";
                 }
             }
 

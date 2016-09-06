@@ -116,6 +116,7 @@ public:
     void mobileEntryFocused();
     void mobileEntryUnfocused();
     void setContentFocus();
+    void showBottomBar(bool isShown);
     static Eina_Bool _hideDelay(void *data);
     void setDesktopMode(bool desktopMode) {m_desktopMode = desktopMode;}
     bool getDesktopMode() { return m_desktopMode; }

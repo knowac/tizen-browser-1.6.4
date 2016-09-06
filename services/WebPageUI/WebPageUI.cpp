@@ -711,6 +711,15 @@ void WebPageUI::setContentFocus()
         getURIEntry().clearFocus();
 }
 
+void WebPageUI::showBottomBar(bool isShown)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (isShown)
+        elm_object_signal_emit(m_mainLayout, "show,bottom", "");
+    else
+        elm_object_signal_emit(m_mainLayout, "hide,bottom", "");
+}
+
 void WebPageUI::_content_clicked(void *data, Evas_Object *, void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);

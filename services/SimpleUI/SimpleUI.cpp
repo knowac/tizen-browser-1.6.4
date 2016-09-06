@@ -915,6 +915,7 @@ void SimpleUI::onUrlIMEOpened(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     SimpleUI* self = reinterpret_cast<SimpleUI*>(data);
+    self->m_webPageUI->showBottomBar(false);
     self->setwvIMEStatus(true);
 }
 
@@ -922,6 +923,7 @@ void SimpleUI::onUrlIMEClosed(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     SimpleUI* self = reinterpret_cast<SimpleUI*>(data);
+    self->m_webPageUI->showBottomBar(true);
     self->setwvIMEStatus(false);
 }
 #endif
