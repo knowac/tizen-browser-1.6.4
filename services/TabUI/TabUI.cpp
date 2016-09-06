@@ -300,12 +300,16 @@ void TabUI::_cm_close_clicked(void* data, Evas_Object*, void*)
         TabUI* tabUI = static_cast<TabUI*>(data);
         _cm_dismissed(nullptr, tabUI->m_ctxpopup, nullptr);
         Elm_Object_Item* it = elm_gengrid_first_item_get(tabUI->m_gengrid);
+        Elm_Object_Item* it_next;
         while (it) {
             TabData *item = (TabData *)elm_object_item_data_get(it);
+            it_next = elm_gengrid_item_next_get(it);
+            elm_object_item_del(it);
             tabUI->closeTabsClicked(item->item->getId());
-            it = elm_gengrid_item_next_get(it);
+            it = it_next;
         }
-        //Todo: set empty state
+        elm_gengrid_realized_items_update(tabUI->m_gengrid);
+        tabUI->updateNoTabsText();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
@@ -401,18 +405,6 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
 
         self->setStateButtons();
         self->createEmptyLayout();
-    } else {
-        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
-    }
-}
-
-void TabUI::_close_all_clicked(void* data, Evas_Object*, void*)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (data) {
-        TabUI* tabUI = static_cast<TabUI*>(data);
-        tabUI->closeAllTabs();
-        elm_gengrid_realized_items_update(tabUI->m_gengrid);
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
@@ -605,18 +597,6 @@ void TabUI::_close_tab_clicked(void *data, Evas_Object*, void*)
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
-}
-
-void TabUI::closeAllTabs()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    Elm_Object_Item* it = elm_gengrid_first_item_get(m_gengrid);
-    while (it) {
-        TabData *item = (TabData *)elm_object_item_data_get(it);
-        item->tabUI->closeTabsClicked(item->item->getId());
-        it = elm_gengrid_item_next_get(it);
-    }
-    closeTabUIClicked();
 }
 
 void TabUI::updateNoTabsText(bool forceShow)
