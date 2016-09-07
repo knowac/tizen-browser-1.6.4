@@ -1490,7 +1490,7 @@ void SimpleUI::onDefSearchEngineClicked()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     auto popup = RadioPopup::createPopup(m_viewManager.getContent());
-    popup->setTitle(Translations::SettingsDefaultSearchEngineTitle);
+    popup->setTitle(_(Translations::SettingsDefaultSearchEngineTitle.c_str()));
     popup->addRadio(RadioButtons::GOOGLE);
     popup->addRadio(RadioButtons::YAHOO);
     popup->addRadio(RadioButtons::BING);
@@ -1521,7 +1521,7 @@ void SimpleUI::onSaveContentToClicked()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     auto popup = RadioPopup::createPopup(m_viewManager.getContent());
-    popup->setTitle(Translations::SettingsAdvancedSaveContentTitle);
+    popup->setTitle(_(Translations::SettingsAdvancedSaveContentTitle.c_str()));
     popup->addRadio(RadioButtons::DEVICE);
     popup->addRadio(RadioButtons::SD_CARD);
     auto stateString = []() -> std::string {

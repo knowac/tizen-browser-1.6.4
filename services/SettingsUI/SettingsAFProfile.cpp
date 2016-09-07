@@ -38,7 +38,7 @@ void SettingsAFProfile::updateButtonMap()
     ItemData profileName;
     m_profile = ewk_context_form_autofill_profile_get(ewk_context_default_get(), 1);
     if (!m_profile)
-        profileName.buttonText = Translations::SettingsAutoFillProfileSetMyProfile;
+        profileName.buttonText = _(Translations::SettingsAutoFillProfileSetMyProfile.c_str());
     else
         profileName.buttonText = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_NAME);
     m_buttonsMap[0] = profileName;
@@ -52,7 +52,7 @@ bool SettingsAFProfile::populateList(Evas_Object* genlist)
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
-    m_naviframe->setTitle(Translations::SettingsAutoFillProfileTitle.c_str());
+    m_naviframe->setTitle(_(Translations::SettingsAutoFillProfileTitle.c_str()));
 
     elm_genlist_clear(genlist);
     appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[0], _select_profile_cb);

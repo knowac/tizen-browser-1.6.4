@@ -34,13 +34,13 @@ SettingsMain::~SettingsMain()
 void SettingsMain::updateButtonMap()
 {
     ItemData homePage;
-    homePage.buttonText = Translations::SettingsMainHomePage;
-    homePage.subText = Translations::SettingsMainHomePageDefault;
+    homePage.buttonText = _(Translations::SettingsMainHomePage.c_str());
+    homePage.subText = _(Translations::SettingsMainHomePageDefault.c_str());
     homePage.sui = this;
     homePage.id = HOME;
 
     ItemData search;
-    search.buttonText = Translations::SettingsMainDefaultSearchEngine;
+    search.buttonText = _(Translations::SettingsMainDefaultSearchEngine.c_str());
     search.subText =  []() -> std::string {
         auto sig =
             SPSC.getWebEngineSettingsParamString(
@@ -53,24 +53,24 @@ void SettingsMain::updateButtonMap()
     search.id = SEARCH;
 
     ItemData autofill;
-    autofill.buttonText = Translations::SettingsMainAutoFillProfiles;
-    autofill.subText = Translations::SettingsMainAutoFillProfilesSub;
+    autofill.buttonText = _(Translations::SettingsMainAutoFillProfiles.c_str());
+    autofill.subText = _(Translations::SettingsMainAutoFillProfilesSub.c_str());
     autofill.sui = this;
     autofill.id = AUTO_FILL_PROFILE;
 
     ItemData zoom;
-    zoom.buttonText = Translations::SettingsMainManualZoom;
-    zoom.subText = Translations::SettingsMainManualZoomSub;
+    zoom.buttonText = _(Translations::SettingsMainManualZoom.c_str());
+    zoom.subText = _(Translations::SettingsMainManualZoomSub.c_str());
     zoom.sui = this;
     zoom.id = ZOOM;
 
     ItemData privacy;
-    privacy.buttonText = Translations::SettingsMainPrivacy;
+    privacy.buttonText = _(Translations::SettingsMainPrivacy.c_str());
     privacy.sui = this;
     privacy.id = PRIVACY;
 
     ItemData advanced;
-    advanced.buttonText = Translations::SettingsMainAdvanced;
+    advanced.buttonText = _(Translations::SettingsMainAdvanced.c_str());
     advanced.sui = this;
     advanced.id = ADVANCED;
 
@@ -91,7 +91,7 @@ bool SettingsMain::populateList(Evas_Object* genlist)
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
-    m_naviframe->setTitle(Translations::SettingsMainTitle.c_str());
+    m_naviframe->setTitle(_(Translations::SettingsMainTitle.c_str()));
 
     updateButtonMap();
     m_genlistItems[SettingsMainOptions::HOME] =

@@ -35,22 +35,22 @@ SettingsPrivacy::~SettingsPrivacy()
 void SettingsPrivacy::updateButtonMap()
 {
     ItemData cookies;
-    cookies.buttonText = Translations::SettingsPrivacyAcceptCookies;
-    cookies.subText = Translations::SettingsPrivacyAcceptCookiesSub;
+    cookies.buttonText = _(Translations::SettingsPrivacyAcceptCookies.c_str());
+    cookies.subText = _(Translations::SettingsPrivacyAcceptCookiesSub.c_str());
     cookies.sui = this;
 
     ItemData suggestions;
-    suggestions.buttonText = Translations::SettingsPrivacySuggestSearches;
-    suggestions.subText = Translations::SettingsPrivacySuggestSearchesSub;
+    suggestions.buttonText = _(Translations::SettingsPrivacySuggestSearches.c_str());
+    suggestions.subText = _(Translations::SettingsPrivacySuggestSearchesSub.c_str());
     suggestions.sui = this;
 
     ItemData signIn;
-    signIn.buttonText = Translations::SettingsPrivacySaveSigninInfo;
-    signIn.subText = Translations::SettingsPrivacySaveSigninInfo;
+    signIn.buttonText = _(Translations::SettingsPrivacySaveSigninInfo.c_str());
+    signIn.subText = _(Translations::SettingsPrivacySaveSigninInfo.c_str());
     signIn.sui = this;
 
     ItemData delPerData;
-    delPerData.buttonText = Translations::SettingsPrivacyDeletePersonalData;
+    delPerData.buttonText = _(Translations::SettingsPrivacyDeletePersonalData.c_str());
     delPerData.sui = this;
 
     m_buttonsMap[SettingsPrivacyOptions::COOKIES] = cookies;
@@ -64,7 +64,7 @@ bool SettingsPrivacy::populateList(Evas_Object* genlist)
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
-    m_naviframe->setTitle(Translations::SettingsPrivacyTitle.c_str());
+    m_naviframe->setTitle(_(Translations::SettingsPrivacyTitle.c_str()));
 
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::COOKIES], _cookies_cb);
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::SUGGESTIONS], _suggestions_cb);

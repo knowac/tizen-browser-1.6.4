@@ -20,10 +20,10 @@ namespace tizen_browser{
 namespace base_ui{
 
 const std::string SettingsHomePage::DEF_HOME_PAGE = Translations::SamsungPage;
-const std::string SettingsHomePage::QUICK_PAGE = Translations::QuickPage;
-const std::string SettingsHomePage::MOST_VISITED_PAGE = Translations::MostVisitedPage;
-const std::string SettingsHomePage::OTHER_PAGE = Translations::OtherPage;
-const std::string SettingsHomePage::CURRENT_PAGE = Translations::CurrentPage;
+const std::string SettingsHomePage::QUICK_PAGE = _(Translations::QuickPage.c_str());
+const std::string SettingsHomePage::MOST_VISITED_PAGE = _(Translations::MostVisitedPage.c_str());
+const std::string SettingsHomePage::OTHER_PAGE = _(Translations::OtherPage.c_str());
+const std::string SettingsHomePage::CURRENT_PAGE = _(Translations::CurrentPage.c_str());
 
 SettingsHomePage::SettingsHomePage(Evas_Object* parent)
 {
@@ -49,33 +49,33 @@ void SettingsHomePage::updateButtonMap()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     ItemData defaultPage;
-    defaultPage.buttonText = Translations::SettingsHomePageDefault;
+    defaultPage.buttonText = _(Translations::SettingsHomePageDefault.c_str());
     defaultPage.subText = DEF_HOME_PAGE;
     defaultPage.sui = this;
     defaultPage.id = DEFAULT;
 
     ItemData current;
-    current.buttonText = Translations::SettingsHomePageCurrentPage;
+    current.buttonText = _(Translations::SettingsHomePageCurrentPage.c_str());
     current.subText = getCurrentPage();
     current.sui = this;
     current.id = CURRENT;
 
     ItemData quick;
-    quick.buttonText = Translations::SettingsHomePageQuickAccess;
+    quick.buttonText = _(Translations::SettingsHomePageQuickAccess.c_str());
     quick.sui = this;
     quick.id = QUICK_ACCESS;
 
     ItemData most;
-    most.buttonText = Translations::SettingsHomePageMostVisited;
+    most.buttonText = _(Translations::SettingsHomePageMostVisited.c_str());
     most.sui = this;
     most.id = MOST_VIS;
 
     ItemData other;
-    other.buttonText = Translations::SettingsHomePageOther;
+    other.buttonText = _(Translations::SettingsHomePageOther.c_str());
     other.subText = [this]() -> std::string {
         auto sig = SPSC.getWebEngineSettingsParamString(
             basic_webengine::WebEngineSettings::CURRENT_HOME_PAGE);
-        auto otherPage = (sig && !sig->empty()) ? *sig : Translations::SamsungPage;
+        auto otherPage = (sig && !sig->empty()) ? *sig : _(Translations::SamsungPage.c_str());
 
         if (!otherPage.compare(QUICK_PAGE) ||
             !otherPage.compare(MOST_VISITED_PAGE) ||
@@ -125,7 +125,7 @@ bool SettingsHomePage::populateList(Evas_Object* genlist)
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
-    m_naviframe->setTitle(Translations::SettingsHomePageTitle.c_str());
+    m_naviframe->setTitle(_(Translations::SettingsHomePageTitle.c_str()));
 
     updateButtonMap();
     m_itemsMap[SettingsHomePageOptions::DEFAULT] =

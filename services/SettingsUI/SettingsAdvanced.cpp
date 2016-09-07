@@ -37,33 +37,33 @@ SettingsAdvanced::~SettingsAdvanced()
 void SettingsAdvanced::updateButtonMap()
 {
     ItemData enable_js;
-    enable_js.buttonText = Translations::SettingsAdvancedEnableJavaScript;
-    enable_js.subText = Translations::SettingsAdvancedEnableJavaScriptSub;
+    enable_js.buttonText = _(Translations::SettingsAdvancedEnableJavaScript.c_str());
+    enable_js.subText = _(Translations::SettingsAdvancedEnableJavaScriptSub.c_str());
     enable_js.sui = this;
     enable_js.id = ENABLE_JS;
 
     ItemData block_popups;
-    block_popups.buttonText = Translations::SettingsAdvancedBlockPopups;
-    block_popups.subText = Translations::SettingsAdvancedBlockPopupsSub;
+    block_popups.buttonText = _(Translations::SettingsAdvancedBlockPopups.c_str());
+    block_popups.subText = _(Translations::SettingsAdvancedBlockPopupsSub.c_str());
     block_popups.sui = this;
     block_popups.id = BLOCK_POPUPS;
 
     ItemData save_content;
-    save_content.buttonText = Translations::SettingsAdvancedSaveContent;
+    save_content.buttonText = _(Translations::SettingsAdvancedSaveContent.c_str());
     save_content.subText =  []() {
         auto sig =
             SPSC.getWebEngineSettingsParamString(
                 basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION);
         return (sig && !sig->empty()) ?
-            *sig :
-            Translations::Device;
+            _(sig->c_str()) :
+            _(Translations::Device.c_str());
     }();
     save_content.sui = this;
     save_content.id = SAVE_CONTENT;
 
     ItemData manage_web_data;
-    manage_web_data.buttonText = Translations::SettingsAdvancedManageWebsiteData;
-    manage_web_data.subText = Translations::SettingsAdvancedManageWebsiteDataSub;
+    manage_web_data.buttonText = _(Translations::SettingsAdvancedManageWebsiteData.c_str());
+    manage_web_data.subText = _(Translations::SettingsAdvancedManageWebsiteDataSub.c_str());
     manage_web_data.sui = this;
     manage_web_data.id = MANAGE_WEB_DATA;
 
@@ -89,7 +89,7 @@ void SettingsAdvanced::changeGenlistStorage()
 
     if (mmc_mode == VCONFKEY_SYSMAN_MMC_REMOVED) {
         setContentDestination(
-            static_cast<std::underlying_type_t<RadioButtons>>(RadioButtons::DEVICE));
+            static_cast<std::underlying_type_t<RadioButtons> >(RadioButtons::DEVICE));
         elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT], EINA_TRUE);
     } else
         elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT], EINA_FALSE);
@@ -112,7 +112,7 @@ bool SettingsAdvanced::populateList(Evas_Object* genlist)
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
-    m_naviframe->setTitle(Translations::SettingsAdvancedTitle.c_str());
+    m_naviframe->setTitle(_(Translations::SettingsAdvancedTitle.c_str()));
 
     m_genlistItems[SettingsAdvancedOptions::ENABLE_JS] =
         appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS], _enable_js_cb);
@@ -240,20 +240,22 @@ void SettingsAdvanced::setContentDestination(int button)
 
     switch (static_cast<RadioButtons>(button)) {
         case RadioButtons::DEVICE:
-            m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = Translations::Device;
+            m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = _(Translations::Device.c_str());
             setStorageType(SettingsStorageType::DEVICE);
+            SPSC.setWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION,
+                Translations::Device);
             break;
         case RadioButtons::SD_CARD:
-            m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = Translations::SDCard;
+            m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText = _(Translations::SDCard.c_str());
             setStorageType(SettingsStorageType::SD_CARD);
+            SPSC.setWebEngineSettingsParamString(
+                basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION,
+                Translations::SDCard);
             break;
         default:
             return;
     }
-
-    SPSC.setWebEngineSettingsParamString(
-        basic_webengine::WebEngineSettings::SAVE_CONTENT_LOCATION,
-        m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT].subText);
     elm_genlist_item_update(m_genlistItems[SAVE_CONTENT]);
 }
 }

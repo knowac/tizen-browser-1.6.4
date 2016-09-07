@@ -35,37 +35,37 @@ void SettingsDelPersData::updateButtonMap()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     // TODO Missing translations
     ItemData selectAll;
-    selectAll.buttonText = Translations::SettingsDelPersDataSelectAll;
+    selectAll.buttonText = _(Translations::SettingsDelPersDataSelectAll.c_str());
     selectAll.sui = this;
     selectAll.id = SELECT_ALL;
 
     ItemData browsHistory;
-    browsHistory.buttonText = Translations::SettingsDelPersDataBrowsingHistory;
+    browsHistory.buttonText = _(Translations::SettingsDelPersDataBrowsingHistory.c_str());
     browsHistory.sui = this;
     browsHistory.id = BROWSING_HISTORY;
 
     ItemData cache;
-    cache.buttonText = Translations::SettingsDelPersDataCache;
+    cache.buttonText = _(Translations::SettingsDelPersDataCache.c_str());
     cache.sui = this;
     cache.id = CACHE;
 
     ItemData cookies;
-    cookies.buttonText = Translations::SettingsDelPersDataCookies;
+    cookies.buttonText = _(Translations::SettingsDelPersDataCookies.c_str());
     cookies.sui = this;
     cookies.id = COOKIES_AND_SITE;
 
     ItemData pass;
-    pass.buttonText = Translations::SettingsDelPersDataPasswords;
+    pass.buttonText = _(Translations::SettingsDelPersDataPasswords.c_str());
     pass.sui = this;
     pass.id = PASSWORDS;
 
     ItemData autofill;
-    autofill.buttonText = Translations::SettingsDelPersDataAutoFillData;
+    autofill.buttonText = _(Translations::SettingsDelPersDataAutoFillData.c_str());
     autofill.sui = this;
     autofill.id = DEL_PERS_AUTO_FILL;
 
     ItemData loc;
-    loc.buttonText = Translations::SettingsDelPersDataLocationData;
+    loc.buttonText = _(Translations::SettingsDelPersDataLocationData.c_str());
     loc.sui = this;
     loc.id = LOCATION;
 
@@ -80,15 +80,15 @@ void SettingsDelPersData::updateButtonMap()
 
 bool SettingsDelPersData::populateList(Evas_Object* genlist)
 {
-    m_naviframe->setTitle(Translations::SettingsDelPersDataTitle.c_str());
+    m_naviframe->setTitle(_(Translations::SettingsDelPersDataTitle.c_str()));
 
     m_naviframe->addLeftButton(__cancel_button_cb, this);
     m_naviframe->addRightButton(__delete_button_cb, this);
     m_naviframe->setPrevButtonVisible(false);
     m_naviframe->setLeftButtonVisible(true);
     m_naviframe->setRightButtonVisible(true);
-    m_naviframe->setRightButtonText(Translations::SettingsDelPersDataDelete.c_str());
-    m_naviframe->setLeftButtonText(Translations::SettingsDelPersDataCancel.c_str());
+    m_naviframe->setRightButtonText(_(Translations::SettingsDelPersDataDelete.c_str()));
+    m_naviframe->setLeftButtonText(_(Translations::SettingsDelPersDataCancel.c_str()));
 
     appendGenlist(genlist, m_setting_check_normal_item_class, &m_buttonsMap[SettingsDelPersDataOptions::SELECT_ALL], nullptr);
     appendGenlist(genlist, m_setting_check_normal_item_class, &m_buttonsMap[SettingsDelPersDataOptions::BROWSING_HISTORY], nullptr);
