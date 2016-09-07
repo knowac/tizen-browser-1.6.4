@@ -24,7 +24,6 @@ SettingsAFProfile::SettingsAFProfile(Evas_Object* parent)
     : m_profile(nullptr)
 {
     init(parent);
-    updateButtonMap();
 };
 
 SettingsAFProfile::~SettingsAFProfile()
@@ -35,6 +34,7 @@ SettingsAFProfile::~SettingsAFProfile()
 void SettingsAFProfile::updateButtonMap()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    // TODO Fix profile name update after profile saving
     ItemData profileName;
     m_profile = ewk_context_form_autofill_profile_get(ewk_context_default_get(), 1);
     if (!m_profile)
@@ -46,11 +46,15 @@ void SettingsAFProfile::updateButtonMap()
 
 bool SettingsAFProfile::populateList(Evas_Object* genlist)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    updateButtonMap();
+
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
     m_naviframe->setTitle(Translations::SettingsAutoFillProfileTitle.c_str());
 
+    elm_genlist_clear(genlist);
     appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[0], _select_profile_cb);
     return true;
 }

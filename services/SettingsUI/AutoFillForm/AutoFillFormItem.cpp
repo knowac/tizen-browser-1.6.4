@@ -59,7 +59,7 @@ profileSaveErrorcode AutoFillFormItem::saveItem(void)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    Ewk_Autofill_Profile *profile = ewk_autofill_profile_new();
+    auto profile = ewk_autofill_profile_new();
     if (!profile) {
         BROWSER_LOGE("Failed to ewk_autofill_profile_new");
         return profile_create_failed;

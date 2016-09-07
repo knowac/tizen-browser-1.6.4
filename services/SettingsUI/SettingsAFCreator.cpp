@@ -24,6 +24,8 @@
 namespace tizen_browser{
 namespace base_ui{
 
+using namespace tools::EflTools;
+
 inline std::string _trim(std::string& s, const std::string& drop = TRIM_SPACE)
 {
     std::string r = s.erase(s.find_last_not_of(drop) + 1);
@@ -99,7 +101,7 @@ bool SettingsAFCreator::populateLayout(Evas_Object* parent)
     m_entryLimitSize.max_char_count = 0;
     m_entryLimitSize.max_byte_count = AUTO_FILL_FORM_ENTRY_MAX_COUNT;
     m_edjFilePath = EDJE_DIR;
-    m_edjFilePath.append("SettingsUI/AutoFillMobileUI.edj");
+    m_edjFilePath.append("SettingsUI/SettingsMobileUI.edj");
 
     m_scroller = createScroller(parent);
     evas_object_show(m_scroller);
@@ -117,29 +119,31 @@ bool SettingsAFCreator::populateLayout(Evas_Object* parent)
     m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
     m_naviframe->setLeftButtonText(_("IDS_BR_SK_CANCEL"));
 
-    if (m_item->getItemComposeMode() == profile_create)
-        m_naviframe->setRightButtonEnabled(true);
+    m_naviframe->setRightButtonEnabled(false);
 
     m_layout = m_scroller;
     return true;
 }
 
-void SettingsAFCreator::createInputLayout(Evas_Object* parent, char* fieldName,
-                                                        genlistCallbackData* cb_data)
+void SettingsAFCreator::createInputLayout(
+    Evas_Object* parent,
+    char* fieldName,
+    genlistCallbackData* cb_data)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    Evas_Object* layout = elm_layout_add(parent);
-    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_layout_file_set(layout, m_edjFilePath.c_str(), "affcv_item");
+    auto layout(elm_layout_add(parent));
+    setExpandHints(layout);
+    if (!elm_layout_file_set(layout, m_edjFilePath.c_str(), "affcv_item"))
+        BROWSER_LOGD("[%s:%d] item layout creation failed", __PRETTY_FUNCTION__, __LINE__);
     elm_object_part_text_set(layout, "field_name", fieldName);
 
-    Evas_Object* editfield = elm_layout_add(layout);
-    elm_layout_file_set(editfield, m_edjFilePath.c_str(), "edit-field");
+    auto editfield(elm_layout_add(layout));
+    if (!elm_layout_file_set(editfield, m_edjFilePath.c_str(), "edit-field"))
+        BROWSER_LOGD("[%s:%d] item layout creation failed", __PRETTY_FUNCTION__, __LINE__);
     evas_object_size_hint_align_set(editfield, EVAS_HINT_FILL, 0.0);
     evas_object_size_hint_weight_set(editfield, EVAS_HINT_EXPAND, 0.0);
 
-    Evas_Object* entry = elm_entry_add(editfield);
+    auto entry(elm_entry_add(editfield));
     elm_object_style_set(entry, "entry_style");
     elm_entry_single_line_set(entry, EINA_TRUE);
     elm_entry_scrollable_set(entry, EINA_TRUE);
@@ -162,17 +166,18 @@ void SettingsAFCreator::createInputLayout(Evas_Object* parent, char* fieldName,
 
     elm_object_part_content_set(editfield, "editfield_entry", entry);
 
-    Evas_Object *button = elm_button_add(editfield);
+    auto button(elm_button_add(editfield));
     elm_object_style_set(button, "basic_button");
     evas_object_smart_callback_add(button, "clicked", __entry_clear_button_clicked_cb, entry);
     elm_object_part_content_set(editfield, "entry_clear_button", button);
 
-    if (!elm_entry_is_empty(entry)) {
-        BROWSER_LOGE("entry is empty");
+    if (!elm_entry_is_empty(entry))
         elm_object_signal_emit(editfield, "show,clear,button,signal", "");
-    }
 
     elm_object_part_content_set(layout, "entry_swallow", editfield);
+    evas_object_show(cb_data->editfield);
+    evas_object_show(cb_data->entry);
+    evas_object_show(cb_data->it);
     evas_object_show(layout);
 }
 
@@ -270,23 +275,24 @@ void SettingsAFCreator::addItems()
     elm_entry_prediction_allow_set(m_emailItemCallbackData.entry, EINA_FALSE);
 }
 
-Evas_Object* SettingsAFCreator::createScroller(Evas_Object *parent)
+Evas_Object* SettingsAFCreator::createScroller(Evas_Object* parent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    Evas_Object *scroller = elm_scroller_add(parent);
-    if (!scroller) {
-        BROWSER_LOGE("elm_scroller_add failed");
-        return nullptr;
-    }
+    auto scroller(elm_scroller_add(parent));
 
     m_box = elm_box_add(scroller);
-    evas_object_size_hint_weight_set(m_box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_box, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_box_align_set(m_box, 0.0, 0.0);
-    elm_object_content_set(scroller, m_box);
 
     addItems();
+
+    elm_object_content_set(scroller, m_box);
+
+    setExpandHints(m_box);
+    setExpandHints(scroller);
+
+    evas_object_show(m_box);
+    evas_object_show(scroller);
 
     return scroller;
 }
@@ -322,9 +328,9 @@ Eina_Bool SettingsAFCreator::applyEntryData(void)
 
     if (full_name && strlen(full_name) && !isEntryHasOnlySpace(full_name))
         m_item->setName(full_name);
-    else {
+    else
         return EINA_FALSE;
-    }
+
     const char *company_name = elm_entry_entry_get(m_companyNameItemCallbackData.entry);
     m_item->setCompany(company_name);
     const char *primary_address = elm_entry_entry_get(m_addressLine1ItemCallbackData.entry);
@@ -345,15 +351,14 @@ Eina_Bool SettingsAFCreator::applyEntryData(void)
     m_item->setEmailAddress(email);
 
     if (m_item->getItemComposeMode() == profile_edit) {
-
         m_editErrorcode = m_item->updateItem();
-        if (m_editErrorcode == profile_edit_failed || m_editErrorcode == profile_already_exist) {
+        if (m_editErrorcode != update_error_none) {
             BROWSER_LOGD("Update failed!");
             return EINA_FALSE;
         }
     } else {
         m_saveErrorcode = m_item->saveItem();
-        if (m_saveErrorcode != profile_create_failed && m_saveErrorcode != duplicate_profile){
+        if (m_saveErrorcode != save_error_none) {
             BROWSER_LOGD("Cannot save autofill data");
             return EINA_FALSE;
         }
@@ -411,7 +416,7 @@ void SettingsAFCreator::__entry_changed_cb(void* data, Evas_Object* obj, void*)
         elm_object_signal_emit(cb_data->editfield, "hide,clear,button,signal", "");
 
     auto isEmpty(elm_entry_is_empty(view->m_fullNameItemCallbackData.entry) == EINA_TRUE);
-    view->m_naviframe->setRightButtonEnabled(isEmpty);
+    view->m_naviframe->setRightButtonEnabled(!isEmpty);
 }
 
 void SettingsAFCreator::__entry_clicked_cb(void* data, Evas_Object*, void*)
