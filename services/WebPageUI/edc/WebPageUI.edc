@@ -119,12 +119,12 @@ collections { base_scale: 2.6;
                 description {
                     state: "hidden_vertical" 0.0;
                     inherit: "default" 0.0;
-                    rel1 {relative: 0.0 -URI_BG_HEIGHT/1228; to:"bg";}
+                    rel1 {relative: 0.0 -2*(URI_BG_HEIGHT/1228); to:"bg";}
                 }
                 description {
                     state: "hidden_landscape" 0.0;
                     inherit: "default" 0.0;
-                    rel1 {relative: 0.0 -URI_BG_HEIGHT/668; to:"bg";}
+                    rel1 {relative: 0.0 -2*(URI_BG_HEIGHT/668); to:"bg";}
                 }
             }
 
@@ -241,13 +241,12 @@ collections { base_scale: 2.6;
                 }
             }
 
-            part {
+            rect {
                 name: "bottom_toolbar";
-                type: RECT;
                 scale: 1;
                 description {
                     state: "default" 0.0;
-                    visible: 0;
+                    visible: 1;
                     align: 0.0 1.0;
                     min: 0 0;
                     max: -1 BOTTOM_TOOLBAR_HEIGHT;
@@ -258,7 +257,7 @@ collections { base_scale: 2.6;
                 description {
                     state: "hidden" 0.0;
                     inherit: "default" 0.0;
-                    rel1 {relative: 0.0 1.0; to:"bg";}
+                    rel1 {relative: 1.0 1.0; to:"bg";}
                 }
             }
             rect {
@@ -466,7 +465,6 @@ collections { base_scale: 2.6;
                 in: 0.01 0.0;
                 action: STATE_SET "hidden_landscape" 0.0;
                 target: "uri_bar_bg";
-                target: "bottom_toolbar";
                 transition: LINEAR 0.15;
             }
             program {
@@ -476,7 +474,6 @@ collections { base_scale: 2.6;
                 in: 0.01 0.0;
                 action: STATE_SET "hidden_vertical" 0.0;
                 target: "uri_bar_bg";
-                target: "bottom_toolbar";
                 transition: LINEAR 0.15;
             }
             program {

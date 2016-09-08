@@ -556,6 +556,11 @@ public:
      */
     boost::signals2::signal<void()> switchToQuickAccess;
 
+    /**
+     * Switch fullscreenmode.
+     */
+    boost::signals2::signal<void(bool)> fullscreenModeSet;
+
 #if PROFILE_MOBILE
     /**
      * Register H/W back key callback for the current webview

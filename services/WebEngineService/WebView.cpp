@@ -1419,20 +1419,23 @@ void WebView::__contextmenu_selected_cb(void *data, Evas_Object */*obj*/, void *
     }
 }
 
-void WebView::__fullscreen_enter_cb(void *data, Evas_Object*, void*) {
+void WebView::__fullscreen_enter_cb(void *data, Evas_Object*, void*)
+{
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     auto self = static_cast<WebView*>(data);
     self->m_fullscreen = true;
+    self->fullscreenModeSet(self->m_fullscreen);
 }
 
-void WebView::__fullscreen_exit_cb(void *data, Evas_Object*, void*) {
+void WebView::__fullscreen_exit_cb(void *data, Evas_Object*, void*)
+{
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     auto self = static_cast<WebView*>(data);
     self->m_fullscreen = false;
+    self->fullscreenModeSet(self->m_fullscreen);
 }
-
 #endif
 
 void WebView::setFocus()

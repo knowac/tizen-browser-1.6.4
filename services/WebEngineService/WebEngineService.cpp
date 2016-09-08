@@ -136,6 +136,7 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
     webView->redirectedWebPage.connect(boost::bind(&WebEngineService::_redirectedWebPage, this, _1, _2));
     webView->setCertificatePem.connect(boost::bind(&WebEngineService::_setCertificatePem, this, _1, _2));
     webView->setWrongCertificatePem.connect(boost::bind(&WebEngineService::_setWrongCertificatePem, this, _1, _2));
+    webView->fullscreenModeSet.connect([this](auto state){fullscreenModeSet(state);});
 #if PROFILE_MOBILE
     webView->getRotation.connect(boost::bind(&WebEngineService::_getRotation, this));
     webView->unsecureConnection.connect(boost::bind(&WebEngineService::_unsecureConnection, this));
@@ -160,6 +161,7 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
     webView->confirmationRequest.disconnect(boost::bind(&WebEngineService::_confirmationRequest, this, _1));
     webView->IMEStateChanged.disconnect(boost::bind(&WebEngineService::_IMEStateChanged, this, _1));
     webView->redirectedWebPage.disconnect(boost::bind(&WebEngineService::_redirectedWebPage, this, _1, _2));
+    webView->fullscreenModeSet.disconnect_all_slots();
 #if PROFILE_MOBILE
     webView->getRotation.disconnect(boost::bind(&WebEngineService::_getRotation, this));
     webView->unsecureConnection.disconnect(boost::bind(&WebEngineService::_unsecureConnection, this));

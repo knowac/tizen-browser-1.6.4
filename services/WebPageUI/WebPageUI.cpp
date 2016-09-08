@@ -52,8 +52,9 @@ WebPageUI::WebPageUI()
     , m_pwaInfo(nullptr)
 #if GESTURE
     , m_gestureLayer(nullptr)
-    , m_uriBarHidden(false)
 #endif
+    , m_uriBarHidden(false)
+    , m_fullscreen(false)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 }
@@ -342,6 +343,21 @@ void WebPageUI::setFocusOnSuspend()
     elm_object_focus_set(m_rightButtonBar->getButton("tab_button"), EINA_TRUE);
 }
 
+void WebPageUI::fullscreenModeSet(bool state)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    auto landscape = isLandscape();
+    m_fullscreen = state;
+    if (!state)
+        elm_object_signal_emit(m_mainLayout, "show_uri_bar", "ui");
+    else if (landscape && state) {
+        (*landscape) ?
+            elm_object_signal_emit(m_mainLayout, "hide_uri_bar_landscape", "ui") :
+            elm_object_signal_emit(m_mainLayout, "hide_uri_bar_vertical", "ui");
+    }
+    showBottomBar(!state);
+}
+
 void WebPageUI::orientationChanged()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -352,17 +368,13 @@ void WebPageUI::orientationChanged()
         if (*landscape) {
             elm_object_signal_emit(m_privateLayout, "show_incognito_landscape", "ui");
             elm_object_signal_emit(m_bottomButtonBar->getContent(), "landscape,mode", "");
-#if GESTURE
             if (m_uriBarHidden)
                 elm_object_signal_emit(m_mainLayout, "hide_uri_bar_landscape", "ui");
-#endif
         } else {
             elm_object_signal_emit(m_privateLayout, "show_incognito_vertical", "ui");
             elm_object_signal_emit(m_bottomButtonBar->getContent(), "portrait,mode", "");
-#if GESTURE
             if (m_uriBarHidden)
                 elm_object_signal_emit(m_mainLayout, "hide_uri_bar_vertical", "ui");
-#endif
         }
     }
     else
@@ -715,7 +727,11 @@ void WebPageUI::setContentFocus()
 
 void WebPageUI::showBottomBar(bool isShown)
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    BROWSER_LOGD("[%s:%d] %d", __PRETTY_FUNCTION__, __LINE__, isShown);
+    if (m_fullscreen) {
+        elm_object_signal_emit(m_mainLayout, "hide,bottom", "");
+        return;
+    }
     if (isShown)
         elm_object_signal_emit(m_mainLayout, "show,bottom", "");
     else

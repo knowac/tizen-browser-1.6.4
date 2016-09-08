@@ -81,6 +81,7 @@ public:
     virtual void showUI();
     virtual void hideUI();
     void createDummyButton();
+    void fullscreenModeSet(bool state);
     virtual void orientationChanged() override;
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
@@ -226,10 +227,11 @@ private:
 
 #if GESTURE
     Evas_Object* m_gestureLayer;
-    bool m_uriBarHidden;
     static const int SINGLE_FINGER = 1;
     static const int SWIPE_MOMENTUM_TRESHOLD = 400;
 #endif
+    bool m_uriBarHidden;
+    bool m_fullscreen;
 };
 
 
