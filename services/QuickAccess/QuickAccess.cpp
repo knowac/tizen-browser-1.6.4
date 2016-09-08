@@ -232,7 +232,6 @@ Evas_Object* QuickAccess::createQuickAccessGengrid(Evas_Object *parent)
 
     elm_gengrid_select_mode_set(quickAccessGengrid, ELM_OBJECT_SELECT_MODE_ALWAYS);
     elm_gengrid_multi_select_set(quickAccessGengrid, EINA_TRUE);
-    elm_gengrid_reorder_mode_set(quickAccessGengrid, EINA_TRUE);
     elm_scroller_policy_set(quickAccessGengrid, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
     evas_object_size_hint_weight_set(quickAccessGengrid, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(quickAccessGengrid, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -435,7 +434,7 @@ char* QuickAccess::_grid_bookmark_text_get(void *data, Evas_Object *, const char
     return strdup("");
 }
 
-Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object*, const char *part)
+Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object* obj, const char *part)
 {
     BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__, part);
     if (data) {
@@ -444,14 +443,14 @@ Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object*, 
         if (!strcmp(part, "elm.swallow.icon")) {
             if (itemData->item->getThumbnail()) {
                 // Favicon
-                Evas_Object * thumb = itemData->item->getFavicon()->getEvasImage(itemData->quickAccess->m_parent);
+                Evas_Object * thumb = itemData->item->getFavicon()->getEvasImage(obj);
                 elm_image_resizable_set(thumb, EINA_TRUE, EINA_TRUE);
                 evas_object_size_hint_min_set(thumb, ELM_SCALE_SIZE(114), ELM_SCALE_SIZE(114));
                 evas_object_size_hint_max_set(thumb, ELM_SCALE_SIZE(114), ELM_SCALE_SIZE(114));
                 return thumb;
             } else {
                 // Default color
-                Evas_Object *textblock = evas_object_textblock_add(itemData->quickAccess->m_parent);
+                Evas_Object *textblock = evas_object_textblock_add(obj);
                 Evas_Textblock_Style *st = evas_textblock_style_new();
                 evas_textblock_style_set(st, "DEFAULT='font=Sans font_size=45 color=#555 align=center valign=center'");
                 evas_object_textblock_style_set(textblock, st);
@@ -461,13 +460,19 @@ Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object*, 
                 evas_object_textblock_text_markup_set(textblock, fName);
 
 
-                Evas_Object *button = elm_button_add(itemData->quickAccess->m_parent);
+                Evas_Object *button = elm_button_add(obj);
                 evas_object_color_set(button, 190, 190, 190, 255);
                 elm_object_content_set(button, textblock);
 
                 return button;
 
             }
+        }
+        if (!strcmp(part, "elm.button")) {
+            auto button = elm_button_add(obj);
+            elm_object_style_set(button, "delete_button");
+            evas_object_smart_callback_add(button, "clicked", __quckAccess_del_clicked, data);
+            return button;
         }
     }
     return nullptr;
@@ -478,6 +483,13 @@ void QuickAccess::_grid_bookmark_del(void* data, Evas_Object*)
     auto itemData = static_cast<BookmarkItemData*>(data);
     if (itemData)
         delete itemData;
+}
+
+void QuickAccess::__quckAccess_del_clicked(void *data, Evas_Object */*obj*/, void *)
+{
+    BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__);
+    auto itemData = static_cast<BookmarkItemData*>(data);
+    itemData->quickAccess->deleteQuickAccessItem(itemData->item);
 }
 
 char *QuickAccess::_grid_mostVisited_text_get(void *data, Evas_Object *, const char *part)
@@ -553,6 +565,16 @@ void QuickAccess::showQuickAccess()
 
     elm_object_translatable_part_text_set(m_layout, "screen_title", "Quick access");  //TODO: translate
     setIndexPage(QuickAccess::QUICKACCESS_PAGE);
+
+}
+
+void QuickAccess::editQuickAccess()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    elm_gengrid_reorder_mode_set(m_quickAccessGengrid, EINA_TRUE);
+
+    //TODO: show delete buttons in corners
 
 }
 

@@ -112,6 +112,7 @@ public:
     virtual std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem>> getAllBookmarkItems(
         int parent = tizen_browser::services::ROOT_FOLDER_ID) = 0;
     virtual std::shared_ptr<tizen_browser::services::BookmarkItem> getRoot() = 0;
+    virtual int getQuickAccessRoot() = 0;
     virtual std::shared_ptr<tizen_browser::services::BookmarkItem> getBookmarkItem(int id) = 0;
     virtual void editBookmark(int id, const std::string & url, const std::string & title, int parent = -1,
         int order = -1) = 0;
@@ -123,6 +124,7 @@ public:
      * @return true if success, false on error of not found bookmark
      */
     virtual bool getItem(const std::string & url, tizen_browser::services::BookmarkItem *item) = 0;
+    virtual int getFolderId(const std::string & title, int parent = tizen_browser::services::ROOT_FOLDER_ID) = 0;
 
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> bookmarkAdded;
     boost::signals2::signal<void (const std::string& uri)> bookmarkDeleted;

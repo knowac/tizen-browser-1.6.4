@@ -144,6 +144,8 @@ public:
     boost::signals2::signal<void ()> showSettingsUI;
     boost::signals2::signal<void ()> switchToMobileMode;
     boost::signals2::signal<void ()> switchToDesktopMode;
+    boost::signals2::signal<void ()> quickAccessEdit;
+    boost::signals2::signal<void ()> addToQuickAccess;
 
     boost::signals2::signal<std::string ()> requestCurrentPageForWebPageUI;
     boost::signals2::signal<basic_webengine::State ()> getEngineState;

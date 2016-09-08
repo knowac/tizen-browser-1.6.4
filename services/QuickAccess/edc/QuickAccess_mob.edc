@@ -322,10 +322,68 @@ group { name: "page_layout";
     }
 }
 
+group { name: "elm/button/base/delete_button";
+  images {
+      image: "btn_delete_nor.png" COMP;
+      image: "btn_delete_press.png" COMP;
+  }
+  parts {
+      part { name: "elm.image";
+          type: IMAGE;
+          scale: 1;
+          mouse_events: 0;
+          description { state: "default" 0.0;
+              align: 0.5 0.5;
+              visible: 1;
+              min: 60 60;
+              max: 60 60;
+              fixed: 1 1;
+              image.normal: "btn_delete_nor.png";
+          }
+          description { state: "pressed" 0.0;
+              inherit: "default" 0.0;
+              image.normal: "btn_delete_press.png";
+          }
+      }
+      rect { "over"; scale;
+          description { "default";
+              rel1.to: "elm.image";
+              rel2.to: "elm.image";
+              color: 0 0 0 0;
+          }
+      }
+  }
+  programs {
+      program { name: "on_mouse_down";
+          signal: "mouse,down,1";
+          source: "over";
+          script {
+              set_state(PART:"elm.image", "pressed", 0.0);
+              emit("elm,action,press", "");
+          }
+       }
+      program {  name: "on_mouse_up";
+          signal: "mouse,up,1";
+          source: "over";
+          script {
+             set_state(PART:"elm.image", "default", 0.0);
+             emit("elm,action,unpress", "");
+          }
+      }
+      program { name: "on_mouse_click";
+          signal: "mouse,clicked,1";
+          source: "over";
+          script {
+              emit("elm,action,click", "");
+          }
+      }
+  }
+}
+
 group {
     name: "elm/gengrid/item/quickAccess/default";
     data.item: "texts" "elm.text";
-    data.item: "contents" "elm.swallow.icon";
+    data.item: "contents" "elm.swallow.icon elm.button";
     parts {
         part { name: "bg";
             type: RECT;
@@ -368,6 +426,18 @@ group {
                 inherit: "default" 0.0;
                 min: 114 114;
                 max: 114 114;
+            }
+        }
+
+        swallow { "elm.button"; scale;
+            mouse_events: 1;
+            repeat_events: 0;
+            description { "default";
+                min: 60 60;
+                max: 60 60;
+                align: 1 0;
+                rel1.to: "bg";
+                rel2.to: "bg";
             }
         }
 
@@ -473,6 +543,7 @@ group {
                     relative: 1.0  1.0; to: "bg";
                 }
             }
+        }
 
         part { name: "img";
             type: IMAGE;
@@ -561,8 +632,8 @@ group {
         }
     }
     programs {}
-    }
 }
+
 
 group {
     name: "elm/gengrid/item/mostVisited/default";

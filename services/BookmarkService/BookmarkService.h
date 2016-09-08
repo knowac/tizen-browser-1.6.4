@@ -117,6 +117,7 @@ public:
     std::vector<std::shared_ptr<BookmarkItem>> getAllBookmarkItems(int parent = ROOT_FOLDER_ID);
 
     std::shared_ptr<services::BookmarkItem> getRoot();
+    int getQuickAccessRoot() {return m_quickAccess_root;}
 
     std::shared_ptr<services::BookmarkItem> getBookmarkItem(int id);
 
@@ -142,6 +143,7 @@ public:
     int get_count(void);
     bool get_id(const char *uri, int *bookmark_id);
     bool is_in_bookmark(const char *uri);
+    int getFolderId(const std::string & title, int parent);
 
 private:
     /**
@@ -159,9 +161,8 @@ private:
 ///    \todo Need to change getBookmarkId function for finding stored bookmark - check getBookmarkExists function
     int getBookmarkId(const std::string & url);
 
-    int getFolderId(const std::string & title, int parent);
-
     std::shared_ptr<services::BookmarkItem> m_root;
+    int m_quickAccess_root;
 };
 
 }

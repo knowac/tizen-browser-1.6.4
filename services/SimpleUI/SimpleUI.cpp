@@ -326,6 +326,8 @@ void SimpleUI::connectUISignals()
     m_webPageUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
     m_webPageUI->switchToMobileMode.connect(boost::bind(&SimpleUI::switchToMobileMode, this));
     m_webPageUI->switchToDesktopMode.connect(boost::bind(&SimpleUI::switchToDesktopMode, this));
+    m_webPageUI->quickAccessEdit.connect(boost::bind(&SimpleUI::editQuickAccess, this));
+    m_webPageUI->addToQuickAccess.connect(boost::bind(&SimpleUI::addQuickAccess, this));
     m_webPageUI->getEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::getState, m_webEngine.get()));
     // WPA
     m_webPageUI->requestCurrentPageForWebPageUI.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
@@ -335,6 +337,8 @@ void SimpleUI::connectUISignals()
     m_quickAccess->getMostVisitedItems.connect(boost::bind(&SimpleUI::onMostVisitedClicked, this));
     m_quickAccess->getQuickAccessItems.connect(boost::bind(&SimpleUI::onQuickAccessClicked, this));
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
+    m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
+    m_quickAccess->deleteQuickAccessItem.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
 #if PROFILE_MOBILE
     m_quickAccess->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
 #endif
@@ -391,7 +395,7 @@ void SimpleUI::connectUISignals()
     m_bookmarkManagerUI->getHistoryGenlistContent.connect(boost::bind(&SimpleUI::showHistoryUI, this, _1, _2, _3));
     m_bookmarkManagerUI->removeSelectedItemsFromHistory.connect(boost::bind(&HistoryUI::removeSelectedHistoryItems, m_historyUI.get()));
 #if PROFILE_MOBILE
-    m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
+    // TODO: delete dead code
 #else
     M_ASSERT(m_zoomUI.get());
     m_zoomUI->setZoom.connect(boost::bind(&SimpleUI::setZoomFactor, this, _1));
@@ -767,9 +771,10 @@ void SimpleUI::onMostVisitedClicked()
 
 void SimpleUI::onQuickAccessClicked()
 {
-   BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-   //TODO: Elements added here shouldn't be bookmark items, but quick access items.
-   m_quickAccess->setQuickAccessItems(m_favoriteService->getAllBookmarkItems());
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    //TODO: Elements added here shouldn't be bookmark items, but quick access items.
+    m_quickAccess->setQuickAccessItems(
+        m_favoriteService->getAllBookmarkItems(m_favoriteService->getQuickAccessRoot()));
 }
 
 void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem)
@@ -858,12 +863,22 @@ void SimpleUI::onNewQuickAccessClicked()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     //TODO: Implement it right with a correct functionality.
-//    InputPopup *inputPopup = InputPopup::createPopup(m_viewManager.getContent(), "Add to Quick access", "",
-//                                                          "Enter web address", _("IDS_BR_OPT_ADD"), _("IDS_BR_SK_CANCEL_ABB"), true);
-//    inputPopup->button_clicked.connect(boost::bind(&SimpleUI::onNewFolderPopupClick, this, _1));        //TODO: connect new function
-//    inputPopup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));        //TODO: connect new function
-//    inputPopup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));        //TODO: connect new function
-//    inputPopup->show();
+    InputPopup *inputPopup = InputPopup::createPopup(m_viewManager.getContent(), "Add to Quick access", "",
+                                                          "Enter web address", _("IDS_BR_OPT_ADD"), _("IDS_BR_SK_CANCEL_ABB"), true);
+    inputPopup->button_clicked.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1));        //TODO: connect new function
+    inputPopup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));        //TODO: connect new function
+    inputPopup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));        //TODO: connect new function
+    inputPopup->show();
+}
+
+void SimpleUI::addQuickAccessItem(const std::string& name)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    m_favoriteService->addBookmark(name, name, std::string(),
+        std::shared_ptr<tizen_browser::tools::BrowserImage>(),
+        std::shared_ptr<tizen_browser::tools::BrowserImage>(), m_favoriteService->getQuickAccessRoot());
+    showQuickAccess();
 }
 
 #if PROFILE_MOBILE
@@ -1600,6 +1615,26 @@ void SimpleUI::switchToDesktopMode()
     } else {
         m_quickAccess->setDesktopMode(true);
     }
+}
+
+void SimpleUI::editQuickAccess()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_quickAccess->editQuickAccess();
+}
+
+void SimpleUI::addQuickAccess()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    BookmarkUpdate item;
+    item.folder_id = m_favoriteService->getQuickAccessRoot();
+    item.old_url = "";
+    item.title = m_webEngine->getTitle();
+    item.url = m_webEngine->getURI();
+
+    addBookmark(item);
+
+    //TODO: display toast message
 }
 
 void SimpleUI::showBookmarkFlowUI()

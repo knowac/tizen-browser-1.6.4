@@ -144,6 +144,7 @@ private:
 
     void onBookmarkClicked(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
     void onNewQuickAccessClicked();
+    void addQuickAccessItem(const std::string &name);
     void onBookmarkEdit(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
     void onBookmarkOrderEdited(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
     void onBookmarkDeleted(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
@@ -255,6 +256,8 @@ private:
     void refetchTabUIData();
     void switchToMobileMode();
     void switchToDesktopMode();
+    void editQuickAccess();
+    void addQuickAccess();
     Evas_Object* showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode = false);
     void closeHistoryUI();
     void showSettings(unsigned);

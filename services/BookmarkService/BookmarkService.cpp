@@ -53,6 +53,15 @@ BookmarkService::BookmarkService()
 
     m_root = std::make_shared<BookmarkItem>(ROOT_FOLDER_ID, "", _("IDS_BR_BODY_BOOKMARKS"), "", -1, 1);
     m_root->set_folder_flag(true);
+
+
+    //TODO: temporary folder. Refactor this when quickaccess dabatabe will be available.
+    if (folderExists("QuickAccess"))
+        m_quickAccess_root = getFolderId("QuickAccess", ROOT_FOLDER_ID);
+    else {
+        addFolder("QuickAccess");
+        m_quickAccess_root = getFolderId("QuickAccess", ROOT_FOLDER_ID);
+    }
 }
 
 BookmarkService::~BookmarkService()
