@@ -134,7 +134,6 @@ void SimpleUI::suspend()
 void SimpleUI::resume()
 {
     m_webEngine->preinitializeWebViewCache();
-    m_webPageUI->createDummyButton();
     m_webEngine->resume();
 #if PROFILE_MOBILE
     if (m_findOnPageUI && m_findOnPageUI->isVisible())
@@ -756,7 +755,8 @@ void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool 
         if (tabsCount() == 0 || m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
             openNewTab(url, title, boost::none, desktopMode, false, basic_webengine::TabOrigin::QUICKACCESS);
         else {
-            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), url, false);
+            M_ASSERT(m_webEngine->getWidget());
+            m_webPageUI->switchViewToWebPage(m_webEngine->getWidget(), url, false);
             m_webEngine->setURI(url);
             m_webPageUI->getURIEntry().clearFocus();
         }

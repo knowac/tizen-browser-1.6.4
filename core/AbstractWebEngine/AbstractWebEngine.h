@@ -56,6 +56,12 @@ public:
     virtual Evas_Object* getLayout() = 0;
 
     /**
+     * Remember that there must be at least 1 tab created to return layout
+     * @return pointer to Evas_Object widget connected with a current WebView.
+     */
+    virtual Evas_Object* getWidget() = 0;
+
+    /**
      * Initialize WebEngine.
      * @param guiParent GUI parent object
      */

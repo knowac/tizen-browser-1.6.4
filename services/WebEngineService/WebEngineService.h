@@ -51,6 +51,7 @@ public:
     virtual std::string getName();
 
     Evas_Object * getLayout();
+    Evas_Object* getWidget();
     void init(Evas_Object* guiParent);
     void preinitializeWebViewCache();
 
