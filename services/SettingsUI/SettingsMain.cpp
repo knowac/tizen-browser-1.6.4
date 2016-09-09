@@ -220,8 +220,14 @@ void SettingsMain::setHomePageSubText()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    auto homePage = getHomePage();
-    auto it = homePage.find(Translations::CurrentPage);
+    auto homePage(getHomePage());
+    auto it(homePage.find(Translations::CurrentPage));
+
+    boost::optional<std::string> currentOpt(SPSC.requestCurrentPage());
+    std::string currentURL = std::string();
+
+    if (currentOpt && !currentOpt->empty())
+        currentURL = *currentOpt;
 
     if (!homePage.compare(Translations::SamsungPage)) {
         m_buttonsMap[SettingsMainOptions::HOME].subText =
@@ -232,6 +238,9 @@ void SettingsMain::setHomePageSubText()
     } else if (!homePage.compare(Translations::MostVisitedPage)) {
         m_buttonsMap[SettingsMainOptions::HOME].subText =
             Translations::SettingsHomePageMostVisited;
+    } else if (!homePage.compare(currentURL)) {
+        m_buttonsMap[SettingsMainOptions::HOME].subText =
+            Translations::SettingsHomePageCurrentPage;
     } else if (it != std::string::npos) {
         homePage.erase(it, Translations::CurrentPage.length());
         m_buttonsMap[SettingsMainOptions::HOME].subText = homePage;

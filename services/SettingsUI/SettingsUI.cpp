@@ -104,6 +104,10 @@ void SettingsUI::showUI()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_naviframe->show();
     updateButtonMap();
+    if (m_genlist || elm_genlist_items_count(m_genlist)) {
+        elm_genlist_clear(m_genlist);
+        populateList(m_genlist);
+    }
 }
 
 void SettingsUI::hideUI()

@@ -111,7 +111,8 @@ void SettingsHomePage::setRadioOnChange()
         elm_radio_value_set(m_radio, SettingsHomePageOptions::MOST_VIS);
     } else if (!stateString.compare(DEF_HOME_PAGE)) {
         elm_radio_value_set(m_radio, SettingsHomePageOptions::DEFAULT);
-    } else if (stateString.find(CURRENT_PAGE) != std::string::npos) {
+    } else if (stateString.find(CURRENT_PAGE) != std::string::npos ||
+        !stateString.compare(getCurrentPage())) {
         elm_radio_value_set(m_radio, SettingsHomePageOptions::CURRENT);
     } else {
         elm_radio_value_set(m_radio, SettingsHomePageOptions::OTHER);
