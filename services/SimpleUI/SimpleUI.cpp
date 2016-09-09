@@ -1374,8 +1374,7 @@ void SimpleUI::newTabClicked()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!checkIfCreate())
         return;
-
-    switchViewToQuickAccess();
+    showHomePage();
 }
 
 void SimpleUI::tabClicked(const tizen_browser::basic_webengine::TabId& tabId)
@@ -1739,7 +1738,8 @@ void SimpleUI::showHomePage()
         stateString.erase(it, Translations::CurrentPage.length());
     }
     auto url = m_webPageUI->getURIEntry().rewriteURI(stateString);
-    onOpenURL(url);
+    m_viewManager.popStackTo(m_webPageUI.get());
+    openNewTab(url);
 }
 
 void SimpleUI::redirectedWebPage(const std::string& oldUrl, const std::string& newUrl)
