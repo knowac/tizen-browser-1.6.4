@@ -2002,3 +2002,144 @@ msgstr "Ma’lumot roumingi o‘chirilgan. Wi-Fi tarmoqqa ulaning yoki ma’lumo
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Yuklab olish bekor qilindi."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Sir rjm yoq"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Maxfiylik"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Birlamchi ombor"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Masshtab qo‘lda o‘zgartir"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Birlamchi qidirish mexanizmi"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Kirish ma’lumotini saqla"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Sirli rejimni o‘chirish"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Sir rejimini yoqish"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Sir rejimi xavfsizligi"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Paroldan foydalanish"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Parol ishlatilmasin"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Ko‘p kirilgan veb-saytlar"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Profilimni o‘rnatish"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Avto-to‘ldirish profilim"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Onlayn shakllarni to‘ldirish uchun ishlatilgan ma’lumotlarni boshqarish."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Kir. ma’l. saqla"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Joylashuv ma’lumotlariga kirish"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Ma’lumotni avtomatik to‘ldirish"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Sir rejimi yoqilgan vaqtda ko‘rilgan veb-sahifalar u o‘chirilganda ham brauzer yoki qidirish jurnalida ko‘rinmaydi.\n\nSir rejimi yoqilgan vaqtda saqlangan xatcho‘plar va veb-sahifalar u o‘chirilganda ham ko‘rsatilmaydi.\n\nSir rejimi ma’lumotlarini parol bilan himoya qilishingiz mumkin."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Sir rejimi yoqilgan vaqtda ko‘rilgan veb-sahifalar u o‘chirilganda ham brauzer yoki qidirish jurnalida ko‘rinmaydi.\n\nSir rejimi yoqilgan vaqtda saqlangan xatcho‘plar va veb-sahifalar u o‘chirilganda ham ko‘rsatilmaydi."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Sir rj o‘ch"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Parol ishlatilmasin"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Yan/ilv"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Veb-manzil"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Tez kir. veb-sahifa qo‘shish"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScript’ni yoqish"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Yangi ilovani ochib bo‘lmadi"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Yangi panelda ochish"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Jild nomi avvaldan ishlatilmoqda."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Yangi jild %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Yangi jild"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "JavaScriptni yoqish"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Veb-sayt ma’lumotlarini boshqar"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Asosiy sahifani o‘rnatish"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Veb-sahifa tezkor kirishlar ro‘yxatiga qo‘shildi."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Tezkor kirishni tahrirlash"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Xatcho‘plarni olib tashlash"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Xatcho‘p qo‘shish"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Brauzer jurnali"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Panellar"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Yangi oyna"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Boshqaga"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Orqaga"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Xatcho‘p"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Profillar yo‘q"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Jurnal"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Xatcho‘plar"
+

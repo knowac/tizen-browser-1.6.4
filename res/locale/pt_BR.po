@@ -254,7 +254,7 @@ msgid "IDS_BR_SBODY_CLEAR_NOTIFICATION_ACCESS_INFORMATION_FOR_ALL_WEBSITES"
 msgstr "Apagar informações de notificação de acesso para todos os sites da web."
 
 msgid "IDS_BR_SBODY_CHANGE_THE_TEXT_SIZE_FOR_EASIER_READING_ESPECIALLY_WHEN_VIEWING_DESKTOP_VERSIONS_OF_WEBSITES_ON_YOUR_PHONE_NOTE_THAT_THE_TEXT_MSG_US"
-msgstr "Change the text size for easier reading, especially when viewing desktop versions of websites on your phone. Note that the text layout may change as a result."
+msgstr "Altera o tamanho do texto para facilitar a leitura, especialmente ao ver as versões de sites da web para desktop no seu telefone. Como resultado, a aparência do texto poderá mudar."
 
 msgid "IDS_BR_SBODY_CHANGE_THE_TEXT_SIZE_FOR_EASIER_READING_ESPECIALLY_WHEN_VIEWING_DESKTOP_VERSIONS_OF_WEBSITES_NOTE_THAT_THE_TEXT_LAYOUT_MAY_CHANGE_AS_A_RESULT"
 msgstr "Altera o tamanho do texto para uma leitura simples, especialmente ao visualizar em seu aparelho, versões de sites para desktop. Como resultado o layout do texto pode ser alterado."
@@ -368,7 +368,7 @@ msgid "IDS_BR_POP_ENTER_BOOKMARK_NAME"
 msgstr "Inserir nome do favorito."
 
 msgid "IDS_BR_POP_DIALING_ING_VZW"
-msgstr "Dialing..."
+msgstr "Discando..."
 
 msgid "IDS_BR_POP_DELETE_WEBSITE_LOCATION_ACCESS_INFORMATION_Q"
 msgstr "Excluir informações de acesso ao local do site?"
@@ -2001,4 +2001,145 @@ msgstr "O Roaming de dados está desativado. Conecte-se à uma rede Wi-Fi ao inv
 
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Transferência cancelada."
+
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Ativ. secr."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Privacidade"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Armazenamento padrão"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Aplicar zoom manual"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Mecanismo de busca padrão"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Salvar inform. de conexão"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Desativar o Modo secreto"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Ativar o Modo secreto"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Segurança do Modo secreto"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Usar senha"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Não usar senha"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Sites mais visitados"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Definir meu perfil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Meu perfil"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Gerencia os dados usados para preencher formulários online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Salv. inf. conex."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Dados de acesso à localização"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Preencher dados automaticamente"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Todas as páginas da web visualizadas com o Modo secreto ativado não serão exibidas no navegador ou no histórico de pesquisa quando o Modo secreto estiver desativado.\n\nQuaisquer favoritos e páginas da web salvos com o Modo secreto ativado não serão exibidos quando ele estiver desativado.\n\nVocê também poderá proteger os dados do Modo secreto com senha."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Todas as páginas da web visualizadas com o Modo secreto ativado não serão exibidas no navegador ou no histórico de pesquisa quando o Modo secreto estiver desativado.\n\nQuaisquer favoritos e páginas da web salvos com o Modo secreto ativado não serão exibidos quando ele estiver desativado."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Secr. desat"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Não usar senha"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Nv guia"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Endereço da web"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Adic. pág. web ao Aces. ráp."
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Ativar JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Impossível abrir nova guia"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Abrir em nova guia"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "O nome da pasta já está em uso."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Nova pasta %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Nova pasta"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Ativar JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Gerenciar dados do site"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Definir página inicial"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Página da web adicionada à lista de acesso rápido."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Editar Acesso rápido"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Remover dos Favoritos"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Adicionar Favorito"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Pesquisa do histórico"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Guias"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nova aba"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Encaminhar"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Voltar"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Marcadores"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Nenhum perfil"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Histórico"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Marcadores"
 

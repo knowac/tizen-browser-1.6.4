@@ -65,7 +65,7 @@ msgid "IDS_BR_BODY_AUTHUSERNAME"
 msgstr "用户名"
 
 msgid "IDS_BR_BODY_AUTHPASSWORD"
-msgstr "混合密码"
+msgstr "密码"
 
 msgid "IDS_BR_OPT_VIEW"
 msgstr "查看"
@@ -1862,7 +1862,7 @@ msgid "IDS_BR_BODY_PD_ITEMS_WILL_BE_DELETED"
 msgstr "将删除 %d 个项目。"
 
 msgid "IDS_BR_BODY_PASSWORD"
-msgstr "混合密码"
+msgstr "密码"
 
 msgid "IDS_BR_BODY_ON"
 msgstr "开"
@@ -2001,4 +2001,145 @@ msgstr "数据漫游已禁用。改为连接至 Wi-Fi 网络，或启用数据�
 
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "已取消下载"
+
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "开启保密模式"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "保密"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "默认存储"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "手动缩放"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "默认搜索引擎"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "保存登录信息"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "关闭保密模式"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "打开保密模式"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "保密模式安全性"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "使用混合密码"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "请勿使用混合密码"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "最常访问的网站"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "设置我的个人资料"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "我的自动填写资料"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "管理用于填写在线表单的数据"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "保存登录信息"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "位置访问数据"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "自动填充数据"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "启用保密模式期间查看的所有网页在关闭保密模式时不会出现在浏览器或搜索历史记录中。\n\n启用保密模式期间保存的所有书签和网页在关闭保密模式时不会显示。\n\n您还可以使用混合密码保护保密模式数据。"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "启用保密模式期间查看的所有网页在关闭保密模式时不会出现在浏览器或搜索历史记录中。\n\n启用保密模式期间保存的所有书签和网页在关闭保密模式时不会显示。"
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "关闭保密模式"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "请勿使用混合密码"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "新页面"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "网址"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "将网页添加至快速访问"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "开启 JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "无法打开新页面"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "在新页面中打开"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "文件夹名称已被使用"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "新建文件夹 %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "新建文件夹"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "启用 JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "管理网站数据"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "设置主页"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "网页已添加至快速访问列表"
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "编辑快速访问"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "从书签中移除"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "添加书签"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "浏览历史"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "页面"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "新页面"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "转发"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "返回"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "书签"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "无个人资料"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "历史记录"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "书签"
 

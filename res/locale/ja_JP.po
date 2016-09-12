@@ -2002,3 +2002,144 @@ msgstr "データローミングが無効です。Wi-Fiネットワークに接�
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "ダウンロードを中止しました。"
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "ｼｰｸﾚｯﾄON"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "プライバシー"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "標準保存先"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "手動ズーム"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "標準検索エンジン"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "サインイン情報を保存"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "シークレットモードをOFF"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "シークレットモードをON"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "シークレットモードセキュリティ"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "ﾊﾟｽﾜｰﾄﾞを使用"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "パスワードを使用しない"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "よく見るWebサイト"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "マイプロフィールを設定"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "自動入力プロフィール"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "オンラインでフォームの入力に使用するデータを管理します。"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "ｻｲﾝｲﾝ情報を保存"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "位置情報アクセスデータ"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "自動入力データ"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "シークレットモードがONの間に表示した全てのWebページは、シークレットモードがOFFの間は閲覧履歴や検索履歴に表示されません。\n\nシークレットモードがONの間に保存した全てのブックマークおよびWebページは、シークレットモードがOFFの間は表示されません。\n\nシークレットモードのデータは、パスワードで保護することもできます。"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "シークレットモードがONの間に表示した全てのWebページは、シークレットモードがOFFの間は閲覧履歴や検索履歴に表示されません。\n\nシークレットモードがONの間に保存した全てのブックマークおよびWebページは、シークレットモードがOFFの間は表示されません。"
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "ｼｰｸﾚｯﾄOFF"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "ﾊﾟｽﾜｰﾄﾞを使用しない"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "新規ﾀﾌﾞ"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Webアドレス"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Webﾍﾟｰｼﾞをｸｲｯｸｱｸｾｽに追加"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScriptをON"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "新しいタブの表示不可"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "新規タブで開く"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "フォルダ名は既に使用されています。"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "新規フォルダ%d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "新規フォルダ"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "JavaScriptを有効化"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Webサイトデータを管理"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "ホームページを設定"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Webページをクイックアクセスリストに追加しました。"
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "クイックアクセスを編集"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "ブックマークから削除"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "ブックマークを追加"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "閲覧履歴"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "タブ"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "新規タブ"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "転送"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "戻る"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "ﾌﾞｯｸﾏｰｸ"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "プロフィールがありません"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "履歴"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "ブックマーク"
+

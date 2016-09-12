@@ -2002,3 +2002,144 @@ msgstr "Передачу даних у роумінгу вимкнено. Нат
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Завантаження скасовано."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Увімк. секр."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Конфіденційність"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Станд. місце збереження"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Збільш. масштабу вручну"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Пошук за замовчуванням"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Збереж. даних авторизації"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Вимкнути секретний режим"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Увімкнути секретний режим"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Безпека секретного режиму"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Використов. пароль"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Не використовувати пароль"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Найчастіші веб-сайти"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Мої контактні дані"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Мій профіль автозаповн."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Керування даними, що використовуються для заповнення онлайн-форм."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Збер. дані автор."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Дані доступу до розташування"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Автозаповнення даних"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Будь-які веб-сторінки, переглянуті в секретному режимі, не відображатимуться в історії браузера або історії пошуку після виходу з цього режиму.\n\nБудь-які закладки та веб-сторінки, збережені в секретному режимі, не відображатимуться після виходу з цього режиму.\n\nКрім того, можна захистити дані секретного режиму за допомогою пароля."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Будь-які веб-сторінки, переглянуті в секретному режимі, не відображатимуться в історії браузера або історії пошуку після виходу з цього режиму.\n\nБудь-які закладки та веб-сторінки, збережені в секретному режимі, не відображатимуться після виходу з нього."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Вимк. секр."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Не використ. пароль"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Нова вкладка"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Веб-адреса"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Сторінка у швидкому доступі"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Увімкнення JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Збій відкриття нової вкладки"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Відкрити в новій вкладці"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Назва папки вже використовується."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Нова папка %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Нова папка"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Увімкнути JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Керування даними з веб-сайтів"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Вибір домашньої сторінки"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Веб-сторінку додано до списку швидкого доступу."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Змінити парам. швидкого доступу"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Видалено із закладок"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Додати закладку"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Історія перегляду сторінок"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Вкладки"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Нова вкладка"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Уперед"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Назад"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Закладки"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Немає профілів"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Історія"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Закладки"
+

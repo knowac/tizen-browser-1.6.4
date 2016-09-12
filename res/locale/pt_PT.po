@@ -2002,3 +2002,144 @@ msgstr "O roaming de dados está desactivado. Ligue-se a uma rede Wi-Fi em subst
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Transferência cancelada."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Secreto ligado"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Privacidade"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Memória padrão"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Zoom manual"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Motor de procura padrão"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Guardar info início sessão"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Desligar Modo secreto"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Ligar Modo secreto"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Segurança do Modo secreto"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Utilizar palavra-passe"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Não utilizar palavra-passe"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Sites Web mais visitados"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Definir o meu perfil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Meu perfil preenchimento"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Gerir dados utilizados para preencher formulários online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Guardar início sessão"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Dados de acesso à localização"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Dados de preenchimento automático"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "As páginas Web que visualizar quando o Modo secreto está ligado não serão mostradas no seu browser ou histórico de procuras quando o Modo secreto está desligado.\n\nNenhum dos favoritos e das páginas Web que guardar quando o Modo secreto está ligado será mostrado quando este está desligado.\n\nTambém pode proteger os seus dados do Modo secreto com uma palavra-passe."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "As páginas Web que visualizar quando o Modo secreto está ligado não serão mostradas no seu browser ou histórico de procuras quando o Modo secreto está desligado.\n\nNenhum dos favoritos e das páginas Web que guardar quando o Modo secreto está ligado será mostrado quando este está desligado."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Secreto desl."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Não usar palavra-passe"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Novo sep."
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Endereço Web"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Adic. pág. Web ao Acesso rápido"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Ligar JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Impossível abrir novo separador"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Abrir num separador novo"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Nome da pasta já utilizado."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Nova pasta %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Nova pasta"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Activar JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Gerir dados de sites Web"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Definir página principal"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Página Web adicionada à lista de acesso rápido."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Editar Acesso rápido"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Remover dos Favoritos"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Adicionar favorito"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Histórico de consultas"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Separadores"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Novo separador"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Reencaminhar"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Anterior"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Favoritos"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Sem perfis"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Histórico"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Favoritos"
+

@@ -2002,3 +2002,144 @@ msgstr "Dátový roaming je vypnutý. Pripojte sa namiesto toho k sieti Wi-Fi al
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Sťahovanie zrušené."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Zapnúť utaj."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Ochrana osobných údajov"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Predvol. úložný priestor"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuálne priblíženie"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Predvolený vyhľadávač"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Ulož. prihlasovacie údaje"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Vypnúť Tajný režim"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Zapnúť Tajný režim"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Zabezpečenie pre Tajný režim"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Použiť heslo"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Nepoužívať heslo"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Najnavštevovanejšie weby"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Nastaviť môj profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Môj profil aut. vypĺňania"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Môžete spravovať údaje používané na vypĺňanie formulárov online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Ulož. prihl. údaje"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Lokalizačné údaje"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automatické vypĺňanie údajov"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Webové stránky zobrazené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať v histórii prehliadača ani v histórii vyhľadávania.\n\nZáložky a webové stránky uložené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať.\n\nSvoje údaje v aplikácii Tajný režim môžete tiež chrániť heslom."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Webové stránky zobrazené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať v histórii prehliadača ani v histórii vyhľadávania.\n\nZáložky a webové stránky uložené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Vypnúť utaj."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Nepoužívať heslo"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Nová"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Webová adresa"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Prid. str. do: Rýchly prístup"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Zapnúť JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Nemožno otvoriť novú kartu"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Otvoriť na novej karte"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Názov priečinka sa už používa."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Nový priečinok %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Nový priečinok"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Povoliť JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Správa údajov webových lokalít"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Nastavenie domovskej stránky"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Webová stránka sa pridala do zoznamu na rýchly prístup."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Upraviť funkciu Rýchly prístup"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Odstrániť zo záložiek"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Pridať záložku"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "História prehliadania"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Karty"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nová karta"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Dopredu"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Späť"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Záložky"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Žiadne profily"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "História"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Záložky"
+

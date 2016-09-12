@@ -2002,3 +2002,144 @@ msgstr "Az adatroaming le van tiltva. Kapcsolódjon Wi-Fi hálózathoz, vagy eng
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Letöltés megszakítva."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Titkos be"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Védett adataim"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Alapértelmezett tárhely"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuális nagyítás"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Alapértelmezett kereső"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Bejelentk. adatok mentése"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Titkos mód kikapcsolása"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Titkos mód bekapcsolása"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Titkos mód védelme"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Jelszó használata"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Nem használok jelszót"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Leglátogatottabb webh."
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Saját profil beállítása"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Saját aut. kitölt. profil"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Kezelheti az online űrlapkitöltésre szolgáló adatokat."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Bej. adatok ment."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Helyadat-hozzáférési adatok"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automatikusan kitöltendő adatok"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "A Titkos módban megtekintett weboldalak a Titkos mód kikapcsolása után nem jelennek meg a böngészési és keresési előzményekben.\n\nA Titkos módban mentett könyvjelzők és weboldalak a mód kikapcsolása után nem lesznek láthatók.\n\nA Titkos mód adatait jelszóval is védheti."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "A Titkos módban megtekintett weboldalak a Titkos mód kikapcsolása után nem jelennek meg a böngészési és keresési előzményekben.\n\nA Titkos módban mentett könyvjelzők és weboldalak a mód kikapcsolása után nem lesznek láthatók."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Titkos ki"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Nem használok jelszót"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Új lap"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Webcím"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Webold. h.ad. a gy. elér.hez"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScript bekapcsolása"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Nem lehet új lapot nyitni"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Megnyitás új lapon"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Ilyen nevű mappa már van."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "%d. új mappa"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Új mappa"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "JavaScript engedélyezése"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Webhelyadatok kezelése"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Kezdőlap beállítása"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Felvette a webhelyet a Gyors elérés listára."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Gyors elérés szerkesztése"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Eltávolítás a Kedvencek közül"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Könyvjel. hozzáad."
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Böngészési előzmények"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Lapok"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Új lap"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Tovább"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Vissza"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Könyvjelz."
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Nincs profil"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Előzmények"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Könyvjelzők"
+

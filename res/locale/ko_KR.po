@@ -2002,3 +2002,144 @@ msgstr "[데이터 로밍]이 해제된 상태입니다. Wi-Fi 네트워크에 �
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "다운로드를 취소하였습니다."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "비밀 모드 실행"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "개인정보 보호"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "기본 저장 위치"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "화면 수동 확대"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "기본 검색 엔진"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "로그인 정보 저장"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "비밀 모드 해제"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "비밀 모드 실행"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "비밀 모드 보안"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "비밀번호 사용"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "비밀번호 사용 안 함"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "자주 방문한 웹사이트"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "내 프로필 설정"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "웹사이트 프로필 관리"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "온라인에서 입력한 데이터를 관리합니다."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "로그인 정보 저장"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "위치정보 데이터"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "자동 완성 데이터"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "비밀 모드 실행 중에 방문한 웹페이지는 해당 모드를 해제하면 브라우저 또는 검색기록에 표시되지 않습니다.\n\n또한 비밀 모드 실행 중에 저장한 북마크 및 웹페이지도 해당 모드를 해제하면 표시되지 않습니다.\n\n비밀번호로 비밀 모드 데이터를 보호할 수 있습니다."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "비밀 모드 실행 중에 방문한 웹페이지는 해당 모드를 해제하면 브라우저 또는 검색기록에 표시되지 않습니다.\n\n또한 비밀 모드 실행 중에 저장한 북마크 및 웹페이지도 해당 모드를 해제하면 표시되지 않습니다."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "비밀 모드 해제"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "비밀번호 사용 안 함"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "새 탭"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "웹 주소"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "빠른 실행에 웹페이지 추가"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "자바 스크립트 실행"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "새 탭을 열 수 없음"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "새 탭에서 실행"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "사용 중인 폴더 이름입니다."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "새 폴더%d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "새 폴더"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "자바 스크립트 사용"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "웹사이트 데이터 관리"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "홈페이지 설정"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "웹페이지를 [빠른 실행]에 추가하였습니다."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "빠른 실행 편집"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "북마크에서 삭제"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "북마크 추가"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "방문기록"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "탭"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "새 탭"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "앞으로"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "뒤로"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "북마크"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "프로필 없음"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "방문기록"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "북마크"
+

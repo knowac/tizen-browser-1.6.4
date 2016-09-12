@@ -2002,3 +2002,144 @@ msgstr "Məlumat rouminqi qeyri-aktivdir. Əvəzində Wi-Fi şəbəkəsinə qoş
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Yükləmədən imtina edildi."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Sirr yanılı"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Məxfilik"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Susmaya görə yaddaş"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Əllə miqyaslama"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Defolt axtarış mexanizmi"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Giriş məlumatı saxla"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Gizli rejimi söndür"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Gizli rejimi yandır"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Gizli rejimin təhlükəsizliyi"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Paroldan istifadə et"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Paroldan istifadə etməyin"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Ən çox dax ol vebsayt"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Mənim profilimi qur"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mənim Avtodold profilim"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Formaları onlayn doldurmaq üçün istifadə edilən məlumatı idarə et."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Giriş məlum saxla"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Məkana çıxış məlumatı"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Məlumatı avtomatik doldur"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Gizli rejim yanılı olan zaman gördüyunuz heç bir vebsəhifə o sönülü olan zaman brauzer və ya axtarış tarixçənizdə görünməyəcək.\n\nGizli rejim yanılı olan zaman saxladığınız heç bir əlfəcin və vebsəhifə o sönülü olan zaman görünməyəcək.\n\nSiz Gizli rejim məlumatını parolla da qoruya bilərsiniz."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Gizli rejim yanılı olan zaman gördüyunuz heç bir vebsəhifə o sönülü olan zaman brauzer və ya axtarış tarixçənizdə görünməyəcək.\n\nGizli rejim yanılı olan zaman saxladığınız heç bir əlfəcin və vebsəhifə o sönülü olan zaman görünməyəcək."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Sirr sönülü"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Paroln istifadə etmə"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Yni tab"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Veb ünvan"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Cəld çıxışa vebsəhifə əlv et"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScript yandır"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Yeni panel açmaq olmadı"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Yeni tab-vərəqdə aç"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Qovluq adı artıq istifadədədir."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Yeni qovluq %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Yeni qovluq"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "JavaScript- işə salın"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Vebsayt məlumatı idarə et"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Əsas səhifəni qur"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Vebsəhifə Cəld çıxışa əlavə edildi."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Cəld çıxışı redaktə et"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Əlfəcinlərdən sil"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Əlfəcin əlavə et"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Baxış tarixçəsi"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Panellər"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Yeni nişan"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Yönləndir"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Geri"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Əlfəcinlər"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Profil yoxdur"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Tarixçə"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Əlfəcinlər"
+

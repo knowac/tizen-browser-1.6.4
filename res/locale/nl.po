@@ -2002,3 +2002,144 @@ msgstr "Gegevensroaming is uitgeschakeld. Maak in plaats daarvan verbinding via 
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Downloaden geannuleerd."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Geheim aan"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Privacy"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Standaardopslag"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Handmatig inzoomen"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Standaard zoekmachine"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Inloggegevens opslaan"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Geheime stand uitschakelen"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Geheime stand inschakelen"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Beveiliging Geheime stand"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Wachtwoord gebruiken"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Wachtwoord niet gebruiken"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Meest bezochte websites"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Mijn profiel instellen"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mijn profiel autom. aanv."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Beheer gegevens die gebruikt worden om online formulieren in te vullen."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Inloggeg. opslaan"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Toegangsgegevens locatie"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Gegevens automatisch invullen"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Webpagina's die u bekijkt terwijl Geheime stand is ingeschakeld, verschijnen niet in uw browser- of zoekhistorie als de stand is uitgeschakeld.\n\nFavorieten en webpagina's die u opslaat terwijl Geheime stand is ingeschakeld, worden niet weergegeven als de stand is uitgeschakeld.\n\nU kunt uw gegevens in Geheime stand ook met een wachtwoord beschermen."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Webpagina's die u bekijkt terwijl Geheime stand is ingeschakeld, verschijnen niet in uw browser- of zoekhistorie als de stand is uitgeschakeld.\n\nFavorieten en webpagina's die u opslaat terwijl Geheime stand is ingeschakeld, worden niet weergegeven als de stand is uitgeschakeld."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Geheim uit"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Wachtwoord niet gebr."
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Nwe tab"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Webadres"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Webpag. aan Snelle toegang"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScript inschakelen"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Kan nieuw tabblad niet openen"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Openen in nieuw tabblad"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Mapnaam al in gebruik."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Nieuwe map %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Nieuwe map"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "JavaScript inschakelen"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Websitegegevens beheren"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Startpagina instellen"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Webpagina toegevoegd aan snelle toegangslijst."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Snelle toegang bewerken"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Verwijderen uit favorieten"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Favoriet toevoegen"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Bladergeschiedenis"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Tabbladen"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nieuw tabblad"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Vooruit"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Terug"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Favorieten"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Geen profielen"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Historie"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Favorieten"
+

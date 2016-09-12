@@ -2002,3 +2002,144 @@ msgstr "Duomenų tarptinklinis ryšys išjungtas. Vietoj to prisijunkite prie �
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Atsisiuntimas atšauktas."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Slapt.r.įj."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Privatumas"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Numatytoji saugykla"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Rank. mastelio keitimas"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Numatytoji paieškos sistema"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Saugaus prisijungimo inf."
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Išjungti slaptą režimą"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Įjungti slaptą režimą"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Slaptojo režimo sauga"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Naudoti slaptažodį"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Nenaudoti slaptažodžio"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Lankomiausios svetainės"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Nustatyti mano profilį"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mano aut. užpild. prof."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Tvarkykite duomenis, naudojamus interneto formoms pildyti."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Saug.prisij. inf."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Vietovės prieigos duomenys"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automatiškai pildyti duomenis"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Tinklalapiai, kuriuos peržiūrėsite veikiant slaptajam režimui, nebus rodomi naršyklėje ar paieškos istorijoje, kai režimas bus išjungtas.\n\nVeikiant slaptajam režimui, išsaugoti adresyno įrašai ir tinklalapiai nebus rodomi, kai režimas bus išjungtas.\n\nBe to, slaptojo režimo duomenis galite apsaugoti slaptažodžiu."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Tinklalapiai, kuriuos peržiūrėsite veikiant slaptajam režimui, nebus rodomi naršyklėje ar paieškos istorijoje, kai režimas bus išjungtas.\n\nVeikiant slaptajam režimui, išsaugoti adresyno įrašai ir tinklalapiai nebus rodomi, kai režimas bus išjungtas."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Slap.r.išj."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Nenaudoti slaptažodž."
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Skirt."
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Žiniatinklio adresas"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Tinklalapis sparč. prieigoje"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Įjungti „JavaScript“"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Nepav. atidar. naujo skirt."
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Atidaryti naujame skirtuke"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Toks aplanko pavadinimas jau naudojamas."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Naujas aplankas %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Naujas aplankas"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Įjungti „JavaScript“"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Tvarkyti svetainės duomenis"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Nustatyti pradžios puslapį"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Tinklalapis pridėtas prie sparčiosios prieigos sąrašo."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Redaguoti sparčiąją prieigą"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Pašalinti iš adresyno įrašų"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Prid.adresyno įrašą"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Naršymo istorija"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Skirtukai"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Naujas skirtukas"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Pirmyn"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Atgal"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Adres. įr."
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Nėra profilių"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Istorija"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Adresyno įrašai"
+

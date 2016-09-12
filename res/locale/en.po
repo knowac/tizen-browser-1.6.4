@@ -2002,3 +2002,144 @@ msgstr "Data roaming is disabled. Connect to a Wi-Fi network instead, or enable 
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Download cancelled."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Secret on"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Privacy"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Default storage"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manual zoom"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Default search engine"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Save sign-in info"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Turn off Secret mode"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Turn on Secret mode"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Secret mode security"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Use password"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Don't use password"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Most visited websites"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Set my profile"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "My Auto fill profile"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Manage data used to fill in forms online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Save sign-in info"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Location access data"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Auto fill data"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Any webpages you view while Secret mode is turned on won't appear in your browser or search history while it is turned off.\n\nAny bookmarks and webpages you save while Secret mode is turned on won't be shown while it is turned off.\n\nYou can also protect your Secret mode data with a password."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Any webpages you view while Secret mode is turned on won't appear in your browser or search history while it is turned off.\n\nAny bookmarks and webpages you save while Secret mode is turned on won't be shown while it is turned off."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Secret off"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Don't use password"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "New tab"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Web address"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Add webpage to Quick access"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Turn on JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Couldn't open new tab"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Open in new tab"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Folder name already in use."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "New folder %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "New folder"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Enable JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Manage website data"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Set home page"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Webpage added to quick access list."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Edit Quick access"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Remove from Bookmarks"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Add bookmark"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Browsing history"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Tabs"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "New tab"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Forward"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Back"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Bookmarks"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "No profiles"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "History"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Bookmarks"
+

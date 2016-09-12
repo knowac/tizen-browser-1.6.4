@@ -2002,3 +2002,144 @@ msgstr "Деректер роумингі өшірілген. Оның орны�
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Жазу тоқтатылды"
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Қосулы"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Құпиялық"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Әдепкі сақтау"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Қолмен үлкейту"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Әдепкі іздеу жүйесі"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Кіру ақпаратын сақтау"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Құпия режимді өшіру"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Құпия режимді қосу"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Құпия режимінің қауіпсіздігі"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Құпиясөзді пайдалану"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Құпиясөзді қолданбау"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Көп кіретін веб-сайттар"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Менің профилімді орнату"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Авто толтыру профилім"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Үлгілерді онлайн күйде толтыру үшін пайдаланылған деректерді басқарыңыз."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Кіру мәл-н сақтау"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Орынға қатынасу деректері"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Авто толтыру деректері"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Құпия режимі қосулы болғанда қаралған қандай да бір веб-парақтар режим өшірулі болған кезде шолғышта немесе іздеу журналында көрсетілмейді.\n\nҚұпия режимі қосулы болғанда сақталған бетбелгілер мен веб-парақтар режим өшірулі болғанда көрсетілмейді.\n\nСондай-ақ, Құпия режим деректерін құпиясөз арқылы қорғай аласыз."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Құпия режимі қосулы болғанда қаралған қандай да бір веб-парақтар режим өшірулі болған кезде шолғышта немесе іздеу журналында көрсетілмейді.\n\nҚұпия режимі қосулы болғанда сақталған бетбелгілер мен веб-парақтары режим өшірулі болғанда көрсетілмейді."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Өшірулі"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Құпиясөзді қолданбау"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Жаңасы"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Веб-мекенжай"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Жыдам қатынасқа веб-бет қосу"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScript опциясын қосу"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Жаңа қойынды ашылмады"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Жаңа қойындыда ашу"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Қалта атауы пайдаланылуда."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "%d-жаңа қалта"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Жаңа қалта"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "JavaScript қосу"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Веб-сайт деректерін басқару"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Бастапқы бетті орнату"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Веб-бет жылдам қатынасу тізіміне қосылды."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Жылдам қатынасты өзгерту"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Бетбелгілерден жою"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Бетбелгі қосу"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Шолу журналы"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Қойындылар"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Жаңа қойынды"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Бағ. өзг-у"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Артқа"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Бетбелгі-р"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Профильдер жоқ"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Журнал"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Бетбелгілер"
+

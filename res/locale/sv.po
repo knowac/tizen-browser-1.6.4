@@ -2002,3 +2002,144 @@ msgstr "Dataroaming har inaktiverats. Anslut till ett Wi-Fi-nätverk istället e
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Nedladdning avbruten."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Hemligt på"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Sekretess"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Standardlagring"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuell zoomning"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Standardsökmotor"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Spara inloggningsinfo"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Stäng av Hemligt läge"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Slå på Hemligt läge"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Skydd i hemligt läge"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Använd lösenord"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Använd inte lösenord"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Mest besökta webbplatser"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Ställ in min profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Min Autofyll-profil"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Hantera data som används för att fylla i formulär online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Spara inlogg.info"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Data om åtkomst till plats"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Fyll i data automatiskt"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Webbsidor som du tittar på i Hemligt läge visas inte i webb- eller sökhistoriken när Hemligt läge är avstängt.\n\nInga bokmärken och webbsidor som du sparar i Hemligt läge visas när läget har stängts av.\n\nDu kan också skydda uppgifter i Hemligt läge med ett lösenord."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Webbsidor som du tittar på i Hemligt läge visas inte i webb- eller sökhistoriken när Hemligt läge är avstängt.\n\nInga bokmärken och webbsidor som du sparar i Hemligt läge visas när läget har stängts av."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Hemligt av"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Använd inte lösenord"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Ny flik"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Webbadress"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Lägg t. webbpl. i Snabbåtk."
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Slå på JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Kan inte öppna ny flik"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Öppna på ny flik"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Mappnamnet används redan."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Ny mapp %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Ny mapp"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Aktivera JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Hantera webbplatsdata"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Ange startsida"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Webbsidan har lagts till i snabbåtkomstlistan."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Redigera Snabbåtkomst"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Ta bort från Bokmärken"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Lägg till bokmärke"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Webbhistorik"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Flikar"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Ny flik"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Vid.bef."
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Tillbaka"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Bokmärken"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Inga profiler"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Historik"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Bokmärken"
+

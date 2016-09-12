@@ -2002,3 +2002,144 @@ msgstr "Dataroaming er deaktiveret. Opret forbindelse til et Wi-Fi-netværk i st
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Download blev annulleret."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Hemmel. til"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Fortrolighed"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Standard-lagringsplads"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuel zoom"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Standardsøgemaskine"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Gem loginoplysninger"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Deaktiver Hemmelig tilstand"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Aktiver Hemmelig tilstand"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Hemmelig tilstand-sikkerhed"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Brug adgangskode"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Brug ikke adgangskode"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Mest besøgte websteder"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Angiv min profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Min aut. udfyldte profil"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Administrer data, der bruges til at udfylde formularer online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Gem loginoplysn."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Placeringsadgangsdata"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automatisk udfyldning af data"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "De websider, du ser, mens Hemmelig tilstand er aktiveret, vises ikke i din browser- eller søgeoversigt, når tilstanden er deaktiveret.\n\nBogmærker og websider, du gemmer, mens Hemmelig tilstand er aktiveret, vises ikke, når tilstanden er deaktiveret.\n\nDu kan også beskytte dine Hemmelig tilstand-data med en adgangskode."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "De websider, du ser, mens Hemmelig tilstand er aktiveret, vises ikke i din browser- eller søgeoversigt, når tilstanden er deaktiveret.\n\nBogmærker og websider, du gemmer, mens Hemmelig tilstand er aktiveret, vises ikke, når tilstanden er deaktiveret."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Hemmel. fra"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Brug ikke adgangskode"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Ny fane"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Webadresse"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Føj webside t. Hurtig adgang"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Aktiver JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Den nye fane kunne ej åbnes"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Åbn i ny fane"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Mappenavnet er allerede i brug."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Ny mappe %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Ny mappe"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Aktiver JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Administrer webstedsdata"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Angiv startside"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Websiden er blevet føjet til hurtigadgangslisten."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Rediger Hurtig adgang"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Fjern fra bogmærker"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Tilføj bogmærke"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Historik"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Faner"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Ny fane"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Videresend"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Tilbage"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Bogmærker"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Ingen profiler"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Oversigt"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Bogmærker"
+

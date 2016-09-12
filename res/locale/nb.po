@@ -2002,3 +2002,144 @@ msgstr "Dataroaming er deaktivert. Koble til et Wi-Fi-nettverk i stedet, eller a
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Nedlasting avbrutt."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Hemmelig på"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Personvern"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Standard lagringssted"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuell zoom"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Standard søkemotor"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Lagre påloggingsoppl."
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Slå av Hemmelig modus"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Slå på Hemmelig modus"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Hemmelig modus-sikkerhet"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Bruk passord"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Ikke bruk passord"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Mest besøkte nettsteder"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Angi min profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Min autoutfyllingsprofil"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Administrer data som brukes for å fylle ut nettskjemaer."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Lagre pålogg.det."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Posisjonstilgangsdata"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Autoutfylling av data"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Alle nettsidene du viser når Hemmelig modus er slått på, vises ikke i nettleser- eller søkehistorikken når den er slått av.\n\nAlle bokmerker og nettsider du lagrer når Hemmelig modus er slått på, vises ikke når den er slått av.\n\nDu kan også beskytte Hemmelig modus-dataene med et passord."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Alle nettsidene du viser når Hemmelig modus er slått på, vises ikke i nettleser- eller søkehistorikken når modusen er slått av.\n\nAlle bokmerker og nettsider du lagrer når Hemmelig modus er slått på, vises ikke når modusen er slått av."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Hemmelig av"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Ikke bruk passord"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Ny fane"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Nettadresse"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Legg til nettside i Hurtigtilgang"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Slå på JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Kunne ikke åpne ny fane"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Åpne i ny fane"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Mappenavnet er allerede i bruk."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Ny mappe %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Ny mappe"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Aktiver JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Administrer nettstedsdata"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Angi hjemmeside"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Nettside er lagt til på Hurtigtilgang-listen."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Rediger Hurtigtilgang"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Fjern fra bokmerker"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Legg til bokmerke"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Søkehistorikk"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Faner"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Ny fane"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Vid.snd"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Tilbake"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Bokmerker"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Ingen profiler"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Logg"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Bokmerker"
+

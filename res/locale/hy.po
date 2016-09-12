@@ -2002,3 +2002,144 @@ msgstr "Տվյալների ռոումինգը կասեցված է: Փոխարե�
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Ներբեռնումը չեղարկված է:"
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Գղտնք միաց."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Գաղտնիություն"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Կանխադրված պահոց"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Ձեռքով մասշտաբավորում"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Կանխադրված որոնիչ"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Պահպանել մուտքի տվյալները"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Անջատել Գաղտնի ռեժիմը"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Միացնել Գաղտնի ռեժիմը"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Գաղտնի ռեժիմի անվտանգություն"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Օգտագործել գաղտնաբառ"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Գաղտնաբառ չօգտագործել"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Առավել այցելված կայքեր"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Նախադրել իմ պրոֆիլը"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Իմ Ինքնալրացվող պրոֆիլը"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Կառավարել ձևերն առցանց լրացնելու համար օգտագործվող տվյալները:"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Պհպ. մուտքի տվյլ."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Տեղորոշման տվյալներ"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Ինքնալրացնել տվյալները"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Կայքէջերը, որոնք դիտում եք Գաղտնի ռեժիմի միացված ժամանակ, չեն հայտնվի Ձեր զննարկչում կամ որոնումների պատմության մեջ, քանի դեռ այն անջատված է:\n\nԷջանիշերը և կայքէջերը, որոնք պահպանում եք Գաղտնի ռեժիմի միացված ժամանակ, չեն ցուցադրվի, քանի դեռ այն անջատված է:\n\nԳաղտնի ռեժիմի տվյալները կարող եք պաշտպանել նաև գաղտնաբառով:"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Կայքէջերը, որոնք դիտում եք Գաղտնի ռեժիմի միացված ժամանակ, չեն հայտնվի Ձեր զննարկչում կամ որոնումների պատմության մեջ, քանի դեռ այն անջատված է:\n\nԷջանիշերը և կայքէջերը, որոնք պահպանում եք Գաղտնի ռեժիմի միացված ժամանակ, չեն ցուցադրվի, քանի դեռ այն անջատված է:"
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Գղտնք անջ."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Գաղտնաբառ չօգտագործել"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Նոր նրդր"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Կայքի հասցե"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Կայքէջ ավելցնել Արագ մուտքին"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Միացնել JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Չհաջողվեց բացել նոր ներդիր"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Բացել նոր ներդիրում"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Պանակի անունն արդեն գործածվում է:"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Նոր պանակ %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Նոր պանակ"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Միացնել JavaScript-ը"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Կառավարել կայքի տվյալները"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Դնել հիմնաէջ"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Կայքէջն ավելացվեց արագ մուտքի ցուցակին:"
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Խմբագրել Արագ մուտքը"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Հեռացնել Էջանիշերից"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Հավելել էջանիշ"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Զննարկման պատմություն"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Ներդիրներ"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Նոր ներդիր"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Առաջ"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Հետ"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Էջանիշեր"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Պրոֆիլներ չկան"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Պատմություն"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Էջանիշեր"
+

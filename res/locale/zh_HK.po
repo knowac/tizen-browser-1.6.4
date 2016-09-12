@@ -2002,3 +2002,144 @@ msgstr "數據漫遊已停用。改為連接至 Wi-Fi 網絡，或啟用數據�
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "下載已取消"
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "保密開啟"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "私隱"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "預設儲存空間"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "手動縮放"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "預設搜尋引擎"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "儲存登入資訊"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "關閉保密模式"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "開啟保密模式"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "保密模式安全性"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "使用密碼"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "無法使用密碼"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "最常瀏覽的網站"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "設定我的個人資料"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "我的自動填寫個人資料"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "管理用於填寫線上表格的數據。"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "儲存登入資訊"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "位置存取數據"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "自動填寫數據"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "保密模式已開啟時檢視的所有網頁在保密模式已關閉時將不在瀏覽器或搜尋歷程記錄中顯示。\n\n保密模式已開啟時儲存的所有書籤及網頁在保密模式已關閉時將不顯示。\n\n您也可以用密碼保護您的保密模式數據。"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "保密模式已開啟時檢視的所有網頁在保密模式已關閉時將不在瀏覽器或搜尋歷程記錄中顯示。\n\n保密模式已開啟時儲存的所有書籤及網頁在保密模式已關閉時將不顯示。"
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "保密關閉"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "無法使用密碼"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "新標籤"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "網址"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "加入網頁至快速存取"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "開啟 JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "無法開啟新標籤"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "在新標籤中開啟"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "資料夾名稱已被使用。"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "新資料夾 %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "新資料夾"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "啟用 JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "管理網站數據"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "設定首頁"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "網頁已加入至快速存取清單。"
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "編輯快速存取"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "從書籤中移除"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "加入書籤"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "瀏覽歷程記錄"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "標籤"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "新標籤"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "轉寄"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "返回"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "書籤"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "無個人資料"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "歷程記錄"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "書籤"
+

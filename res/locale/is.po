@@ -2002,3 +2002,144 @@ msgstr "Slökkt er á gagnareiki. Tengstu Wi-Fi neti í staðinn eða kveiktu á
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Það var hætt við niðurhal."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Leynd á"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Gagnaleynd"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Sjálfgefin geymsla"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Handvirkur aðdráttur"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Sjálfgefin leitarvél"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Vista innskráningaruppl."
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Slökkva á leyndarstillingu"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Kveikja á leyndarstillingu"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Öryggi leyndarstillingar"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Nota lykilorð"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Ekki nota lykilorð"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Mest heimsótt vefsvæði"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Velja prófíl"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mitt útfyllingarsnið"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Stjórna gögnum sem notuð eru við útfyllingu eyðublaða á netinu."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Vista upplýsingar"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Gögn aðgangs að staðsetningu"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Sjálfvirk gagnaútfylling"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Vefsíður sem þú skoðar þegar kveikt er á leyndarstillingu birtast ekki í vafranum eða leitarferlinum þínum þegar slökkt er á stillingunni.\n\nEngin bókamerki og vefsíður sem þú vistar þegar kveikt er á leyndarstillingu eru sýnileg þegar slökkt er á stillingunni.\n\nÞú getur einnig varið leyndarstillingargögnin þín með lykilorði."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Vefsíður sem þú skoðar þegar kveikt er á leyndarstillingu birtast ekki í vafranum eða leitarferlinum þínum þegar slökkt er á stillingunni.\n\nEngin bókamerki og vefsíður sem þú vistar þegar kveikt er á leyndarstillingu eru sýnileg þegar slökkt er á stillingunni."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Leynd af"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Ekki nota lykilorð"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Flipi"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Veffang"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Bæta vefsíðu við flýtiaðgang"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Kveikja á JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Gat ekki opnað nýjan flipa"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Opna í nýjum flipa"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Möppuheitið er þegar í notkun."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Ný mappa %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Ný mappa"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Opna fyrir JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Stjórna gögnum vefsvæðis"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Stilla heimasíðu"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Vefsíða sett á flýtiaðgangslistann."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Breyta flýtiaðgangi"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Fjarlægja úr bókamerkjum"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Bæta við bókamerki"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Vefferill"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Flipar"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nýr flipi"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Áfram"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Til baka"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Bókamerki"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Engin snið"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Ferill"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Bókamerki"
+

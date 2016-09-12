@@ -2002,3 +2002,144 @@ msgstr "Tá fánaíocht sonraí díchumasaithe. Nasc le líonra Wi-Fi ina ionad,
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Íoslódáil curtha ar ceal."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Rúnda air"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Príobháideacht"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Stóras réamhshocraithe"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Zúmáil de láimh"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Inneall cuardaigh r.shocraithe"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Sábh. fais. sínithe ist."
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Cas as Mód rúnda"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Cas air Mód rúnda"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Slándáil Mhód rúnda"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Úsáid pasfhocal"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Ná húsáid pasfhocal"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Láithreáin is mó cuairt"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Socraigh mo phróifíl"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mo phróifíl uathlíonta"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Bainistigh na sonraí a úsáidtear le foirmeacha ar líne a chomhlánú."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Sábh. síniú ist."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Sonraí rochtana suímh"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Uathlíon sonraí"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Aon leathanaigh ghréasáin a n-amharcann tú orthu agus Mód rúnda casta air, ní thaispeánfar i do stair bhrabhsálaí ná chuardaigh iad agus é casta as.\n\nAon leabharmharcanna nó leathanaigh ghréasáin a shábhálann tú agus Mód rúnda casta air, ní thaispeánfar iad agus é casta as.\n\nIs féidir leat do sonraí i Mód rúnda a chosaint le pasfhocal freisin."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Aon leathanaigh ghréasáin a n-amharcann tú orthu agus Mód rúnda casta air, ní thaispeánfar i do stair bhrabhsálaí ná chuardaigh iad agus é casta as.\n\nAon leabharmharcanna nó leathanaigh ghréasáin a shábhálann tú agus Mód rúnda casta air, ní thaispeánfar iad agus é casta as."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Rúnda as"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Ná húsáid pasfhocal"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Táb nua"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Seoladh gréasáin"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Cuir lch. le Mear-rochtain"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Cas air JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Ní féidir táb nua a oscailt"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Oscail i dtáb nua"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Ainm an fhillteáin in úsáid cheana."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Fillteán nua %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Fillteán nua"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Cumasaigh JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Bainistigh sonraí láith."
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Socraigh an leathanach baile"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Leathanach gréasáin curtha le Liosta mear-rochtana."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Cuir Mear-rochtain in eagar"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Bain ó Leabharmharcanna"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Cuir l.mharc leis"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Stair bhrabhsála"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Táib"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Táb nua"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Ar agh."
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Siar"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "L.mharcanna"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Níl próifílí ann"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Stair"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Leabharmharcanna"
+

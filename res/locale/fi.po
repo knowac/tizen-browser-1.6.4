@@ -2002,3 +2002,144 @@ msgstr "Dataverkkovierailu on poistettu käytöstä. Muodosta sen sijaan yhteys 
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Lataus peruutettu."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Sal. päällä"
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Yksityisyys"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Oletustallennussijainti"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuaalinen zoom"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Oletushakukone"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Tallenna kirj.tiedot"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Poista salainen tila käytöstä"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Ota salainen tila käyttöön"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Salaisen tilan suojaus"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Käytä salasanaa"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Älä käytä salasanaa"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Katsotuimmat sivustot"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Määritä oma profiili"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Oma autom. täyt. profiili"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Hallitse verkkolomakkeiden täyttämiseen käytettäviä tietoja."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Tall. kirj.tiedot"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Sijainnin käyttötiedot"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Täytä tiedot automaattisesti"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Salaisen tilan käytön aikana avatut verkkosivut eivät näy selain- tai hakuhistoriassa, kun tila on poistettu käytöstä.\n\nSalaisen tilan käytön aikana tallennettuja kirjanmerkkejä ja verkkosivuja ei näytetä, kun tila on poistettu käytöstä.\n\nVoit myös suojata salaisen tilan tiedot salasanalla."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Salaisen tilan käytön aikana avatut verkkosivut eivät näy selain- tai hakuhistoriassa, kun tila on poistettu käytöstä.\n\nSalaisen tilan käytön aikana tallennettuja kirjanmerkkejä ja verkkosivuja ei näytetä, kun tila on poistettu käytöstä."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Sal. pois"
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Älä käytä salasanaa"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Uusi v."
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Verkko-osoite"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Lisää verkkosivu Pikakäyttöön"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Ota JavaScript käyttöön"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Uutta välilehteä ei voi avata"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Avaa uudessa välilehdessä"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Kansion nimi on jo käytössä."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Uusi kansio %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Uusi kansio"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Ota JavaScript käyttöön"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Sivuston tietojen hallinta"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Määritä kotisivu"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Verkkosivu on lisätty pikaluetteloon."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Muokkaa Pikakäyttö-toimintoa"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Poista kirjanmerkeistä"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Lisää kirjanmerkki"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Selaushistoria"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Välilehdet"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Uusi välilehti"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Siirrä"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Takaisin"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Kirjanm."
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Profiileja ei ole"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Historia"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Kirjanmerkit"
+

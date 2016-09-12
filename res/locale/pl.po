@@ -2002,3 +2002,144 @@ msgstr "Roaming danych jest wyłączony. Połącz zamiast tego z siecią Wi-Fi l
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Anulowano pobieranie."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Tr.chr.wł."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Prywatność"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Domyślna pamięć zapisu"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Powiększenie ręczne"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Domyślna wyszukiwarka"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Zapisuj inform. logowania"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Wyłącz tryb chroniony"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Włącz tryb chroniony"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Bezpieczeństwo tr. chronionego"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Użyj hasła"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Nie używaj hasła"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Najcz. odwiedzane witryny"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Ustaw mój profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mój profil autom. wypełn."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Zarządzaj danymi używanymi do wypełniania formularzy online."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Zapis. inf. log."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Dane dostępu do lokalizacji"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automatyczne wypełnianie danych"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Żadne strony WWW wyświetlane przy włączonym trybie chronionym nie będą widoczne w historii przeglądarki ani w historii wyszukiwania po jego wyłączeniu.\n\nŻadne zakładki ani strony WWW zapisane przy włączonym trybie chronionym nie będą widoczne po jego wyłączeniu.\n\nMożesz także zabezpieczyć dane trybu chronionego za pomocą hasła."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Żadne strony WWW wyświetlane przy włączonym trybie chronionym nie będą widoczne w historii przeglądarki ani w historii wyszukiwania po jego wyłączeniu.\n\nŻadne zakładki ani strony WWW zapisane przy włączonym trybie chronionym nie będą widoczne po jego wyłączeniu."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Tr.chr.wył."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Nie używaj hasła"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "NowKart"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Adres WWW"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Dod. str. WWW do szyb. dost."
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Włącz JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Błąd otwierania nowej karty"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Otwórz w nowej karcie"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Nazwa katalogu jest już w użyciu."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Nowy katalog %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Nowy katalog"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Włącz obsługę JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Zarządzaj danymi witryn intern."
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Ustawianie strony głównej"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Dodano stronę WWW do listy szybkiego dostępu."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Edytuj Szybki dostęp"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Usuń z zakładek"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Dodawanie zakładki"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Historia przeglądania"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Karty"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nowa karta"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Przekaż"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Wstecz"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Zakładki"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Brak profili"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Historia"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Zakładki"
+

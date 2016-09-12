@@ -2002,3 +2002,144 @@ msgstr "Prenos podataka u romingu nije omogućen. Umesto toga, poveži se na Wi-
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Preuzimanje prekinuto."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Taj. rež. uk."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Privatnost"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Podrazumevano skladište"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Ručno zumiranje"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Podrazumevani veb pretraživač"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Sačuvaj podat. za prijavu"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Isključi Tajni režim"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Uključi Tajni režim"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Zaštita Tajnog režima"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Koristi lozinku"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Ne koristite lozinku"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Najposećeniji sajtovi"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Podesi moj profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Moje Aut. popunj. profila"
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Funkcija Upravljaj podacima se koristi za popunjavanje obrazaca na mreži."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Sač. pod. za prijavu"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Podaci o pristupanju lokaciji"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automatsko popunjavanje podataka"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Nijedna veb stranica koju prikažete dok je uključen Tajni režim neće se pojavljivati u pretraživaču niti u istoriji pretrage dok je Tajni režim isključen.\n\nNijedan obeleživač niti veb stranica koju sačuvate dok je uključen Tajni režim neće se prikazati dok je Tajni režim isključen.\n\nPodatke Tajnog režima možete da zaštitite i pomoću lozinke."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Nijedna veb stranica koju prikažete dok je uključen Tajni režim neće se pojavljivati u pretraživaču niti u istoriji pretrage dok je Tajni režim isključen.\n\nNijedan obeleživač niti veb stranica koju sačuvate dok je uključen Tajni režim neće se prikazati dok je Tajni režim isključen."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Taj. rež. is."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Ne koristi lozinku"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Nova kar."
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Veb adresa"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Dod. veb str. u Brzi pristup"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Uključi JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Nova kartica nije otvorena"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Otvori u novoj kartici"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Naziv foldera je već u upotrebi."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Novi folder %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Novi folder"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Omogući JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Organizuj podatke o sajtovima"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Podesi početnu stranicu"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Veb stranica je dodata u listu za brzi pristup."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Izmeni funkciju Brzi pristup"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Ukloni iz Obeleživača"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Dodaj obeleživač"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Istorija pretraživanja"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Kartice"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nova kartica"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Napred"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Nazad"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Obeleživ."
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Nema nijednog profila"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Istorija"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Obeleživači"
+

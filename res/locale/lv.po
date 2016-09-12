@@ -2002,3 +2002,144 @@ msgstr "Datu viesabonēšana ir deaktivizēta. Izveidojiet savienojumu ar Wi-Fi 
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Lejupielāde atcelta."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Slep. iesl."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Konfidencialitāte"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Noklusējuma krātuve"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Manuālā tālummaiņa"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Noklusējuma meklētājprogramma"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Saglabāt pierakst. datus"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Izslēgt slepeno režīmu"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Ieslēgt slepeno režīmu"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Slepenā režīma drošība"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Izmantot paroli"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Neizmantot paroli"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Biežāk apmeklētās vietnes"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Iestatīt manu profilu"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Mans autom.aizpild. prof."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Pārvaldiet datus, kas tiek izmantoti veidlapu aizpildīšanai tiešsaistē."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Sagl. pier. inf."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Atrašanās vietas piekļuves dati"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Automātiski ievadīt datus"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Tīmekļa vietnes, ko skatāt, kad ir ieslēgts slepenais režīms, pēc tā izslēgšanas netiks parādītas jūsu pārlūkprogrammas vai meklēšanas vēsturē.\n\nGrāmatzīmes un tīmekļa lapas, ko esat saglabājis, kad ir ieslēgts slepenais režīms, pēc tā izslēgšanas netiks rādītas.\n\nSlepenā režīma datus varat aizsargāt arī ar paroli."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Tīmekļa vietnes, ko skatāt, kad ir ieslēgts slepenais režīms, pēc tā izslēgšanas netiks parādītas jūsu pārlūkprogrammas vai meklēšanas vēsturē.\n\nGrāmatzīmes un tīmekļa lapas, ko esat saglabājis, kad ir ieslēgts slepenais režīms, pēc tā izslēgšanas netiks rādītas."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Slep. izsl."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Neizmantot paroli"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Jauna"
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Tīmekļa adrese"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Piev. tīm. lapu ātr. piekļ."
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "JavaScript ieslēgšana"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Nevarēja atvērt jaunu cilni"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Atvērt jaunā cilnē"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Mapes nosaukums jau tiek lietots."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Jauna mape %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Jauna mape"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Aktivizēt JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Pārvaldīt tīmekļa vietnes datus"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Iestatīt sākumlapu"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Tīmekļa lapa ir pievienota ātrās piekļuves sarakstam."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Rediģēt ātro piekļuvi"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Noņemt no grāmatzīmēm"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Pievienot grāmatz."
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Pārlūkošanas vēsture"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Cilnes"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Jauna cilne"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Pārsūtīt"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Atpakaļ"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Grāmatzīm."
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Nav profilu"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Vēsture"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Grāmatzīmes"
+

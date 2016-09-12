@@ -2002,3 +2002,144 @@ msgstr "Prenos podatkov na gostovanju je onemogočen. Povežite se z omrežjem W
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Nalaganje preklicano."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Skriv. vkl."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Zasebnost"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Privzeta shramba"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Ročna povečava"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Privzeti iskalnik"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Shrani podatke za prijavo"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Izklopite skrivnostni način"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Vklopite skrivnostni način"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Varnost skrivnostnega načina"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Uporabi geslo"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Ne uporabi gesla"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Najbolj obisk. spl. mesta"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Nastavi moj profil"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Moj profil za sam. izpol."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Upravljanje podatkov za izpolnjevanje spletnih obrazcev."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Sh. pod. za prij."
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Podatki za dostop do lokacije"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Samodejno izpolnjevanje podatkov"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Nobena spletna stran, ki jo odprete, ko je vklopljen skrivnostni način, ne bo prikazana v brskalniku ali zgodovini iskanja, ko ga izklopite.\n\nNoben zaznamek in spletna stran, shranjena med tem, ko je skrivnostni način vklopljen, ne bosta prikazana, ko ga izklopite.\n\nPodatke v skrivnostnem načinu lahko tudi zaščitite z geslom."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Nobena spletna stran, ki jo odprete, ko je vklopljen skrivnostni način, ne bo prikazana v brskalniku ali zgodovini iskanja, ko ga izklopite.\n\nNoben zaznamek in spletna stran, shranjena med tem, ko je skrivnostni način vklopljen, ne bosta prikazana, ko ga izklopite."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Skriv. izk."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Ne uporabi gesla"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Nov zav."
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Spletni naslov"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Dod. spl. st. v Hitri dostop"
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Vklopi JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Nov. zavihka ni mog. odpreti"
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Odpri na novem zavihku"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Ime mape je že v uporabi."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Nova mapa %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Nova mapa"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Omogoči JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Upravlj. podatkov spletnih mest"
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Nastavite domačo stran"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Spletna stran dodana na seznam za hitri dostop."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Uredi funkcijo Hitri dostop"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Odstrani iz zaznamkov"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Dodaj zaznamek"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Zgodovina brskanja"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Zavihki"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Nov zavihek"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Naprej"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Nazaj"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Zaznamki"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Ni profilov"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Zgodovina"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Zaznamki"
+

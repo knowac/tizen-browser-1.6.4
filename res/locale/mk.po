@@ -2002,3 +2002,144 @@ msgstr "Податочниот роаминг е исклучен. Поврзе�
 msgid "IDS_BR_POP_DOWNLOAD_CANCELLED"
 msgstr "Преземањето е откажано."
 
+msgid "IDS_BR_BUTTON_SECRET_ON_ABB"
+msgstr "Таен вклуч."
+
+msgid "IDS_BR_MBODY_PRIVACY"
+msgstr "Доверливо"
+
+msgid "IDS_BR_MBODY_DEFAULT_STORAGE"
+msgstr "Основна меморија"
+
+msgid "IDS_BR_MBODY_MANUAL_ZOOM"
+msgstr "Рачен зум"
+
+msgid "IDS_BR_TMBODY_DEFAULT_SEARCH_ENGINE"
+msgstr "Основен пребарувач"
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO"
+msgstr "Сочувај инфо. за најава"
+
+msgid "IDS_BR_OPT_TURN_OFF_SECRET_MODE_ABB"
+msgstr "Исклучете Таен режим"
+
+msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
+msgstr "Вклучете Таен режим"
+
+msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
+msgstr "Безбедност на Таен режим"
+
+msgid "IDS_BR_BUTTON_USE_PASSWORD_ABB"
+msgstr "Користи лозинка"
+
+msgid "IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"
+msgstr "Не користи лозинка"
+
+msgid "IDS_BR_MBODY_MOST_VISITED_WEBSITES"
+msgstr "Најпосетувани страници"
+
+msgid "IDS_BR_MBODY_SET_MY_PROFILE"
+msgstr "Одреди мој профил"
+
+msgid "IDS_BR_MBODY_MY_AUTO_FILL_PROFILE"
+msgstr "Мој профил за авт.пополн."
+
+msgid "IDS_BR_SBODY_MANAGE_DATA_USED_TO_FILL_IN_FORMS_ONLINE"
+msgstr "Управувајте со податоци што се користат за пополнување обрасци на интернет."
+
+msgid "IDS_BR_MBODY_SAVE_SIGN_IN_INFO_ABB"
+msgstr "Соч.инф.за најава"
+
+msgid "IDS_BR_OPT_LOCATION_ACCESS_DATA"
+msgstr "Податоци за пристап кон локација"
+
+msgid "IDS_BR_OPT_AUTO_FILL_DATA"
+msgstr "Автоматско пополнување податоци"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_MSG"
+msgstr "Сите интернет-страници што ги гледате додека е вклучен Таен режим, нема да се појават во Вашиот прегледник или во историјата на пребарувања додека е исклучена.\n\nСите ознаки и интернет-страници што ги зачувувате додека е вклучен Таен режим, нема да се прикажат додека тој е исклучен.\n\nМожете да ги заштитите своите податоци во Таен режим и со лозинка."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_YOU_VIEW_WHILE_SECRET_MODE_IS_TURNED_ON_WONT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_MSG"
+msgstr "Сите интернет-страници што ги гледате додека е вклучен Таен режим, нема да се појават во Вашиот прегледник или во историјата на пребарувања додека е исклучена.\n\nСите ознаки и интернет-страници што ги зачувувате додека е вклучен Таен режим, нема да се прикажат додека тој е исклучен."
+
+msgid "IDS_BR_BUTTON_SECRET_OFF_ABB"
+msgstr "Таен искл."
+
+msgid "IDS_BR_BUTTON_DONT_USE_PASSWORD_ABB"
+msgstr "Не користи лозинка"
+
+msgid "IDS_BR_BUTTON_NEW_TAB_ABB2"
+msgstr "Н. кар."
+
+msgid "IDS_BR_NPBODY_WEB_ADDRESS_ABB"
+msgstr "Интернет-адреса"
+
+msgid "IDS_BR_HEADER_ADD_WEBPAGE_TO_QUICK_ACCESS_ABB"
+msgstr "Дод. интернет-стр. Брз прис."
+
+msgid "IDS_BR_TMBODY_TURN_ON_JAVASCRIPT"
+msgstr "Вклучете JavaScript"
+
+msgid "IDS_BR_HEADER_COULDNT_OPEN_NEW_TAB_ABB"
+msgstr "Не може да се отв.нова карт."
+
+msgid "IDS_BR_OPT_OPEN_IN_NEW_TAB_ABB"
+msgstr "Отвори во нова картичка"
+
+msgid "IDS_BR_TPOP_FOLDER_NAME_ALREADY_IN_USE"
+msgstr "Името на папката веќе се користи."
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER_PD"
+msgstr "Нова папка %d"
+
+msgid "IDS_BR_NPBODY_NEW_FOLDER"
+msgstr "Нова папка"
+
+msgid "IDS_BR_OPT_ENABLE_JAVASCRIPT"
+msgstr "Овозможи JavaScript"
+
+msgid "IDS_BR_TMBODY_MANAGE_WEBSITE_DATA"
+msgstr "Уреди подат.за интернет-стр."
+
+msgid "IDS_BR_HEADER_SET_HOME_PAGE_ABB"
+msgstr "Постави почетна страница"
+
+msgid "IDS_BR_TPOP_WEBPAGE_ADDED_TO_QUICK_ACCESS_LIST"
+msgstr "Интернет-страницата е додадена во листата за брз пристап."
+
+msgid "IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"
+msgstr "Измени Брз пристап"
+
+msgid "IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"
+msgstr "Отстрани од Ознаки"
+
+msgid "IDS_BR_HEADER_ADD_BOOKMARK_ABB"
+msgstr "Додај омил.страница"
+
+msgid "IDS_BR_BODY_BROWSING_HISTORY"
+msgstr "Историја на пребарување"
+
+msgid "IDS_BR_HEADER_TABS_ABB2"
+msgstr "Картички"
+
+msgid "IDS_BR_OPT_NEW_TAB"
+msgstr "Нова картичка"
+
+msgid "IDS_BR_BUTTON_FORWARD_ABB2"
+msgstr "Препрати"
+
+msgid "IDS_BR_BUTTON_BACK_ABB3"
+msgstr "Назад"
+
+msgid "IDS_BR_BUTTON_BOOKMARKS_ABB"
+msgstr "Ознаки"
+
+msgid "IDS_BR_NPBODY_NO_PROFILES_ABB"
+msgstr "Без профили"
+
+msgid "IDS_BR_TAB2_HISTORY"
+msgstr "Историја"
+
+msgid "IDS_BR_TAB2_BOOKMARKS"
+msgstr "Ознаки"
+
