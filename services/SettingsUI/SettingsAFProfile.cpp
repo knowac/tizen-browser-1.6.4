@@ -22,8 +22,11 @@ namespace base_ui{
 
 SettingsAFProfile::SettingsAFProfile(Evas_Object* parent)
     : m_profile(nullptr)
+    , m_itemData(nullptr)
+    , m_profileName(std::string())
 {
     init(parent);
+    SPSC.setProfileName.connect([this](std::string name){m_profileName = name;});
 };
 
 SettingsAFProfile::~SettingsAFProfile()
@@ -34,28 +37,38 @@ SettingsAFProfile::~SettingsAFProfile()
 void SettingsAFProfile::updateButtonMap()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Fix profile name update after profile saving
     ItemData profileName;
-    m_profile = ewk_context_form_autofill_profile_get(ewk_context_default_get(), 1);
+    void* item_data(nullptr);
+    Eina_List* list(nullptr);
+    Eina_List* entire_item_list(
+        ewk_context_form_autofill_profile_get_all(ewk_context_default_get()));
+
+    // ID for the item is not always 1 so we need to return the first existing one
+    EINA_LIST_FOREACH(entire_item_list, list, item_data) {
+        if (item_data) {
+            m_profile = static_cast<Ewk_Autofill_Profile*>(item_data);
+            break;
+        }
+    }
     if (!m_profile)
         profileName.buttonText = _(Translations::SettingsAutoFillProfileSetMyProfile.c_str());
-    else
+    else if (m_profileName.empty())
         profileName.buttonText = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_NAME);
-    m_buttonsMap[0] = profileName;
+    else
+        profileName.buttonText = m_profileName;
+    m_itemData = std::make_shared<ItemData>(profileName);
 }
 
 bool SettingsAFProfile::populateList(Evas_Object* genlist)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    updateButtonMap();
 
     m_naviframe->setLeftButtonVisible(false);
     m_naviframe->setRightButtonVisible(false);
     m_naviframe->setPrevButtonVisible(true);
     m_naviframe->setTitle(_(Translations::SettingsAutoFillProfileTitle.c_str()));
 
-    elm_genlist_clear(genlist);
-    appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[0], _select_profile_cb);
+    appendGenlist(genlist, m_setting_item_class, m_itemData.get(), _select_profile_cb);
     return true;
 }
 

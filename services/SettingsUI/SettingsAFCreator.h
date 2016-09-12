@@ -79,8 +79,8 @@ private:
     void addItems();
 protected:
     std::map<unsigned, ItemData> m_buttonsMap;
-    Evas_Object *m_scroller;
-    Evas_Object *m_box;
+    Evas_Object* m_scroller;
+    Evas_Object* m_box;
 
     profileEditErrorcode m_editErrorcode;
     profileSaveErrorcode m_saveErrorcode;

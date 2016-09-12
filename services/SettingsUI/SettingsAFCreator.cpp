@@ -34,6 +34,7 @@ inline std::string _trim(std::string& s, const std::string& drop = TRIM_SPACE)
 
 SettingsAFCreator::SettingsAFCreator(Evas_Object* parent, bool profile_exists)
     : m_scroller(nullptr)
+    , m_box(nullptr)
     , m_editErrorcode(update_error_none)
     , m_saveErrorcode(save_error_none)
     , m_editFieldItemClass(nullptr)
@@ -42,7 +43,6 @@ SettingsAFCreator::SettingsAFCreator(Evas_Object* parent, bool profile_exists)
     , m_profile_exists(profile_exists)
 {
     init(parent);
-    loadProfile();
 };
 
 SettingsAFCreator::~SettingsAFCreator()
@@ -55,8 +55,19 @@ bool SettingsAFCreator::loadProfile(void)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     Ewk_Autofill_Profile* profile = nullptr;
-    if (m_profile_exists)
-        profile = ewk_context_form_autofill_profile_get(m_ewkContext, 1);
+    if (m_profile_exists) {
+        void* item_data(nullptr);
+        Eina_List* list(nullptr);
+        Eina_List* entire_item_list(
+            ewk_context_form_autofill_profile_get_all(ewk_context_default_get()));
+
+        EINA_LIST_FOREACH(entire_item_list, list, item_data) {
+            if (item_data) {
+                profile = static_cast<Ewk_Autofill_Profile*>(item_data);
+                break;
+            }
+        }
+    }
 
     createNewAutoFillFormItem(profile);
 
@@ -67,9 +78,9 @@ void SettingsAFCreator::createNewAutoFillFormItem(Ewk_Autofill_Profile* profile)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!profile)
-        m_item  = std::shared_ptr<AutoFillFormItem>(new AutoFillFormItem(nullptr));
+        m_item  = std::make_shared<AutoFillFormItem>(nullptr);
     else {
-        AutoFillFormItemData* item_data = new AutoFillFormItemData;
+        auto item_data = new AutoFillFormItemData;
         if (!item_data) {
             BROWSER_LOGE("Malloc failed to get item_data");
             return;
@@ -89,7 +100,7 @@ void SettingsAFCreator::createNewAutoFillFormItem(Ewk_Autofill_Profile* profile)
         item_data->activation = false;
         item_data->compose_mode = profile_edit;
 
-        m_item = std::shared_ptr<AutoFillFormItem>(new AutoFillFormItem(item_data));
+        m_item = std::make_shared<AutoFillFormItem>(item_data);
         delete item_data;
         item_data = nullptr;
         return;
@@ -98,6 +109,8 @@ void SettingsAFCreator::createNewAutoFillFormItem(Ewk_Autofill_Profile* profile)
 
 bool SettingsAFCreator::populateLayout(Evas_Object* parent)
 {
+    loadProfile();
+
     m_entryLimitSize.max_char_count = 0;
     m_entryLimitSize.max_byte_count = AUTO_FILL_FORM_ENTRY_MAX_COUNT;
     m_edjFilePath = EDJE_DIR;
@@ -325,6 +338,7 @@ Eina_Bool SettingsAFCreator::applyEntryData(void)
     std::string full_name_str = std::string(full_name);
     full_name_str = _trim(full_name_str);
     full_name = full_name_str.c_str();
+    SPSC.setProfileName(full_name);
 
     if (full_name && strlen(full_name) && !isEntryHasOnlySpace(full_name))
         m_item->setName(full_name);

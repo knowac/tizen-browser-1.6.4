@@ -73,6 +73,7 @@ public:
     B_SIG<void (int)> setSearchEngineSubText;
     B_SIG<void (int)> setContentDestination;
     B_SIG<void ()> showTextPopup;
+    B_SIG<void (std::string)> setProfileName;
 
 private:
     SettingsPrettySignalConnector(){};

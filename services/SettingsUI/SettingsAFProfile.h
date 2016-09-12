@@ -45,8 +45,9 @@ public:
     virtual void updateButtonMap();
     static void _select_profile_cb(void* data, Evas_Object*, void*);
 protected:
-    std::map<unsigned, ItemData> m_buttonsMap;
     Ewk_Autofill_Profile* m_profile;
+    std::shared_ptr<ItemData> m_itemData;
+    std::string m_profileName;
 };
 
 }
