@@ -889,7 +889,22 @@ void SimpleUI::addQuickAccessItem(const std::string& name)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    m_favoriteService->addBookmark(name, name, std::string(),
+    std::string url = name;
+    std::string title;
+
+    //TODO: extract all prefixes to external file
+    if (!strncmp(name.c_str(), "http://", strlen("http://")))
+        title = name.substr(strlen("http://"), std::string::npos);
+    else if (!strncmp(name.c_str(), "https://", strlen("https://")))
+        title = name.substr(strlen("https://"), std::string::npos);
+    else if (!strncmp(name.c_str(), "ftp://", strlen("ftp://")))
+        title = name.substr(strlen("ftp://"), std::string::npos);
+    else {
+        url = std::string("http://") + name;
+        title = name;
+    }
+
+    m_favoriteService->addBookmark(url, title, std::string(),
         std::shared_ptr<tizen_browser::tools::BrowserImage>(),
         std::shared_ptr<tizen_browser::tools::BrowserImage>(), m_favoriteService->getQuickAccessRoot());
     showQuickAccess();
@@ -1668,6 +1683,14 @@ void SimpleUI::addQuickAccess()
     item.old_url = "";
     item.title = m_webEngine->getTitle();
     item.url = m_webEngine->getURI();
+
+    //TODO: extract all prefixes to external file
+    if (!strncmp(item.title.c_str(), "http://", strlen("http://")))
+        item.title = item.title.substr(strlen("http://"), std::string::npos);
+    else if (!strncmp(item.title.c_str(), "https://", strlen("https://")))
+        item.title = item.title.substr(strlen("https://"), std::string::npos);
+    else if (!strncmp(item.title.c_str(), "ftp://", strlen("ftp://")))
+        item.title = item.title.substr(strlen("ftp://"), std::string::npos);
 
     addBookmark(item);
 
