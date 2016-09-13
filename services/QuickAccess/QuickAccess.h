@@ -51,7 +51,7 @@ public:
     void setDesktopMode(bool mode);
     bool canBeBacked(int tabCount);
     void backButtonClicked();
-    inline bool isMostVisitedActive() const;
+    bool isMostVisitedActive();
     void orientationChanged();
     void showMostVisited();
     void showQuickAccess();

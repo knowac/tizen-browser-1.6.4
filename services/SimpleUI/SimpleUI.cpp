@@ -353,6 +353,7 @@ void SimpleUI::connectUISignals()
 #if PWA
     m_webPageUI->pwaRequestManifest.connect(boost::bind(&basic_webengine::AbstractWebEngine::requestManifest, m_webEngine.get()));
 #endif
+    m_webPageUI->isMostVisited.connect(boost::bind(&QuickAccess::isMostVisitedActive, m_quickAccess.get()));
 
     M_ASSERT(m_quickAccess.get());
     m_quickAccess->openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2));

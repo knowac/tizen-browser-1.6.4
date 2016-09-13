@@ -391,7 +391,11 @@ void WebPageUI::showContextMenu()
 
         if (m_statesMgr->equals(WPUState::QUICK_ACCESS)) {
             //TODO: Add translation
-            elm_ctxpopup_item_append(m_ctxpopup, "Edit Quick access", nullptr, _cm_edit_qa_clicked, this);
+            boost::optional<bool> isMostVisitedOpt(isMostVisited());
+            if (!isMostVisitedOpt || !(*isMostVisitedOpt))
+                elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"), nullptr, _cm_edit_qa_clicked, this);
+            else
+                elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_DELETE"), nullptr, nullptr, nullptr);
         } else if (m_statesMgr->equals(WPUState::MAIN_WEB_PAGE)) {
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_SHARE"), nullptr, _cm_share_clicked, this);
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_FIND_ON_PAGE"), nullptr, _cm_find_on_page_clicked, this);
@@ -400,7 +404,7 @@ void WebPageUI::showContextMenu()
             if (bookmark) {
                 //TODO: Add translation
                 if (*bookmark)
-                    elm_ctxpopup_item_append(m_ctxpopup, "Remove from bookmarks", nullptr,
+                    elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_REMOVE_FROM_BOOKMARKS_ABB"), nullptr,
                         _cm_delete_bookmark_clicked, this);
                 else
                     elm_ctxpopup_item_append(m_ctxpopup, "Add to Bookmarks", nullptr,
@@ -419,10 +423,10 @@ void WebPageUI::showContextMenu()
             BROWSER_LOGW("[%s] State not handled, context menu not shown", __PRETTY_FUNCTION__);
             return;
         }
-
         elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_SETTINGS"), nullptr, _cm_settings_clicked, this);
 #if PWA
-        elm_ctxpopup_item_append(m_ctxpopup, "Add to Homescreen", nullptr, _cm_add_to_hs_clicked, this);
+        if (!m_statesMgr->equals(WPUState::QUICK_ACCESS))
+            elm_ctxpopup_item_append(m_ctxpopup, "Add to Homescreen", nullptr, _cm_add_to_hs_clicked, this);
 #endif
         alignContextMenu(*window);
     } else

@@ -657,7 +657,7 @@ void QuickAccess::backButtonClicked()
     switchViewToWebPage();
 }
 
-bool QuickAccess::isMostVisitedActive() const
+bool QuickAccess::isMostVisitedActive()
 {
     return m_currPage == MOST_VISITED_PAGE;
 }
