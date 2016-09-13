@@ -23,10 +23,13 @@ namespace tizen_browser{
 namespace base_ui{
 
 SettingsAdvanced::SettingsAdvanced(Evas_Object* parent)
+    : m_popup(nullptr)
 {
     init(parent);
     updateButtonMap();
     vconf_notify_key_changed("memory/sysman/mmc", notifyStorageChange, this);
+    SPSC.settingsSaveContentRadioPopupPtr.connect(
+        [this](auto popup){m_popup = popup;});
 };
 
 SettingsAdvanced::~SettingsAdvanced()
@@ -74,8 +77,6 @@ void SettingsAdvanced::updateButtonMap()
 
     SPSC.setContentDestination.connect(
         boost::bind(&SettingsAdvanced::setContentDestination, this, _1));
-
-    changeGenlistStorage();
 }
 
 void SettingsAdvanced::changeGenlistStorage()
@@ -105,6 +106,10 @@ void SettingsAdvanced::notifyStorageChange(keynode_t* /*key*/, void* data)
 
     auto self = static_cast<SettingsAdvanced*>(data);
     self->changeGenlistStorage();
+    if (self->m_popup) {
+        self->m_popup->popupDismissed(self->m_popup);
+        self->m_popup = nullptr;
+    }
 }
 
 bool SettingsAdvanced::populateList(Evas_Object* genlist)
@@ -123,6 +128,7 @@ bool SettingsAdvanced::populateList(Evas_Object* genlist)
     m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA] =
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA], _manage_web_data_cb);
 
+    changeGenlistStorage();
     elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA], EINA_TRUE);
 
     return true;

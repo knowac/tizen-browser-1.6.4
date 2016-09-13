@@ -22,6 +22,7 @@
 #include <memory>
 #include "Tools/GeneralTools.h"
 #include "../../core/AbstractWebEngine/WebEngineSettings.h"
+#include "../SimpleUI/RadioPopup.h"
 
 #define SPSC SettingsPrettySignalConnector::Instance()
 
@@ -68,6 +69,7 @@ public:
     B_SIG<void (unsigned)> showSettings;
     B_SIG<void ()> settingsBaseShowRadioPopup;
     B_SIG<void ()> settingsSaveContentToRadioPopup;
+    B_SIG<void (RadioPopup*)> settingsSaveContentRadioPopupPtr;
     B_SIG<void (int)> setSearchEngineSubText;
     B_SIG<void (int)> setContentDestination;
     B_SIG<void ()> showTextPopup;

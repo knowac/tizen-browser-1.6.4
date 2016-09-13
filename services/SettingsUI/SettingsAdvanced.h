@@ -27,6 +27,7 @@
 #include <Evas.h>
 #include <vconf.h>
 #include "BrowserLogger.h"
+#include "../SimpleUI/RadioPopup.h"
 #include "Tools/EflTools.h"
 #include "Tools/SettingsEnums.h"
 
@@ -66,6 +67,8 @@ public:
     static void notifyStorageChange(keynode_t *key, void* data);
     void setContentDestination(int button);
     bool setStorageType(SettingsStorageType type);
+private:
+    RadioPopup* m_popup;
 };
 
 }

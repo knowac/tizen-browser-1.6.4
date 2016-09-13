@@ -506,7 +506,6 @@ void SimpleUI::connectSettingsSignals()
     SPSC.settingsSaveContentToRadioPopup.connect(
         boost::bind(&SimpleUI::onSaveContentToClicked, this));
 
-
     // SETTINGS HOME PAGE SIGNALS
     m_settingsManager->init(m_viewManager.getContent());
     SPSC.requestCurrentPage.connect(
@@ -1589,6 +1588,7 @@ void SimpleUI::onSaveContentToClicked()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     auto popup = RadioPopup::createPopup(m_viewManager.getContent());
+    SPSC.settingsSaveContentRadioPopupPtr(popup);
     popup->setTitle(_(Translations::SettingsAdvancedSaveContentTitle.c_str()));
     popup->addRadio(RadioButtons::DEVICE);
     popup->addRadio(RadioButtons::SD_CARD);
@@ -1606,6 +1606,7 @@ void SimpleUI::onSaveContentToClicked()
         [&,this](const RadioButtons& button){
         SPSC.setContentDestination(static_cast<int>(button));
         dismissPopup(popup);
+        SPSC.settingsSaveContentRadioPopupPtr(nullptr);
     });
     popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
     popup->popupDismissed.connect(
