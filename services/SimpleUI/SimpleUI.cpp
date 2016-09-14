@@ -363,17 +363,29 @@ void SimpleUI::connectUISignals()
     m_tabUI->closeTabsClicked.connect(boost::bind(&SimpleUI::closeTabsClicked, this,_1));
     m_tabUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_tabUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-    m_tabUI->changeEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::changeState, m_webEngine.get()));
     m_tabUI->changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
     m_tabUI->refetchTabUIData.connect(boost::bind(&SimpleUI::refetchTabUIData, this));
-    m_tabUI->checkIfParamExistsInDB.connect(boost::bind(&storage::SettingsStorage::isDBParamPresent, &m_storageService->getSettingsStorage(), _1));
-    m_tabUI->setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool, &m_storageService->getSettingsStorage(), _1, _2));
-    m_tabUI->setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString, &m_storageService->getSettingsStorage(), _1, _2));
-    m_tabUI->getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool, &m_storageService->getSettingsStorage(), _1, false));
-    m_tabUI->getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText, &m_storageService->getSettingsStorage(), _1, ""));
+    m_tabUI->checkIfParamExistsInDB.connect(boost::bind(&storage::SettingsStorage::isDBParamPresent,
+        &m_storageService->getSettingsStorage(), _1));
+    m_tabUI->setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool,
+        &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString,
+        &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool,
+        &m_storageService->getSettingsStorage(), _1, false));
+    m_tabUI->getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText,
+        &m_storageService->getSettingsStorage(), _1, ""));
     m_tabUI->showPasswordUI.connect(boost::bind(&SimpleUI::showPasswordUI, this));
     m_tabUI->getPasswordUI().closeUI.connect(boost::bind(&SimpleUI::closeTopView, this));
-    m_tabUI->getPasswordUI().setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString, &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->getPasswordUI().setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString,
+        &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->getPasswordUI().setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool,
+        &m_storageService->getSettingsStorage(), _1, _2));
+    m_tabUI->getPasswordUI().getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText,
+        &m_storageService->getSettingsStorage(), _1, ""));
+    m_tabUI->getPasswordUI().getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool,
+        &m_storageService->getSettingsStorage(), _1, false));
+    m_tabUI->getPasswordUI().changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
 
     M_ASSERT(m_historyUI.get());
     m_historyUI->clearHistoryClicked.connect(boost::bind(&SimpleUI::onClearHistoryAllClicked, this));
@@ -1364,10 +1376,6 @@ void SimpleUI::showTabUI()
 
     if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS) && m_webEngine->tabsCount() > 0 && m_webEngine->isLoading())
         onGenerateThumb(m_webEngine->currentTabId());
-    std::vector<basic_webengine::TabContentPtr> tabsContents =
-            m_webEngine->getTabContents();
-    m_tabService->fillThumbs(tabsContents);
-    m_tabUI->addTabItems(tabsContents);
 }
 
 void SimpleUI::closeTabUI()
@@ -1381,7 +1389,7 @@ void SimpleUI::refetchTabUIData() {
     std::vector<basic_webengine::TabContentPtr> tabsContents =
             m_webEngine->getTabContents();
     m_tabService->fillThumbs(tabsContents);
-    m_tabUI->addTabItems(tabsContents);
+    m_tabUI->addTabItems(tabsContents, m_webEngine->isSecretMode());
 }
 
 void SimpleUI::newTabClicked()
@@ -1896,6 +1904,7 @@ void SimpleUI::updateView()
 
 void SimpleUI::changeEngineState()
 {
+    m_webEngine->changeState();
     m_webEngine->disconnectCurrentWebViewSignals();
     m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
     updateView();

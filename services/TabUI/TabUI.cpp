@@ -31,8 +31,6 @@ namespace base_ui{
 
 EXPORT_SERVICE(TabUI, "org.tizen.browser.tabui")
 
-const std::string TabUI::PASSWORD_DECISION_MADE = "password_decision";
-
 TabUI::TabUI()
     : m_parent(nullptr)
     , m_content(nullptr)
@@ -71,6 +69,7 @@ void TabUI::showUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
+    refetchTabUIData();
     m_naviframe->show();
     orientationChanged();
 }
@@ -79,12 +78,6 @@ void TabUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
-    if (m_state == State::PASSWORD_DECISION) {
-        m_state = State::NORMAL;
-        createEmptyLayout();
-        setStateButtons();
-        updateNoTabsText();
-    }
     elm_gengrid_clear(m_gengrid);
     m_naviframe->hide();
 }
@@ -94,10 +87,10 @@ void TabUI::init(Evas_Object* parent)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(parent);
     m_parent = parent;
-    auto paramExists = checkIfParamExistsInDB(PASSWORD_DECISION_MADE);
+    auto paramExists = checkIfParamExistsInDB(PasswordUI::DECISION_MADE);
     if (paramExists) {
         if (!*paramExists) {
-            setDBBoolParamValue(PASSWORD_DECISION_MADE, false);
+            setDBBoolParamValue(PasswordUI::DECISION_MADE, false);
         }
     } else {
         BROWSER_LOGE("[%s:%d] unknow checkIfParamExistsInDB value!", __PRETTY_FUNCTION__, __LINE__);
@@ -288,6 +281,8 @@ void TabUI::_cm_secret_clicked(void* data, Evas_Object*, void*)
     if (data) {
         TabUI* tabUI = static_cast<TabUI*>(data);
         _cm_dismissed(nullptr, tabUI->m_ctxpopup, nullptr);
+        tabUI->m_passwordUI.setState(PasswordState::SecretModeData);
+        tabUI->showPasswordUI();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
@@ -347,6 +342,8 @@ void TabUI::_right_button_clicked(void * data, Evas_Object*, void*)
             self->newTabClicked();
             break;
         case State::PASSWORD_DECISION:
+            self->m_passwordUI.setState(PasswordState::CreatePassword);
+            self->m_passwordUI.setAction(PasswordAction::CreatePasswordFirstTime);
             self->showPasswordUI();
             break;
         default:
@@ -365,18 +362,18 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
 
         switch (self->m_state) {
         case State::NORMAL: {
-            auto decisionMade = self->getDBBoolParamValue(PASSWORD_DECISION_MADE);
+            auto decisionMade = self->getDBBoolParamValue(PasswordUI::DECISION_MADE);
             if (decisionMade) {
-                if(*decisionMade) {
-                    //TODO check password
+                if (*decisionMade) {
                     auto password = self->getDBStringParamValue(PasswordUI::PASSWORD_FIELD);
                     if (password) {
                         if (password->empty()) {    // password is not used
-                            self->m_state = State::SECRET;
                             self->changeEngineState();
                             self->refetchTabUIData();
                         } else {    // check password validity
-                            //TODO open screen with password confirm
+                            self->m_passwordUI.setState(PasswordState::ConfirmPassword);
+                            self->m_passwordUI.setAction(PasswordAction::ConfirmPasswordEnterSecret);
+                            self->showPasswordUI();
                         }
                     } else {
                         BROWSER_LOGW("[%s] cannot read password from DB", __PRETTY_FUNCTION__);
@@ -390,14 +387,12 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
             }
         }  break;
         case State::SECRET:     // disable secret
-            self->m_state = State::NORMAL;
             self->changeEngineState();
             self->refetchTabUIData();
             break;
         case State::PASSWORD_DECISION:      // do not use password
-            self->m_state = State::SECRET;
             self->setDBStringParamValue(PasswordUI::PASSWORD_FIELD, "");
-            self->setDBBoolParamValue(PASSWORD_DECISION_MADE, true);
+            self->setDBBoolParamValue(PasswordUI::DECISION_MADE, true);
             self->changeEngineState();
             self->refetchTabUIData();
             break;
@@ -425,12 +420,21 @@ void TabUI::addTabItem(basic_webengine::TabContentPtr hi)
         BROWSER_LOGW("GengridItem wasn't created successfully");
 }
 
-void TabUI::addTabItems(std::vector<basic_webengine::TabContentPtr>& items)
+void TabUI::addTabItems(std::vector<basic_webengine::TabContentPtr>& items, bool secret)
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    BROWSER_LOGD("[%s:%d] secret: %d", __PRETTY_FUNCTION__, __LINE__, secret);
+    if (secret)
+        m_state = State::SECRET;
+    else
+        m_state = State::NORMAL;
+
+    createEmptyLayout();
+
     elm_gengrid_clear(m_gengrid);
     for (auto it = items.begin(); it < items.end(); ++it)
         addTabItem(*it);
+
+    setStateButtons();
     updateNoTabsText();
 }
 

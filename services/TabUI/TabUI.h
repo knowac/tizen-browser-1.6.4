@@ -51,7 +51,7 @@ public:
 
     virtual std::string getName();
 
-    void addTabItems(std::vector<basic_webengine::TabContentPtr>& items);
+    void addTabItems(std::vector<basic_webengine::TabContentPtr>& items, bool secret);
     virtual void orientationChanged() override;
 
     //AbstractContextMenu interface implementation
@@ -133,7 +133,6 @@ private:
     const unsigned int GENGRID_ITEM_WIDTH_LANDSCAPE = 636;
     const unsigned int GENGRID_ITEM_HEIGHT_LANDSCAPE = 274;
     const unsigned int GESTURE_MOMENTUM_MIN = 2000;
-    static const std::string PASSWORD_DECISION_MADE;
 };
 }
 }

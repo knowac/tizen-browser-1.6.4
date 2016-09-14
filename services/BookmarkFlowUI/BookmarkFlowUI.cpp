@@ -176,7 +176,6 @@ void BookmarkFlowUI::createGenlistItemClasses()
         _genlist_folder_content_get);
     m_add_to_qa_item_class = createGenlistItemClass("type1", _genlist_add_to_qa_text_get,
         _genlist_add_to_qa_content_get);
-            elm_genlist_item_class_new();
 }
 
 Elm_Genlist_Item_Class* BookmarkFlowUI::createGenlistItemClass(
