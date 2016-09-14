@@ -71,6 +71,7 @@ public:
             const std::string& title,
             const TabOrigin& origin,
             tools::BrowserImagePtr thumbnail,
+            tools::BrowserImagePtr favicon,
             bool isSecret = false);
     TabContent(const TabId& id,
                const std::string& url,
@@ -82,7 +83,9 @@ public:
     std::string getTitle() const;
     TabOrigin getOrigin() const;
     void setThumbnail(tools::BrowserImagePtr thumbnail);
+    void setFavicon(tools::BrowserImagePtr favicon);
     tools::BrowserImagePtr getThumbnail() const;
+    tools::BrowserImagePtr getFavicon() const;
     bool getIsSecret() const;
 
 private:
@@ -91,6 +94,7 @@ private:
     std::string m_title;
     TabOrigin m_origin;
     tools::BrowserImagePtr m_thumbnail;
+    tools::BrowserImagePtr m_favicon;
     bool m_isSecret;
 
 };

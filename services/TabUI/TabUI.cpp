@@ -466,11 +466,23 @@ Evas_Object * TabUI::_gengrid_content_get(void *data, Evas_Object *obj, const ch
 {
     BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__, part);
     if (data && obj && part) {
-        TabData *itemData = static_cast<TabData*>(data);
+        auto itemData = static_cast<TabData*>(data);
         if (!strcmp(part, "elm.icon")) {
-            auto layout = elm_layout_add(obj);
-            elm_layout_file_set(layout, itemData->tabUI->m_edjFilePath.c_str(), "favicon_image");
-            return layout;
+            auto favicon = itemData->item->getFavicon();
+            if (favicon) {
+                auto faviconEvas = favicon->getEvasImage(obj);
+                evas_object_size_hint_min_set(faviconEvas,
+                    ELM_SCALE_SIZE(40),
+                    ELM_SCALE_SIZE(40));
+                evas_object_size_hint_max_set(faviconEvas,
+                    ELM_SCALE_SIZE(40),
+                    ELM_SCALE_SIZE(40));
+                return faviconEvas;
+            } else {
+                auto layout = elm_layout_add(obj);
+                elm_layout_file_set(layout, itemData->tabUI->m_edjFilePath.c_str(), "favicon_image");
+                return layout;
+            }
         }
         if (!strcmp(part, "elm.button")) {
             auto button = elm_button_add(obj);

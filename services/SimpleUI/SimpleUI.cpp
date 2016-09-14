@@ -238,7 +238,13 @@ void SimpleUI::restoreLastSession()
 
     auto vec = m_tabService->getAllTabs();
     for (const basic_webengine::TabContent& i : *vec) {
-        openNewTab(i.getUrl(), i.getTitle(), boost::optional<int>(i.getId().get()), false, false, i.getOrigin());
+        openNewTab(
+            i.getUrl(),
+            i.getTitle(),
+            boost::optional<int>(i.getId().get()),
+            false,
+            false,
+            i.getOrigin());
     }
 }
 
@@ -626,6 +632,7 @@ void SimpleUI::connectModelSignals()
     m_historyService->historyDeleted.connect(boost::bind(&SimpleUI::onHistoryRemoved, this,_1));
 
     m_tabService->generateThumb.connect(boost::bind(&SimpleUI::onGenerateThumb, this, _1));
+    m_tabService->generateFavicon.connect(boost::bind(&SimpleUI::onGenerateFavicon, this, _1));
 
     m_platformInputManager->returnPressed.connect(boost::bind(&elm_exit));
     m_platformInputManager->backPressed.connect(boost::bind(&SimpleUI::onBackPressed, this));
@@ -1023,6 +1030,13 @@ void SimpleUI::onGenerateThumb(basic_webengine::TabId tabId)
     m_tabService->updateTabItemSnapshot(tabId, snapshotImage);
 }
 
+void SimpleUI::onGenerateFavicon(basic_webengine::TabId tabId)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    m_tabService->updateTabItemFavicon(tabId, m_webEngine->getFavicon());
+}
+
 void SimpleUI::onCreateTabId()
 {
     int id = m_tabService->createTabId();
@@ -1246,17 +1260,17 @@ void SimpleUI::loadFinished()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_webPageUI->loadFinished();
-#if PROFILE_MOBILE
     if (!m_webEngine->isSecretMode()) {
-        m_tabService->updateTabItem(m_webEngine->currentTabId(),
-                m_webEngine->getURI(),
-                m_webEngine->getTitle(),
-                m_webEngine->getOrigin());
-        m_historyService->addHistoryItem(m_webEngine->getURI(),
-                                                 m_webEngine->getTitle(),
-                                                 m_webEngine->getFavicon());
+        m_tabService->updateTabItem(
+            m_webEngine->currentTabId(),
+            m_webEngine->getURI(),
+            m_webEngine->getTitle(),
+            m_webEngine->getOrigin());
+        m_historyService->addHistoryItem(
+            m_webEngine->getURI(),
+            m_webEngine->getTitle(),
+            m_webEngine->getFavicon());
     }
-#endif
 }
 
 void SimpleUI::filterURL(const std::string& url)
@@ -1376,8 +1390,15 @@ void SimpleUI::showTabUI()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_viewManager.pushViewToStack(m_tabUI.get());
 
-    if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS) && m_webEngine->tabsCount() > 0 && m_webEngine->isLoading())
+    if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS) &&
+        m_webEngine->tabsCount() > 0 &&
+        m_webEngine->isLoading())
         onGenerateThumb(m_webEngine->currentTabId());
+
+    auto tabsContents = m_webEngine->getTabContents();
+    m_tabService->fillThumbs(tabsContents);
+    m_tabService->fillFavicons(tabsContents);
+    m_tabUI->addTabItems(tabsContents, m_webEngine->isSecretMode());
 }
 
 void SimpleUI::closeTabUI()
@@ -1388,9 +1409,9 @@ void SimpleUI::closeTabUI()
 }
 
 void SimpleUI::refetchTabUIData() {
-    std::vector<basic_webengine::TabContentPtr> tabsContents =
-            m_webEngine->getTabContents();
+    auto tabsContents = m_webEngine->getTabContents();
     m_tabService->fillThumbs(tabsContents);
+    m_tabService->fillFavicons(tabsContents);
     m_tabUI->addTabItems(tabsContents, m_webEngine->isSecretMode());
 }
 

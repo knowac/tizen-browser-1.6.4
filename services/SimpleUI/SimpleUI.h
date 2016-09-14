@@ -186,6 +186,7 @@ private:
      * @brief Handles 'generateThumb' signals.
      */
     void onGenerateThumb(basic_webengine::TabId tabId);
+    void onGenerateFavicon(basic_webengine::TabId tabId);
     void onSnapshotCaptured(std::shared_ptr<tools::BrowserImage> snapshot, tools::SnapshotType snapshot_type);
     void onCreateTabId();
 

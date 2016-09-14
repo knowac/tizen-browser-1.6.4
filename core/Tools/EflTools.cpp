@@ -35,19 +35,27 @@ namespace EflTools {
 std::unique_ptr<Blob> getBlobPNG(std::shared_ptr<BrowserImage> browserImage)
 {
     BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
+    if (!browserImage) {
+        BROWSER_LOGD("browserImage is null");
+        return nullptr;
+    }
     unsigned long long length = 0;
-    void* mem_buffer = getBlobPNG(browserImage->getWidth(), browserImage->getHeight(), browserImage->getData(), &length);
-    if (!mem_buffer || !length){
+    void* mem_buffer = getBlobPNG(
+        browserImage->getWidth(),
+        browserImage->getHeight(),
+        browserImage->getData(),
+        &length);
+    if (!mem_buffer || !length) {
         BROWSER_LOGW("Cannot create BlobPNG");
         return nullptr;
     }
     std::unique_ptr<Blob> image(new Blob(mem_buffer, length));
-
     return std::move(image);
 }
 
 void* getBlobPNG(int width, int height, void* image_data, unsigned long long* length)
 {
+    BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
     EINA_SAFETY_ON_NULL_RETURN_VAL(image_data, NULL);
 
     image_util_encode_h handler = nullptr;
@@ -87,7 +95,6 @@ void* getBlobPNG(int width, int height, void* image_data, unsigned long long* le
         BROWSER_LOGW("[%s:%d] mage_util_encode_destroy: error!", __PRETTY_FUNCTION__, __LINE__);
         return nullptr;
     }
-
     return outputBuffer;
 }
 
