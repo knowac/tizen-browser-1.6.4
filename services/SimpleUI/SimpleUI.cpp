@@ -419,6 +419,7 @@ void SimpleUI::connectUISignals()
     m_bookmarkManagerUI->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
     m_bookmarkManagerUI->getHistoryGenlistContent.connect(boost::bind(&SimpleUI::showHistoryUI, this, _1, _2, _3));
     m_bookmarkManagerUI->removeSelectedItemsFromHistory.connect(boost::bind(&HistoryUI::removeSelectedHistoryItems, m_historyUI.get()));
+    m_bookmarkManagerUI->isEngineSecretMode.connect(boost::bind(&basic_webengine::AbstractWebEngine::isSecretMode, m_webEngine.get()));
 #if PROFILE_MOBILE
     // TODO: delete dead code
 #else

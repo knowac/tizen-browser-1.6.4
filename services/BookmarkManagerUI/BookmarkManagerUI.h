@@ -86,6 +86,7 @@ public:
     boost::signals2::signal<void (int)> newFolderItemClicked;
     boost::signals2::signal<Evas_Object* (Evas_Object*, SharedNaviframeWrapper, bool)> getHistoryGenlistContent;
     boost::signals2::signal<void (void)> removeSelectedItemsFromHistory;
+    boost::signals2::signal<bool ()> isEngineSecretMode;
 
 private:
     using FolderData = struct
@@ -110,6 +111,7 @@ private:
     void createEmptyLayout();
     void createGenlistItemClasses();
     void addBookmarkItem(BookmarkData* item);
+    void checkSecretMode();
 
     void changeState(BookmarkManagerState state);
     void reoderBookmarkItems();

@@ -78,6 +78,7 @@ void BookmarkManagerUI::showUI()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
     m_naviframe->show();
+    checkSecretMode();
 }
 
 void BookmarkManagerUI::hideUI()
@@ -500,6 +501,23 @@ void BookmarkManagerUI::addBookmarkItem(BookmarkData* item)
     m_map_bookmark.insert(
         std::pair<unsigned int, Elm_Object_Item*>(item->bookmarkItem->getId(), bookmarkView));
     elm_genlist_item_selected_set(bookmarkView, EINA_FALSE);
+}
+
+void BookmarkManagerUI::checkSecretMode()
+{
+    auto secretMode = isEngineSecretMode();
+    if (!secretMode) {
+        BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
+        return;
+    }
+
+    if (*secretMode) {
+        elm_object_signal_emit(m_content, "hide_modules_toolbar", "ui");
+        evas_object_hide(m_modulesToolbar);
+    } else {
+        elm_object_signal_emit(m_content, "show_toolbars", "ui");
+        evas_object_show(m_modulesToolbar);
+    }
 }
 
 void BookmarkManagerUI::onBackPressed()
