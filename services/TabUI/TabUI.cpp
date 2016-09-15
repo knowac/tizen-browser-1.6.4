@@ -391,10 +391,7 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
             self->refetchTabUIData();
             break;
         case State::PASSWORD_DECISION:      // do not use password
-            self->setDBStringParamValue(PasswordUI::PASSWORD_FIELD, "");
-            self->setDBBoolParamValue(PasswordUI::DECISION_MADE, true);
-            self->changeEngineState();
-            self->refetchTabUIData();
+            self->showNoPasswordWarning();
             break;
         }
 
@@ -403,6 +400,14 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
+}
+
+void TabUI::switchToSecretFirstTime()
+{
+    setDBStringParamValue(PasswordUI::PASSWORD_FIELD, "");
+    setDBBoolParamValue(PasswordUI::DECISION_MADE, true);
+    changeEngineState();
+    refetchTabUIData();
 }
 
 void TabUI::addTabItem(basic_webengine::TabContentPtr hi)

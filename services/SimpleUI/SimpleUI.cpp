@@ -376,6 +376,7 @@ void SimpleUI::connectUISignals()
     m_tabUI->getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText,
         &m_storageService->getSettingsStorage(), _1, ""));
     m_tabUI->showPasswordUI.connect(boost::bind(&SimpleUI::showPasswordUI, this));
+    m_tabUI->showNoPasswordWarning.connect(boost::bind(&SimpleUI::onFirstSecretMode, this));
     m_tabUI->getPasswordUI().closeUI.connect(boost::bind(&SimpleUI::closeTopView, this));
     m_tabUI->getPasswordUI().setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString,
         &m_storageService->getSettingsStorage(), _1, _2));
@@ -1945,6 +1946,21 @@ void SimpleUI::closeTopView()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_viewManager.popTheStack();
+}
+
+void SimpleUI::onFirstSecretMode()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    TextPopup* popup = TextPopup::createPopup(m_viewManager.getContent());
+    popup->addButton(OK);
+    popup->setTitle(_("IDS_BR_HEADER_DONT_USE_PASSWORD_ABB"));
+    popup->setMessage("To protect your Secret mode data, create a password. "
+        "If you Use Secret mode without creating a password, you will not be able to "
+        "prevent others from viewing your browser and search history, bookmarks, And saved pages.");
+    popup->buttonClicked.connect(boost::bind(&TabUI::switchToSecretFirstTime, m_tabUI.get()));
+    popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
+    popup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
+    popup->show();
 }
 
 void SimpleUI::addBookmark(BookmarkUpdate bookmark_update)

@@ -56,8 +56,8 @@ public:
 
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
-
     PasswordUI& getPasswordUI() { return m_passwordUI; };
+    void switchToSecretFirstTime();
 
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> tabClicked;
     boost::signals2::signal<void ()> newTabClicked;
@@ -71,6 +71,7 @@ public:
     boost::signals2::signal<bool (std::string)> getDBBoolParamValue;
     boost::signals2::signal<std::string (std::string)> getDBStringParamValue;
     boost::signals2::signal<void ()> showPasswordUI;
+    boost::signals2::signal<void ()> showNoPasswordWarning;
 
 private:
     struct TabData

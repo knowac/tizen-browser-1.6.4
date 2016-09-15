@@ -330,6 +330,7 @@ private:
     void searchWebPage(std::string &text, int flags);
     void showPasswordUI();
     void closeTopView();
+    void onFirstSecretMode();
 
     std::string edjePath(const std::string &);
 
