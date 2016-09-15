@@ -257,11 +257,11 @@ void SettingsAFCreator::addItems()
     elm_entry_prediction_allow_set(m_postCodeItemCallbackData.entry, EINA_FALSE);
 
     // country region
-    m_countyRegionItemCallbackData.type = profile_composer_title_country_region;
-    createInputLayout(m_box, strdup(_("IDS_BR_MBODY_COUNTRY_REGION")), &m_countyRegionItemCallbackData);
-    elm_box_pack_end(m_box, m_countyRegionItemCallbackData.it);
+    m_countryRegionItemCallbackData.type = profile_composer_title_country_region;
+    createInputLayout(m_box, strdup(_("IDS_BR_MBODY_COUNTRY_REGION")), &m_countryRegionItemCallbackData);
+    elm_box_pack_end(m_box, m_countryRegionItemCallbackData.it);
     if (m_item->getStateProvince() && strlen(m_item->getStateProvince()))
-        elm_object_part_text_set(m_countyRegionItemCallbackData.entry, "elm.text", m_item->getStateProvince());
+        elm_object_part_text_set(m_countryRegionItemCallbackData.entry, "elm.text", m_item->getStateProvince());
 
     // phone
     m_phoneItemCallbackData.type = profile_composer_title_phone;
@@ -353,12 +353,12 @@ Eina_Bool SettingsAFCreator::applyEntryData(void)
     m_item->setSecondaryAddress2(secondary_address);
     const char *city_town = elm_entry_entry_get(m_cityTownItemCallbackData.entry);
     m_item->setCityTown(city_town);
-    const char *county = elm_entry_entry_get(m_countryItemCallbackData.entry);
-    m_item->setStateProvince(county);
+    const char *country = elm_entry_entry_get(m_countryItemCallbackData.entry);
+    m_item->setCountry(country);
     const char *post_code = elm_entry_entry_get(m_postCodeItemCallbackData.entry);
     m_item->setPostCode(post_code);
-    const char *country = elm_entry_entry_get(m_countyRegionItemCallbackData.entry);
-    m_item->setCountry(country);
+    const char *region = elm_entry_entry_get(m_countryRegionItemCallbackData.entry);
+    m_item->setStateProvince(region);
     const char *phone = elm_entry_entry_get(m_phoneItemCallbackData.entry);
     m_item->setPhoneNumber(phone);
     const char *email = elm_entry_entry_get(m_emailItemCallbackData.entry);
@@ -483,7 +483,7 @@ void SettingsAFCreator::__entry_next_key_cb(void* data, Evas_Object*, void*)
     } else if (type == profile_composer_title_country) {
         entry = self->m_postCodeItemCallbackData.entry;
     } else if (type == profile_composer_title_post_code) {
-        entry = self->m_countyRegionItemCallbackData.entry;
+        entry = self->m_countryRegionItemCallbackData.entry;
     } else if (type == profile_composer_title_country_region) {
         entry = self->m_phoneItemCallbackData.entry;
     } else if (type == profile_composer_title_phone) {
