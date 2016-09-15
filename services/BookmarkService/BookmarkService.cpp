@@ -190,11 +190,13 @@ bool BookmarkService::editBookmark(const std::string & url, const std::string & 
 bool BookmarkService::deleteBookmark(const std::string & url)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    int id = getBookmarkId(url);
-    if (id!=0)
-        bp_bookmark_adaptor_delete(id);
-    bookmarkDeleted(url);
-    return true;
+    int id(getBookmarkId(url));
+    int ret(0);
+
+    if (id != 0)
+        ret = bp_bookmark_adaptor_delete(id);
+
+    return static_cast<bool>(ret);
 }
 
 std::shared_ptr<BookmarkItem> BookmarkService::addFolder(const std::string &title, int parent)

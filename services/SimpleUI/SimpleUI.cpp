@@ -1994,13 +1994,22 @@ void SimpleUI::editBookmark(BookmarkUpdate bookmark_update)
     }
 }
 
-//TODO: Add toast popup informing that delete was success.
-//http://suprem.sec.samsung.net/jira/browse/TWF-1839
 void SimpleUI::deleteBookmark()
 {
-    std::string uri = m_webEngine->getURI();
+    std::string uri(m_webEngine->getURI());
+    bool ret(true);
     if (m_favoriteService->bookmarkExists(uri))
-        m_favoriteService->deleteBookmark(uri);
+        ret = m_favoriteService->deleteBookmark(uri);
+    // TODO add translations
+    auto text(
+        ret ?
+        "Bookmark deletion has failed!" :
+        "Bookmark has been deleted successfully.");
+    auto toast(tools::EflTools::createToastPopup(
+        m_viewManager.getContent(),
+        3.0,
+        text));
+    evas_object_show(toast);
 }
 }
 }

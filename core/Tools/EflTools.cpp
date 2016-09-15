@@ -25,6 +25,7 @@
 #include "browser_config.h"
 #include "BrowserLogger.h"
 #include "EflTools.h"
+#include "Elementary.h"
 
 
 namespace tizen_browser {
@@ -105,6 +106,15 @@ bool pointInObject(Evas_Object* object, int px, int py)
     Evas_Coord x, y, w, h;
     evas_object_geometry_get(object, &x, &y, &w, &h);
     return (px >= x && px <= x + w && py >= y && py <= y + h);
+}
+
+Evas_Object* createToastPopup(Evas_Object* parent, double timeout, const char* text)
+{
+    auto toast(elm_popup_add(parent));
+    elm_object_style_set(toast, "toast");
+    elm_popup_timeout_set(toast, timeout);
+    elm_object_text_set(toast, text);
+    return toast;
 }
 
 } /* end of EflTools */
