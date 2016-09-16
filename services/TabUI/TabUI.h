@@ -100,7 +100,6 @@ private:
     static void _right_button_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _left_button_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _close_tab_clicked(void *data, Evas_Object*, void*);
-    static void _cm_sync_clicked(void*, Evas_Object*, void*);
     static void _cm_secret_clicked(void*, Evas_Object*, void*);
     static void _cm_close_clicked(void*, Evas_Object*, void*);
     static Evas_Event_Flags _gesture_occured(void * data, void * event_info);

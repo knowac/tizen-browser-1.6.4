@@ -254,24 +254,12 @@ void TabUI::showContextMenu()
     if (window) {
         createContextMenu(*window);
 
-        elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_SYNC_OPEN_PAGES"), nullptr, _cm_sync_clicked, this);
         elm_ctxpopup_item_append(m_ctxpopup, "Secret mode security", nullptr, _cm_secret_clicked, this);
         if (elm_gengrid_items_count(m_gengrid) != 0)
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_CLOSE_ALL"), nullptr, _cm_close_clicked, this);
         alignContextMenu(*window);
     } else {
         BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
-    }
-}
-
-void TabUI::_cm_sync_clicked(void* data, Evas_Object*, void* )
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (data) {
-        TabUI* tabUI = static_cast<TabUI*>(data);
-        _cm_dismissed(nullptr, tabUI->m_ctxpopup, nullptr);
-    } else {
-        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
 }
 
