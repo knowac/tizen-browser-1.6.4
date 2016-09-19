@@ -39,11 +39,6 @@ void SettingsPrivacy::updateButtonMap()
     cookies.subText = _(Translations::SettingsPrivacyAcceptCookiesSub.c_str());
     cookies.sui = this;
 
-    ItemData suggestions;
-    suggestions.buttonText = _(Translations::SettingsPrivacySuggestSearches.c_str());
-    suggestions.subText = _(Translations::SettingsPrivacySuggestSearchesSub.c_str());
-    suggestions.sui = this;
-
     ItemData signIn;
     signIn.buttonText = _(Translations::SettingsPrivacySaveSigninInfo.c_str());
     signIn.subText = _(Translations::SettingsPrivacySaveSigninInfo.c_str());
@@ -54,7 +49,6 @@ void SettingsPrivacy::updateButtonMap()
     delPerData.sui = this;
 
     m_buttonsMap[SettingsPrivacyOptions::COOKIES] = cookies;
-    m_buttonsMap[SettingsPrivacyOptions::SUGGESTIONS] = suggestions;
     m_buttonsMap[SettingsPrivacyOptions::SIGNIN_INFO] = signIn;
     m_buttonsMap[SettingsPrivacyOptions::DEL_PER_DATA] = delPerData;
 }
@@ -67,7 +61,6 @@ bool SettingsPrivacy::populateList(Evas_Object* genlist)
     m_naviframe->setTitle(_(Translations::SettingsPrivacyTitle.c_str()));
 
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::COOKIES], _cookies_cb);
-    appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::SUGGESTIONS], _suggestions_cb);
     appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsPrivacyOptions::SIGNIN_INFO], _signin_cb);
     appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsPrivacyOptions::DEL_PER_DATA], _del_per_data_cb);
     return true;
@@ -87,20 +80,6 @@ void SettingsPrivacy::_cookies_cb(void *, Evas_Object* obj, void*)
     else
         ewk_cookie_manager_accept_policy_set(
             ewk_context_cookie_manager_get(ewk_context_default_get()), EWK_COOKIE_ACCEPT_POLICY_NEVER);
-}
-
-void SettingsPrivacy::_suggestions_cb(void *, Evas_Object* obj, void*)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto el = elm_genlist_selected_item_get(obj);
-    auto check = elm_object_item_part_content_get(el, "elm.swallow.end");
-    auto value = !elm_check_state_get(check);
-
-    elm_check_state_set(check, value);
-    // TODO Not sure if it is correct option
-    SPSC.setWebEngineSettingsParam(
-        basic_webengine::WebEngineSettings::REMEMBER_FROM_DATA,
-        static_cast<bool>(value));
 }
 
 void SettingsPrivacy::_signin_cb(void *, Evas_Object* obj, void*)

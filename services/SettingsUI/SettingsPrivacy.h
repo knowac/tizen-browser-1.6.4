@@ -34,7 +34,6 @@ namespace base_ui{
 
 enum SettingsPrivacyOptions {
     COOKIES,
-    SUGGESTIONS,
     SIGNIN_INFO,
     DEL_PER_DATA
 };
@@ -49,7 +48,6 @@ public:
     virtual bool populateList(Evas_Object* genlist);
     virtual void updateButtonMap();
     static void _cookies_cb(void *data, Evas_Object*obj , void* event_info);
-    static void _suggestions_cb(void *data, Evas_Object*obj , void* event_info);
     static void _signin_cb(void *data, Evas_Object*obj , void* event_info);
     static void _del_per_data_cb(void *data, Evas_Object*obj , void* event_info);
 };
