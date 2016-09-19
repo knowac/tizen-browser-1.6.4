@@ -150,6 +150,9 @@ public:
 
     boost::signals2::signal<std::string ()> requestCurrentPageForWebPageUI;
     boost::signals2::signal<basic_webengine::State ()> getEngineState;
+#if PWA
+    boost::signals2::signal<void ()> pwaRequestManifest;
+#endif
 
 private:
     static void faviconClicked(void* data, Evas_Object* obj, const char* emission, const char* source);
@@ -169,8 +172,9 @@ private:
     static void _cm_desktop_view_page_clicked(void*, Evas_Object*, void*);
     static void _cm_mobile_view_page_clicked(void*, Evas_Object*, void*);
     static void _cm_settings_clicked(void*, Evas_Object*, void*);
+#if PWA
     static void _cm_add_to_hs_clicked(void*, Evas_Object*, void*);
-    static int result_cb(int ret, void *data);
+#endif
     static void launch_share(const char *uri);
 
     void createLayout();

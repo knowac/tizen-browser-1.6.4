@@ -58,6 +58,9 @@ public:
 
     void setURI(const std::string &);
     std::string getURI(void) const;
+#if PWA
+    void requestManifest(void);
+#endif
     std::string getTitle(void) const;
     TabOrigin getOrigin(void) const;
     std::string getUserAgent(void) const;
@@ -243,6 +246,10 @@ private:
     void _redirectedWebPage(const std::string& oldUrl, const std::string& newUrl);
     void _setCertificatePem(const std::string& uri, const std::string& pem);
     void _setWrongCertificatePem(const std::string& uri, const std::string& pem);
+#if PWA
+    void _resultDataManifest(std::string pwaData);
+    void _iconDownload(std::string download_uri);
+#endif
 #if PROFILE_MOBILE
     int _getRotation();
     void setWebViewSettings(std::shared_ptr<WebView> webView);

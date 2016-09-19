@@ -118,6 +118,7 @@ if(TIZEN_BUILD)
 
     if (${PROFILE} MATCHES "mobile")
         ADD_DEFINITIONS(-DPROFILE_MOBILE=1)
+        ADD_DEFINITIONS(-DPWA=0)
     endif (${PROFILE} MATCHES "mobile")
 
 endif(TIZEN_BUILD)

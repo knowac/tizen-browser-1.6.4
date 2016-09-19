@@ -83,6 +83,10 @@ public:
      */
     virtual std::string getURI(void) const = 0;
 
+#if PWA
+    virtual void requestManifest(void) = 0;
+#endif
+
     /**
      * @return title of page opened in current tab.
      */
@@ -566,6 +570,12 @@ public:
      * Switch fullscreenmode.
      */
     boost::signals2::signal<void(bool)> fullscreenModeSet;
+
+#if PWA
+    boost::signals2::signal<void (std::string)> resultDataManifest;
+
+    boost::signals2::signal<void (std::string)> iconDownload;
+#endif
 
 #if PROFILE_MOBILE
     /**

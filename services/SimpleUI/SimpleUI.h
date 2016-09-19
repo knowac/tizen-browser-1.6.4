@@ -274,6 +274,9 @@ private:
     void onSaveContentToClicked();
     std::string requestSettingsCurrentPage();
     void selectSettingsOtherPageChange();
+#if PWA
+    void resultDataManifest(std::string pwaData);
+#endif
 
     void onEditOtherPagePopupClicked(const std::string& newName);
     void showBookmarkFlowUI();

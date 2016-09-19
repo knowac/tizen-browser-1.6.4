@@ -147,6 +147,10 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
     webView->setCertificatePem.connect(boost::bind(&WebEngineService::_setCertificatePem, this, _1, _2));
     webView->setWrongCertificatePem.connect(boost::bind(&WebEngineService::_setWrongCertificatePem, this, _1, _2));
     webView->fullscreenModeSet.connect([this](auto state){fullscreenModeSet(state);});
+#if PWA
+    webView->resultDataManifest.connect(boost::bind(&WebEngineService::_resultDataManifest, this, _1));
+    webView->iconDownload.connect(boost::bind(&WebEngineService::_iconDownload, this, _1));
+#endif
 #if PROFILE_MOBILE
     webView->getRotation.connect(boost::bind(&WebEngineService::_getRotation, this));
     webView->unsecureConnection.connect(boost::bind(&WebEngineService::_unsecureConnection, this));
@@ -172,6 +176,10 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
     webView->IMEStateChanged.disconnect(boost::bind(&WebEngineService::_IMEStateChanged, this, _1));
     webView->redirectedWebPage.disconnect(boost::bind(&WebEngineService::_redirectedWebPage, this, _1, _2));
     webView->fullscreenModeSet.disconnect_all_slots();
+#if PWA
+    webView->resultDataManifest.disconnect(boost::bind(&WebEngineService::_resultDataManifest, this));
+    webView->iconDownload.disconnect(boost::bind(&WebEngineService::_iconDownload, this));
+#endif
 #if PROFILE_MOBILE
     webView->getRotation.disconnect(boost::bind(&WebEngineService::_getRotation, this));
     webView->unsecureConnection.disconnect(boost::bind(&WebEngineService::_unsecureConnection, this));
@@ -228,6 +236,26 @@ std::string WebEngineService::getURI() const
     else
         return std::string("");
 }
+
+#if PWA
+void WebEngineService::requestManifest()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_currentWebView->requestManifest();
+}
+
+void WebEngineService::_resultDataManifest(std::string pwaData)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    resultDataManifest(pwaData);
+}
+
+void WebEngineService::_iconDownload(std::string download_uri)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_downloadControl->launch_download_app(download_uri.c_str());
+}
+#endif
 
 bool WebEngineService::isLoadError() const
 {

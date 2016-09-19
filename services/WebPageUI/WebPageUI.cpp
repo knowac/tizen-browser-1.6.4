@@ -24,7 +24,6 @@
 #include "BrowserAssert.h"
 #include "UrlHistoryList/UrlHistoryList.h"
 #include "WebPageUIStatesManager.h"
-#include <shortcut_manager.h>
 #include <string>
 #include <app_control.h>
 
@@ -422,7 +421,9 @@ void WebPageUI::showContextMenu()
         }
 
         elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_SETTINGS"), nullptr, _cm_settings_clicked, this);
+#if PWA
         elm_ctxpopup_item_append(m_ctxpopup, "Add to Homescreen", nullptr, _cm_add_to_hs_clicked, this);
+#endif
         alignContextMenu(*window);
     } else
         BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
@@ -530,7 +531,7 @@ void WebPageUI::_cm_settings_clicked(void* data, Evas_Object*, void* )
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
-
+#if PWA
 void WebPageUI::_cm_add_to_hs_clicked(void* data, Evas_Object*, void* )
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -540,50 +541,14 @@ void WebPageUI::_cm_add_to_hs_clicked(void* data, Evas_Object*, void* )
         webPageUI->m_pwaInfo = std::make_shared<pwaInfo>();
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
 
-        std::string uri = webPageUI->getURI();
-
-        // TODO just test or temporary code. after will fixing from engine data receive.
-        webPageUI->m_pwaInfo->id = "test";
-        webPageUI->m_pwaInfo->decodedIcon = "Icon";
-        webPageUI->m_pwaInfo->uri = uri.c_str();
-        webPageUI->m_pwaInfo->name = "ProgressiveWebApp";
-        webPageUI->m_pwaInfo->shortName = "pwa";
-        webPageUI->m_pwaInfo->orientation = landscape_primary;
-        webPageUI->m_pwaInfo->displayMode = WebDisplayModeFullscreen;
-        webPageUI->m_pwaInfo->themeColor = 1.1;
-        webPageUI->m_pwaInfo->backgroundColor = 2.2;
-
-        std::string str = std::string("browser_shortcut://")
-            + "pwa_id:" + (webPageUI->m_pwaInfo->id) + "/"
-            + "pwa_decodedIcon:" + (webPageUI->m_pwaInfo->decodedIcon) + "/"
-            + "pwa_uri:" + (webPageUI->m_pwaInfo->uri) + "/"
-            + "pwa_name:" + (webPageUI->m_pwaInfo->name) + "/"
-            + "pwa_shortName:" + (webPageUI->m_pwaInfo->shortName) + "/"
-            + "pwa_orientation:" + std::to_string(webPageUI->m_pwaInfo->orientation) + "/"
-            + "pwa_displayMode:" + std::to_string(webPageUI->m_pwaInfo->displayMode) + "/"
-            + "pwa_themeColor:" + std::to_string(webPageUI->m_pwaInfo->themeColor) + "/"
-            + "pwa_backgroundColor:" + std::to_string(webPageUI->m_pwaInfo->backgroundColor) + "/";
-
-        BROWSER_LOGD("[%s:%d] str : %s", __PRETTY_FUNCTION__, __LINE__, str.c_str());
-
-        if (shortcut_add_to_home("PWA Sample", LAUNCH_BY_URI, str.c_str(), NULL, 0, result_cb, NULL) != SHORTCUT_ERROR_NONE) {
-            BROWSER_LOGE("[%s:%d] Fail to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
-        }
+        // send request API.
+        pwaRequestManifest();
     }
     else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
 }
-
-int WebPageUI::result_cb(int ret, void *data) {
-    if (data) {
-        BROWSER_LOGD("[%s:%d] ret : %d, data : %s", __PRETTY_FUNCTION__, __LINE__, ret, data);
-    }
-    else {
-        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
-    }
-    return 0;
-}
+#endif
 
 std::string WebPageUI::getURI() {
     auto retVal = requestCurrentPageForWebPageUI();

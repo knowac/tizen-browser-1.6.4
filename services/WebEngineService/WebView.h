@@ -84,7 +84,9 @@ public:
 
     void setURI(const std::string &);
     std::string getURI(void);
-
+#if PWA
+    void requestManifest(void);
+#endif
     std::string getTitle(void);
 
     std::string getUserAgent(void);
@@ -283,6 +285,10 @@ public:
     boost::signals2::signal<void (const std::string&, const std::string&)> redirectedWebPage;
     boost::signals2::signal<void()> unsecureConnection;
     boost::signals2::signal<void(bool)> fullscreenModeSet;
+#if PWA
+    boost::signals2::signal<void (std::string)> resultDataManifest;
+    boost::signals2::signal<void (std::string)> iconDownload;
+#endif
 
 protected:
     std::string getRedirectedURL() {return m_redirectedURL;};
@@ -295,6 +301,11 @@ private:
 
     static void __newWindowRequest(void * data, Evas_Object *, void *out);
     static void __closeWindowRequest(void * data, Evas_Object *, void *);
+
+#if PWA
+    static void dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void*);
+    static int result_cb(int ret, void *data);
+#endif
 
 #if  PROFILE_MOBILE
     context_menu_type _get_menu_type(Ewk_Context_Menu *menu);
@@ -379,6 +390,9 @@ private:
     std::map<CertificateConfirmationPtr, Ewk_Certificate_Policy_Decision *> m_confirmationCertificatenMap;
 
     static const std::string COOKIES_PATH;
+#if PWA
+    static std::string m_pwaData;
+#endif
 
 #if PROFILE_MOBILE
     int m_status_code;

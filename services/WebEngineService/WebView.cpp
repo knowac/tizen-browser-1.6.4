@@ -43,6 +43,8 @@
 #include "GeneralTools.h"
 #include "Tools/WorkQueue.h"
 #include "ServiceManager.h"
+#include <shortcut_manager.h>
+#include <string>
 
 #if PROFILE_MOBILE
 #include <device/haptic.h>
@@ -70,6 +72,9 @@ namespace basic_webengine {
 namespace webengine_service {
 
 const std::string WebView::COOKIES_PATH = "cookies";
+#if PWA
+std::string WebView::m_pwaData = "";
+#endif
 
 struct SnapshotItemData {
     WebView * web_view;
@@ -663,6 +668,105 @@ std::string WebView::getURI(void)
     BROWSER_LOGD("[%s:%d] uri=%s", __PRETTY_FUNCTION__, __LINE__, ewk_view_url_get(m_ewkView));
     return fromChar(ewk_view_url_get(m_ewkView));
 }
+
+#if PWA
+void WebView::requestManifest(void)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    ewk_view_request_manifest(m_ewkView, dataSetManifest, this);
+}
+
+void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void* data)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    WebView * self = reinterpret_cast<WebView *>(data);
+
+    if (view) {
+        const char* short_name(ewk_manifest_short_name_get(manifest));
+        const char* name(ewk_manifest_name_get(manifest));
+        const char* start_url(ewk_manifest_start_url_get(manifest));
+        const char* icon_src(ewk_manifest_icons_src_get(manifest, 0));
+        int orientation_type = ewk_manifest_orientation_type_get(manifest);
+        int display_mode = ewk_manifest_web_display_mode_get(manifest);
+        long theme_color = ewk_manifest_theme_color_get(manifest);
+        long background_color = ewk_manifest_background_color_get(manifest);
+        size_t icon_count = ewk_manifest_icons_count_get(manifest);
+
+        std::string str_short_name = "";
+        std::string str_name = "";
+        std::string str_start_url = "";
+        std::string str_icon_src = "";
+
+        if (short_name != NULL) {
+            str_short_name = short_name;
+        }
+        if (name != NULL) {
+            str_name = name;
+        }
+        if (start_url != NULL) {
+            str_start_url = start_url;
+        }
+        if (icon_src != NULL) {
+            str_icon_src = icon_src;
+        }
+
+        std::string retVal("browser_shortcut:://");
+        retVal.append("pwa_shortName:"); retVal.append(str_short_name.c_str()); retVal.append(",");
+        retVal.append("pwa_name:"); retVal.append(str_name.c_str()); retVal.append(",");
+        retVal.append("pwa_uri:"); retVal.append(str_start_url.c_str()); retVal.append(",");
+        retVal.append("pwa_orientation:"); retVal.append(std::to_string(orientation_type)); retVal.append(",");
+        retVal.append("pwa_displayMode:"); retVal.append(std::to_string(display_mode)); retVal.append(",");
+        retVal.append("pwa_themeColor:"); retVal.append(std::to_string(theme_color)); retVal.append(",");
+        retVal.append("pwa_backgroundColor:"); retVal.append(std::to_string(background_color)); retVal.append(",");
+        retVal.append("icon_count:"); retVal.append(std::to_string(icon_count)); retVal.append(",");
+        retVal.append("icon_src:"); retVal.append(str_icon_src.c_str()); retVal.append(",");
+
+        BROWSER_LOGD("[%s:%d] retVal : %s", __PRETTY_FUNCTION__, __LINE__, retVal.c_str());
+        m_pwaData = retVal;
+        //self->iconDownload(icon_src);
+
+/*
+        size_t len = strlen(icon_src.c_str());
+        char array[100] = {0,};
+        for(int i = 0; i < (int)len; i++) {
+            array[i] = icon_src[i];
+        }
+        int key = 0;
+        std::string result = "";
+
+        for(int i = len-1; i >= 0; i--) {
+            if(array[i] == '/') {
+                key = i;
+                break;
+            }
+        }
+        for(int j = key+1; j < (int)len; j++) {
+            result = result + array[j];
+        }
+        BROWSER_LOGD("[%s:%d] result : %s", __PRETTY_FUNCTION__, __LINE__, result.c_str());
+        std::string icon = "/opt/usr/home/owner/content/Downloads/" + result;
+*/
+        if (shortcut_add_to_home(name, LAUNCH_BY_URI, start_url, NULL, 0, result_cb, NULL) != SHORTCUT_ERROR_NONE) {
+            BROWSER_LOGE("[%s:%d] Fail to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
+        } else {
+            BROWSER_LOGE("[%s:%d] Success to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
+            self->resultDataManifest(m_pwaData);
+        }
+        BROWSER_LOGD("[%s:%d] dataSetManifest callback function end!", __PRETTY_FUNCTION__, __LINE__);
+    }
+}
+
+int WebView::result_cb(int ret, void *data) {
+
+    if (data) {
+        BROWSER_LOGD("[%s:%d] ret : %d, data : %s", __PRETTY_FUNCTION__, __LINE__, ret, data);
+    } else {
+        BROWSER_LOGW("[%s] result_cb_data = nullptr", __PRETTY_FUNCTION__);
+    }
+    return 0;
+}
+#endif
 
 std::string WebView::getTitle(void)
 {
