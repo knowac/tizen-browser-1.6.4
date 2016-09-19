@@ -445,13 +445,8 @@ std::vector<std::shared_ptr<BookmarkItem> > BookmarkService::getBookmarks(int fo
     std::vector<std::shared_ptr<BookmarkItem> > bookmarks;
     int *ids = nullptr;
     int ids_count = 0;
-#if PROFILE_MOBILE
     if (bp_bookmark_adaptor_get_ids_p(&ids, &ids_count, -1, 0, folder_id,
-            ALL_TYPE, -1, -1, BP_BOOKMARK_O_SEQUENCE, 0) < 0) {
-#else
-    if (bp_bookmark_adaptor_get_ids_p(&ids, &ids_count, -1, 0, folder_id,
-            BOOKMARK_TYPE, -1, -1, BP_BOOKMARK_O_SEQUENCE, 0) < 0) {
-#endif
+            ALL_TYPE, -1, -1, BP_BOOKMARK_O_SEQUENCE, 0) < 0 || !ids_count) {
         errorPrint("bp_bookmark_adaptor_get_ids_p");
         return std::vector<std::shared_ptr<BookmarkItem>>();
     }
@@ -468,7 +463,8 @@ std::vector<std::shared_ptr<BookmarkItem> > BookmarkService::getBookmarks(int fo
                     title, std::string(""), bookmark_info.parent, bookmark_info.sequence);
 
             if (bookmark_info.thumbnail_length > 0) {
-                tools::BrowserImagePtr bi = std::make_shared<tizen_browser::tools::BrowserImage>(
+                tools::BrowserImagePtr bi =
+                    std::make_shared<tizen_browser::tools::BrowserImage>(
                         bookmark_info.thumbnail_width,
                         bookmark_info.thumbnail_height,
                         bookmark_info.thumbnail_length);

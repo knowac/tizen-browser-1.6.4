@@ -71,13 +71,13 @@ void TabService::errorPrint(std::string method) const
         tools::capiWebError::tabErrorToString(error_code).c_str());
 }
 
-std::shared_ptr<std::vector<basic_webengine::TabContent> > TabService::getAllTabs()
+std::shared_ptr<std::vector<basic_webengine::TabContent>> TabService::getAllTabs()
 {
     BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
     int* items = nullptr;
     int count;
-    auto vec = std::make_shared<std::vector<basic_webengine::TabContent> >(std::vector<basic_webengine::TabContent>());
-    if (bp_tab_adaptor_get_full_ids_p(&items, &count) < 0) {
+    auto vec = std::make_shared<std::vector<basic_webengine::TabContent>>(std::vector<basic_webengine::TabContent>());
+    if (bp_tab_adaptor_get_full_ids_p(&items, &count) < 0 || !count) {
         errorPrint("bp_tab_adaptor_get_full_ids_p");
         return vec;
     }

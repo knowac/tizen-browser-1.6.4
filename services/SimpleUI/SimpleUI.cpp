@@ -25,6 +25,10 @@
 #include <Edje.h>
 #include <Evas.h>
 #include <app.h>
+#include <thread>
+#include <future>
+#include <functional>
+
 #include "Config.h"
 #include "app_i18n.h"
 #include "TabService.h"
@@ -69,9 +73,7 @@ SimpleUI::SimpleUI()
     : AbstractMainWindow()
     , m_webPageUI()
     , m_bookmarkFlowUI()
-#if PROFILE_MOBILE
     , m_findOnPageUI()
-#endif
     , m_bookmarkManagerUI()
     , m_quickAccess()
     , m_historyUI()
@@ -84,10 +86,8 @@ SimpleUI::SimpleUI()
 #if PWA
     , m_pwa()
 #endif
-#if PROFILE_MOBILE
     , m_current_angle(0)
     , m_temp_angle(0)
-#endif
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     elm_init(0, nullptr);
@@ -97,7 +97,7 @@ SimpleUI::SimpleUI()
     int width;
     elm_win_screen_size_get(main_window, nullptr, nullptr, &width, nullptr);
     double config_scale_value = (double)(width)/SCALE_FACTOR;
-    tizen_browser::config::Config::getInstance().set(
+    config::Config::getInstance().set(
             "scale", static_cast<double>(elm_config_scale_get()/config_scale_value));
 
     elm_win_conformant_set(main_window, EINA_TRUE);
@@ -135,6 +135,10 @@ void SimpleUI::suspend()
 
 void SimpleUI::resume()
 {
+    if (!m_isSessionRestored) {
+        switchViewToQuickAccess();
+        m_isSessionRestored = true;
+    }
     m_webEngine->preinitializeWebViewCache();
     m_webEngine->resume();
 #if PROFILE_MOBILE
@@ -170,16 +174,20 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
     std::string url = _url;
     m_caller = _caller;
 
-    if(!m_initialised){
+    if (!m_initialised) {
         if (m_window.get()) {
-            m_tabLimit = boost::any_cast <int> (tizen_browser::config::Config::getInstance().get("TAB_LIMIT"));
-            m_favoritesLimit = boost::any_cast <int> (tizen_browser::config::Config::getInstance().get("FAVORITES_LIMIT"));
+            m_tabLimit = boost::any_cast<int>(config::Config::getInstance().get("TAB_LIMIT"));
+            m_favoritesLimit = boost::any_cast<int>(config::Config::getInstance().get("FAVORITES_LIMIT"));
 
             loadUIServices();
             loadModelServices();
 
-            connectModelSignals();
-            connectUISignals();
+            auto futureModelSig =
+                std::async(std::launch::async, [this](){connectModelSignals();});
+            auto futureUISig
+                = std::async(std::launch::async, [this](){connectUISignals();});
+            futureModelSig.get();
+            futureUISig.get();
 
             // initModelServices() needs to be called after initUIServices()
             initUIServices();
@@ -187,10 +195,9 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
 
             //Push first view to stack.
             m_viewManager.pushViewToStack(m_webPageUI.get());
-#if PROFILE_MOBILE
+
             // Register H/W back key callback
             m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
-#endif
         }
 #if PWA
         // Progressive web app
@@ -208,17 +215,14 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
                 rotationType(rotationLock::landscape);
         }
 #endif
-        if (url.empty())
-        {
+        if (url.empty()) {
             BROWSER_LOGD("[%s]: restore last session", __func__);
-            switchViewToQuickAccess();
             restoreLastSession();
         }
         m_initialised = true;
     }
 
-    if (!url.empty())
-    {
+    if (!url.empty()) {
         BROWSER_LOGD("[%s]: open new tab", __func__);
         openNewTab(url);
     }
@@ -238,8 +242,9 @@ void SimpleUI::restoreLastSession()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    auto vec = m_tabService->getAllTabs();
-    for (const basic_webengine::TabContent& i : *vec) {
+    m_isSessionRestored = false;
+    auto vec(m_tabService->getAllTabs());
+    for (const auto& i : *vec) {
         openNewTab(
             i.getUrl(),
             i.getTitle(),
@@ -247,74 +252,106 @@ void SimpleUI::restoreLastSession()
             false,
             false,
             i.getOrigin());
+        m_isSessionRestored = true;
     }
 }
 
-
-//TODO: Move all service creation here:
 void SimpleUI::loadUIServices()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     m_webPageUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::WebPageUI,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.webpageui"));
+        std::dynamic_pointer_cast<base_ui::WebPageUI, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.webpageui"));
 
     m_quickAccess =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::QuickAccess,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.quickaccess"));
-
-    m_tabUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::TabUI,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.tabui"));
+        std::dynamic_pointer_cast<base_ui::QuickAccess, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.quickaccess"));
 
     m_historyUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::HistoryUI, tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.historyui"));
+        std::dynamic_pointer_cast<base_ui::HistoryUI, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.historyui"));
 
-    m_settingsManager =
-        std::dynamic_pointer_cast
-        <SettingsManager, tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.settingsui"));
-    m_settingsUI = m_settingsManager->getView(SettingsMainOptions::BASE);
+    m_tabUI =
+        std::dynamic_pointer_cast<base_ui::TabUI, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.tabui"));
 
-    m_bookmarkFlowUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::BookmarkFlowUI,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.bookmarkflowui"));
-#if PROFILE_MOBILE
-    m_findOnPageUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::FindOnPageUI,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.findonpageui"));
-#else
-    m_zoomUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::ZoomUI, tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.zoomui"));
-#endif
-    m_bookmarkManagerUI =
-        std::dynamic_pointer_cast
-        <tizen_browser::base_ui::BookmarkManagerUI,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.bookmarkmanagerui"));
+    auto futureSettings(std::async(std::launch::async, [this](){
+        m_settingsManager =
+            std::dynamic_pointer_cast<SettingsManager, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.settingsui"));
+        m_settingsUI = m_settingsManager->getView(SettingsMainOptions::BASE);
+    }));
+    auto futureBookmarkFlow(std::async(std::launch::async, [this](){
+        m_bookmarkFlowUI =
+            std::dynamic_pointer_cast<base_ui::BookmarkFlowUI, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.bookmarkflowui"));
+    }));
+    auto futureFindOnPage(std::async(std::launch::async, [this](){
+        m_findOnPageUI =
+            std::dynamic_pointer_cast<base_ui::FindOnPageUI, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.findonpageui"));
+    }));
+    auto futureBookmarksMan(std::async(std::launch::async, [this](){
+        m_bookmarkManagerUI =
+            std::dynamic_pointer_cast<base_ui::BookmarkManagerUI, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.bookmarkmanagerui"));
+    }));
+    futureSettings.get();
+    futureBookmarkFlow.get();
+    futureFindOnPage.get();
+    futureBookmarksMan.get();
 }
 
-void SimpleUI::connectUISignals()
+void SimpleUI::loadModelServices()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-#if PROFILE_MOBILE
-    m_viewManager.isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-#endif
 
+    m_webEngine =
+        std::dynamic_pointer_cast
+        <basic_webengine::AbstractWebEngine, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.webengineservice"));
+
+    m_historyService =
+        std::dynamic_pointer_cast
+        <services::HistoryService, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.historyservice"));
+
+    m_platformInputManager =
+        std::dynamic_pointer_cast
+        <services::PlatformInputManager, core::AbstractService>(
+            core::ServiceManager::getInstance().getService("org.tizen.browser.platforminputmanager"));
+
+    auto futureStorage(std::async(std::launch::async, [this](){
+        m_storageService = std::dynamic_pointer_cast
+            <services::StorageService, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.storageservice"));
+    }));
+    auto futureTab(std::async(std::launch::async, [this](){
+        m_tabService = std::dynamic_pointer_cast<
+            services::TabService, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.tabservice"));
+    }));
+    auto futureFavourite(std::async(std::launch::async, [this](){
+        m_favoriteService = std::dynamic_pointer_cast
+            <interfaces::AbstractFavoriteService, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.favoriteservice"));
+    }));
+    auto futureCertificates(std::async(std::launch::async, [this](){
+        m_certificateContents = std::dynamic_pointer_cast
+            <services::CertificateContents, core::AbstractService>(
+                core::ServiceManager::getInstance().getService("org.tizen.browser.certificateservice"));
+    }));
+    futureStorage.get();
+    futureTab.get();
+    futureFavourite.get();
+    futureCertificates.get();
+}
+
+void SimpleUI::connectWebPageSignals()
+{
     M_ASSERT(m_webPageUI.get());
     m_webPageUI->getURIEntry().uriChanged.connect(boost::bind(&SimpleUI::filterURL, this, _1));
-//    m_webPageUI->getURIEntry().uriEntryEditingChangedByUser.connect(boost::bind(&SimpleUI::onURLEntryEditedByUser, this, _1));
-//    m_webPageUI->getUrlHistoryList()->openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1));
-//    m_webPageUI->getUrlHistoryList()->uriChanged.connect(boost::bind(&SimpleUI::filterURL, this, _1));
     m_webPageUI->backPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
     m_webPageUI->backPage.connect(boost::bind(&basic_webengine::AbstractWebEngine::back, m_webEngine.get()));
     m_webPageUI->showTabUI.connect(boost::bind(&SimpleUI::showTabUI, this));
@@ -359,7 +396,10 @@ void SimpleUI::connectUISignals()
     m_webPageUI->pwaRequestManifest.connect(boost::bind(&basic_webengine::AbstractWebEngine::requestManifest, m_webEngine.get()));
 #endif
     m_webPageUI->isMostVisited.connect(boost::bind(&QuickAccess::isMostVisitedActive, m_quickAccess.get()));
+}
 
+void SimpleUI::connectQuickAccessSignals()
+{
     M_ASSERT(m_quickAccess.get());
     m_quickAccess->openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2));
     m_quickAccess->getMostVisitedItems.connect(boost::bind(&SimpleUI::onMostVisitedClicked, this));
@@ -367,10 +407,11 @@ void SimpleUI::connectUISignals()
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
     m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
     m_quickAccess->deleteQuickAccessItem.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
-#if PROFILE_MOBILE
     m_quickAccess->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
-#endif
+}
 
+void SimpleUI::connectTabsSignals()
+{
     M_ASSERT(m_tabUI.get());
     m_tabUI->closeTabUIClicked.connect(boost::bind(&SimpleUI::closeTabUI, this));
     m_tabUI->newTabClicked.connect(boost::bind(&SimpleUI::newTabClicked, this));
@@ -402,27 +443,30 @@ void SimpleUI::connectUISignals()
     m_tabUI->getPasswordUI().getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool,
         &m_storageService->getSettingsStorage(), _1, false));
     m_tabUI->getPasswordUI().changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
+}
 
+void SimpleUI::connectHistorySignals()
+{
     M_ASSERT(m_historyUI.get());
     m_historyUI->clearHistoryClicked.connect(boost::bind(&SimpleUI::onClearHistoryAllClicked, this));
     m_historyUI->signalDeleteHistoryItems.connect(boost::bind(&SimpleUI::onDeleteHistoryItems, this, _1));
     m_historyUI->closeHistoryUIClicked.connect(boost::bind(&SimpleUI::closeHistoryUI, this));
     m_historyUI->signalHistoryItemClicked.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2, false));
     m_historyUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
+}
 
-    connectSettingsSignals();
-
+void SimpleUI::connectBookmarkFlowSignals()
+{
     M_ASSERT(m_bookmarkFlowUI.get());
     m_bookmarkFlowUI->closeBookmarkFlowClicked.connect(boost::bind(&SimpleUI::closeBookmarkFlowUI, this));
     m_bookmarkFlowUI->saveBookmark.connect(boost::bind(&SimpleUI::addBookmark, this, _1));
     m_bookmarkFlowUI->editBookmark.connect(boost::bind(&SimpleUI::editBookmark, this, _1));
     m_bookmarkFlowUI->showSelectFolderUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
         _1, BookmarkManagerState::SelectFolder));
+}
 
-    M_ASSERT(m_findOnPageUI.get());
-    m_findOnPageUI->closeFindOnPageUIClicked.connect(boost::bind(&SimpleUI::closeFindOnPageUI, this));
-    m_findOnPageUI->startFindingWord.connect(boost::bind(&SimpleUI::findWord, this, _1));
-
+void SimpleUI::connectBookmarkManagerSignals()
+{
     M_ASSERT(m_bookmarkManagerUI.get());
     m_bookmarkManagerUI->closeBookmarkManagerClicked.connect(boost::bind(&SimpleUI::closeBookmarkManagerUI, this));
     m_bookmarkManagerUI->folderSelected.connect(boost::bind(&BookmarkFlowUI::setFolder, m_bookmarkFlowUI.get(), _1));
@@ -436,60 +480,17 @@ void SimpleUI::connectUISignals()
     m_bookmarkManagerUI->getHistoryGenlistContent.connect(boost::bind(&SimpleUI::showHistoryUI, this, _1, _2, _3));
     m_bookmarkManagerUI->removeSelectedItemsFromHistory.connect(boost::bind(&HistoryUI::removeSelectedHistoryItems, m_historyUI.get()));
     m_bookmarkManagerUI->isEngineSecretMode.connect(boost::bind(&basic_webengine::AbstractWebEngine::isSecretMode, m_webEngine.get()));
-#if PROFILE_MOBILE
-    // TODO: delete dead code
-#else
-    M_ASSERT(m_zoomUI.get());
-    m_zoomUI->setZoom.connect(boost::bind(&SimpleUI::setZoomFactor, this, _1));
-    m_zoomUI->getZoom.connect(boost::bind(&SimpleUI::getZoomFactor, this));
-    m_zoomUI->scrollView.connect(boost::bind(&SimpleUI::scrollView, this, _1, _2));
-#endif
 }
 
-void SimpleUI::loadModelServices()
+void SimpleUI::connectFindOnPageSignals()
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
-    m_webEngine =
-        std::dynamic_pointer_cast
-        <basic_webengine::AbstractWebEngine,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.webengineservice"));
-
-    m_storageService =
-        std::dynamic_pointer_cast
-        <tizen_browser::services::StorageService,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.storageservice"));
-
-    m_favoriteService =
-        std::dynamic_pointer_cast
-        <tizen_browser::interfaces::AbstractFavoriteService,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.favoriteservice"));
-
-    m_historyService =
-        std::dynamic_pointer_cast
-        <tizen_browser::services::HistoryService,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.historyservice"));
-
-    m_tabService = std::dynamic_pointer_cast<
-            tizen_browser::services::TabService,
-            tizen_browser::core::AbstractService>(
-            tizen_browser::core::ServiceManager::getInstance().getService(
-                    "org.tizen.browser.tabservice"));
-
-    m_platformInputManager =
-        std::dynamic_pointer_cast
-        <tizen_browser::services::PlatformInputManager,tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.platforminputmanager"));
-
-    m_certificateContents =
-        std::dynamic_pointer_cast
-        <tizen_browser::services::CertificateContents, tizen_browser::core::AbstractService>
-        (tizen_browser::core::ServiceManager::getInstance().getService("org.tizen.browser.certificateservice"));
+    M_ASSERT(m_findOnPageUI.get());
+    m_findOnPageUI->closeFindOnPageUIClicked.connect(boost::bind(&SimpleUI::closeFindOnPageUI, this));
+    m_findOnPageUI->startFindingWord.connect(boost::bind(&SimpleUI::findWord, this, _1));
 }
 
 void SimpleUI::connectSettingsSignals()
 {
-    M_ASSERT(m_settingsUI.get());
     M_ASSERT(m_settingsManager.get());
 
     // SETTINGS OVERALL
@@ -503,7 +504,7 @@ void SimpleUI::connectSettingsSignals()
             &basic_webengine::AbstractWebEngine::getSettingsParam,
             m_webEngine.get(),
             _1));
-    SPSC. getWebEngineSettingsParamString.connect(
+    SPSC.getWebEngineSettingsParamString.connect(
         boost::bind(
             &storage::SettingsStorage::getParamString,
             &m_storageService->getSettingsStorage(),
@@ -546,67 +547,8 @@ void SimpleUI::connectSettingsSignals()
         boost::bind(&SimpleUI::settingsDeleteSelectedData, this,_1));
 }
 
-void SimpleUI::initUIServices()
+void SimpleUI::connectWebEngineSignals()
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
-    M_ASSERT(m_webPageUI.get());
-    m_webPageUI->init(m_viewManager.getContent());
-
-    M_ASSERT(m_quickAccess.get());
-    m_quickAccess->init(m_webPageUI->getContent());
-
-    M_ASSERT(m_tabUI.get());
-    m_tabUI->init(m_viewManager.getContent());
-
-    M_ASSERT(m_historyUI.get());
-    m_historyUI->init(m_viewManager.getContent());
-
-    M_ASSERT(m_settingsUI.get());
-    m_settingsUI->init(m_viewManager.getContent());
-
-    M_ASSERT(m_bookmarkFlowUI.get());
-    m_bookmarkFlowUI->init(m_viewManager.getContent());
-#if PROFILE_MOBILE
-    M_ASSERT(m_findOnPageUI.get());
-    m_findOnPageUI->init(m_webPageUI->getContent());
-#else
-    M_ASSERT(m_zoomUI.get());
-    m_zoomUI->init(m_viewManager.getContent());
-#endif
-
-    M_ASSERT(m_bookmarkManagerUI.get());
-    m_bookmarkManagerUI->init(m_viewManager.getContent());
-}
-
-void SimpleUI::initModelServices()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
-    M_ASSERT(m_webEngine.get());
-    M_ASSERT(m_webPageUI.get());
-    m_webEngine->init(m_webPageUI->getContent());
-
-#if PROFILE_MOBILE
-    M_ASSERT(m_storageService->getSettingsStorage());
-    M_ASSERT(m_storageService->getFoldersStorage());
-    m_storageService->getSettingsStorage().initWebEngineSettingsFromDB();
-#endif
-
-    M_ASSERT(m_favoriteService);
-    m_favoriteService->getBookmarks();
-
-    M_ASSERT(m_platformInputManager);
-    m_platformInputManager->init(m_window.get());
-
-    M_ASSERT(m_certificateContents.get());
-    m_certificateContents->init();
-}
-
-void SimpleUI::connectModelSignals()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
     m_webEngine->minimizeBrowser.connect(boost::bind(&SimpleUI::minimizeBrowser, this));
     m_webEngine->uriChanged.connect(boost::bind(&URIEntry::changeUri, &m_webPageUI->getURIEntry(), _1));
     m_webEngine->downloadStarted.connect(boost::bind(&SimpleUI::downloadStarted, this, _1));
@@ -630,37 +572,121 @@ void SimpleUI::connectModelSignals()
     m_webEngine->setCertificatePem.connect(boost::bind(&services::CertificateContents::saveCertificateInfo, m_certificateContents, _1, _2));
     m_webEngine->setWrongCertificatePem.connect(boost::bind(&services::CertificateContents::saveWrongCertificateInfo, m_certificateContents, _1, _2));
     m_webEngine->fullscreenModeSet.connect(boost::bind(&WebPageUI::fullscreenModeSet, m_webPageUI.get(), _1));
-#if PROFILE_MOBILE
+#if PWA
+    m_webEngine->resultDataManifest.connect(boost::bind(&SimpleUI::resultDataManifest, this, _1));
+#endif
     m_webEngine->confirmationRequest.connect(boost::bind(&SimpleUI::handleConfirmationRequest, this, _1));
     m_webEngine->getRotation.connect(boost::bind(&SimpleUI::getRotation, this));
     m_webEngine->openFindOnPage.connect(boost::bind(&SimpleUI::showFindOnPageUI, this, _1));
     m_webEngine->closeFindOnPage.connect(boost::bind(&SimpleUI::closeFindOnPageUI, this));
     m_webEngine->unsecureConnection.connect(boost::bind(&SimpleUI::showUnsecureConnectionPopup, this));
-#endif
-
-    m_historyService->historyDeleted.connect(boost::bind(&SimpleUI::onHistoryRemoved, this,_1));
-
-    m_tabService->generateThumb.connect(boost::bind(&SimpleUI::onGenerateThumb, this, _1));
-    m_tabService->generateFavicon.connect(boost::bind(&SimpleUI::onGenerateFavicon, this, _1));
-
-    m_platformInputManager->returnPressed.connect(boost::bind(&elm_exit));
-    m_platformInputManager->backPressed.connect(boost::bind(&SimpleUI::onBackPressed, this));
-#if !PROFILE_MOBILE
-    m_platformInputManager->escapePressed.connect(boost::bind(&SimpleUI::onEscapePressed, this));
-    m_platformInputManager->redPressed.connect(boost::bind(&SimpleUI::onRedKeyPressed, this));
-    m_platformInputManager->yellowPressed.connect(boost::bind(&SimpleUI::onYellowKeyPressed, this));
-#endif
-
-    m_certificateContents->getHostCertList.connect(boost::bind(&storage::CertificateStorage::getHostCertList, &m_storageService->getCertificateStorage()));
-    m_certificateContents->addOrUpdateCertificateEntry.connect(boost::bind(&storage::CertificateStorage::addOrUpdateCertificateEntry, &m_storageService->getCertificateStorage(), _1, _2, _3));
-
-#if PROFILE_MOBILE
-    m_storageService->getSettingsStorage().setWebEngineSettingsParam.connect(boost::bind(&basic_webengine::AbstractWebEngine::setSettingsParam, m_webEngine.get(), _1, _2));
-    m_platformInputManager->menuButtonPressed.connect(boost::bind(&SimpleUI::onMenuButtonPressed, this));
-    m_platformInputManager->XF86BackPressed.connect(boost::bind(&SimpleUI::onXF86BackPressed, this));
     m_webEngine->registerHWKeyCallback.connect(boost::bind(&SimpleUI::registerHWKeyCallback, this));
     m_webEngine->unregisterHWKeyCallback.connect(boost::bind(&SimpleUI::unregisterHWKeyCallback, this));
-#endif
+}
+
+void SimpleUI::connectHistoryServiceSignals()
+{
+    m_historyService->historyDeleted.connect(boost::bind(&SimpleUI::onHistoryRemoved, this,_1));
+}
+
+void SimpleUI::connectTabServiceSignals()
+{
+    m_tabService->generateThumb.connect(boost::bind(&SimpleUI::onGenerateThumb, this, _1));
+    m_tabService->generateFavicon.connect(boost::bind(&SimpleUI::onGenerateFavicon, this, _1));
+}
+
+void SimpleUI::connectPlatformInputSignals()
+{
+    m_platformInputManager->returnPressed.connect(boost::bind(&elm_exit));
+    m_platformInputManager->backPressed.connect(boost::bind(&SimpleUI::onBackPressed, this));
+    m_platformInputManager->menuButtonPressed.connect(boost::bind(&SimpleUI::onMenuButtonPressed, this));
+    m_platformInputManager->XF86BackPressed.connect(boost::bind(&SimpleUI::onXF86BackPressed, this));
+}
+
+void SimpleUI::connectCertificateSignals()
+{
+    m_certificateContents->getHostCertList.connect(boost::bind(&storage::CertificateStorage::getHostCertList, &m_storageService->getCertificateStorage()));
+    m_certificateContents->addOrUpdateCertificateEntry.connect(boost::bind(&storage::CertificateStorage::addOrUpdateCertificateEntry, &m_storageService->getCertificateStorage(), _1, _2, _3));
+}
+
+void SimpleUI::connectStorageSignals()
+{
+    m_storageService->getSettingsStorage().setWebEngineSettingsParam.connect(boost::bind(&basic_webengine::AbstractWebEngine::setSettingsParam, m_webEngine.get(), _1, _2));
+}
+
+void SimpleUI::connectUISignals()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_viewManager.isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
+    connectWebPageSignals();
+    connectQuickAccessSignals();
+    connectTabsSignals();
+    connectHistorySignals();
+    connectSettingsSignals();
+    connectBookmarkFlowSignals();
+    connectFindOnPageSignals();
+    connectBookmarkManagerSignals();
+}
+
+void SimpleUI::connectModelSignals()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    connectWebEngineSignals();
+    connectHistorySignals();
+    connectTabServiceSignals();
+    connectPlatformInputSignals();
+    connectCertificateSignals();
+    connectStorageSignals();
+}
+
+void SimpleUI::initUIServices()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto viewManager(m_viewManager.getContent());
+
+    M_ASSERT(m_webPageUI.get());
+    m_webPageUI->init(viewManager);
+
+    auto webPageUI(m_webPageUI->getContent());
+    M_ASSERT(m_quickAccess.get());
+    m_quickAccess->init(webPageUI);
+
+    M_ASSERT(m_tabUI.get());
+    m_tabUI->init(viewManager);
+
+    M_ASSERT(m_historyUI.get());
+    m_historyUI->init(viewManager);
+
+    M_ASSERT(m_settingsUI.get());
+    m_settingsUI->init(viewManager);
+
+    M_ASSERT(m_bookmarkFlowUI.get());
+    m_bookmarkFlowUI->init(viewManager);
+
+    M_ASSERT(m_findOnPageUI.get());
+    m_findOnPageUI->init(webPageUI);
+
+    M_ASSERT(m_bookmarkManagerUI.get());
+    m_bookmarkManagerUI->init(viewManager);
+}
+
+void SimpleUI::initModelServices()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    M_ASSERT(m_webEngine.get());
+    M_ASSERT(m_webPageUI.get());
+    m_webEngine->init(m_webPageUI->getContent());
+
+    M_ASSERT(m_storageService->getSettingsStorage());
+    m_storageService->getSettingsStorage().initWebEngineSettingsFromDB();
+
+    M_ASSERT(m_platformInputManager);
+    m_platformInputManager->init(m_window.get());
+
+    M_ASSERT(m_certificateContents.get());
+    m_certificateContents->init();
 }
 
 #if PROFILE_MOBILE
@@ -681,18 +707,17 @@ void SimpleUI::unregisterHWKeyCallback()
 void SimpleUI::switchViewToWebPage()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if(m_webEngine->isSuspended())
+    if (m_webEngine->isSuspended())
         m_webEngine->resume();
     m_webEngine->connectCurrentWebViewSignals();
     m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), m_webEngine->getURI(), m_webEngine->isLoading());
 }
 
-void SimpleUI::switchToTab(const tizen_browser::basic_webengine::TabId& tabId)
+void SimpleUI::switchToTab(const basic_webengine::TabId& tabId)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if(m_webEngine->currentTabId() != tabId) {
+    if (m_webEngine->currentTabId() != tabId)
         m_webEngine->switchToTab(tabId);
-    }
     switchViewToWebPage();
 }
 
@@ -723,7 +748,7 @@ void SimpleUI::openNewTab(const std::string &uri, const std::string& title,
         bool incognitoMode, basic_webengine::TabOrigin origin)
 {
     BROWSER_LOGD("[%s:%d] uri =%s", __PRETTY_FUNCTION__, __LINE__, uri.c_str());
-    tizen_browser::basic_webengine::TabId tab = m_webEngine->addTab(uri,
+    basic_webengine::TabId tab = m_webEngine->addTab(uri,
             adaptorId, title, desktopMode, origin);
     if (tab == basic_webengine::TabId::NONE) {
         BROWSER_LOGW("[%s:%d] New tab is not created!", __PRETTY_FUNCTION__, __LINE__);
@@ -741,7 +766,7 @@ void SimpleUI::closeTab()
     closeTab(tabId);
 }
 
-void SimpleUI::closeTab(const tizen_browser::basic_webengine::TabId& id)
+void SimpleUI::closeTab(const basic_webengine::TabId& id)
 {
     BROWSER_LOGD("[%s:%d] id: %d", __PRETTY_FUNCTION__, __LINE__, id.get());
     m_tabService->removeTab(id);

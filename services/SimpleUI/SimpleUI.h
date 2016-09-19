@@ -282,7 +282,6 @@ private:
     void showBookmarkFlowUI();
     void closeBookmarkFlowUI();
     void showFindOnPageUI(const std::string& str);
-#if PROFILE_MOBILE
     void showCertificatePopup();
     void showCertificatePopup(const std::string& host, const std::string& pem, services::CertificateContents::HOST_TYPE type);
     void showUnsecureConnectionPopup();
@@ -297,9 +296,22 @@ private:
     bool isLandscape();
     int getRotation();
     void rotationType(rotationLock lock);
+    void connectWebPageSignals();
+    void connectQuickAccessSignals();
+    void connectTabsSignals();
+    void connectHistorySignals();
     void connectSettingsSignals();
+    void connectBookmarkFlowSignals();
+    void connectBookmarkManagerSignals();
+    void connectFindOnPageSignals();
+    void connectWebEngineSignals();
+    void connectHistoryServiceSignals();
+    void connectTabServiceSignals();
+    void connectPlatformInputSignals();
+    void connectCertificateSignals();
+    void connectStorageSignals();
+
     static void __orientation_changed(void* data, Evas_Object*, void*);
-#endif
     Evas_Object* getMainWindow();
     void closeBookmarkManagerUI();
     void showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
@@ -375,11 +387,10 @@ private:
     ProgressiveWebApp m_pwa;
 #endif
     SharedNaviframeWrapper m_QAEditNaviframe;
-#if PROFILE_MOBILE
     Evas_Object *m_conformant;
     int m_current_angle;
     int m_temp_angle;
-#endif
+    bool m_isSessionRestored;
 };
 
 }

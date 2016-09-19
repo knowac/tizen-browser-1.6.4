@@ -47,8 +47,6 @@ void ViewManager::init(Evas_Object* parentWindow)
     M_ASSERT(parentWindow);
 
     m_conformant = elm_conformant_add(parentWindow);
-     //tmp for TSAM-5664 rotation resize issue
-    //elm_win_indicator_mode_set(parentWindow, ELM_WIN_INDICATOR_SHOW);
     evas_object_size_hint_weight_set(m_conformant, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_show(m_conformant);
     elm_win_resize_object_add(parentWindow, m_conformant);
@@ -63,10 +61,10 @@ void ViewManager::init(Evas_Object* parentWindow)
     evas_object_show(m_mainLayout);
     elm_box_pack_end(bx, m_mainLayout);
 
-    Eina_Bool ret = elm_layout_file_set(m_mainLayout,
-                                        (std::string(EDJE_DIR)
-                                        + std::string("SimpleUI/ViewManager.edj")).c_str(),
-                                        "main_layout");
+    Eina_Bool ret = elm_layout_file_set(
+        m_mainLayout,
+        (std::string(EDJE_DIR) + std::string("SimpleUI/ViewManager.edj")).c_str(),
+        "main_layout");
     if (!ret)
         BROWSER_LOGD("[%s:%d]  elm_layout_file_set falied !!!",__PRETTY_FUNCTION__, __LINE__);
 
@@ -86,10 +84,8 @@ void ViewManager::popStackTo(interfaces::AbstractUIComponent* view)
     M_ASSERT(view);
     interfaces::AbstractUIComponent* previousView = m_viewStack.top();
 
-    while(!m_viewStack.empty() && m_viewStack.top() != view)
-    {
+    while (!m_viewStack.empty() && m_viewStack.top() != view)
         m_viewStack.pop();
-    }
     updateLayout(previousView);
     BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack());
 }
@@ -97,8 +93,7 @@ void ViewManager::popStackTo(interfaces::AbstractUIComponent* view)
 void ViewManager::popTheStack()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if(!m_viewStack.empty())
-    {
+    if (!m_viewStack.empty()) {
         interfaces::AbstractUIComponent* previousView = m_viewStack.top();
         m_viewStack.pop();
         updateLayout(previousView);
@@ -111,10 +106,10 @@ void ViewManager::pushViewToStack(interfaces::AbstractUIComponent* view)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     M_ASSERT(view);
-    if (topOfStack() == view)
-    {
-       BROWSER_LOGD("[%s:%d] View %p is already on stack !!!",
-                          __PRETTY_FUNCTION__, __LINE__, view);
+    if (topOfStack() == view) {
+       BROWSER_LOGD(
+           "[%s:%d] View %p is already on stack !!!",
+           __PRETTY_FUNCTION__, __LINE__, view);
        return;
     }
     interfaces::AbstractUIComponent* previousView = topOfStack();
@@ -128,17 +123,15 @@ void ViewManager::updateLayout(interfaces::AbstractUIComponent* previousView)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     Evas_Object* swallowed = elm_layout_content_get(m_mainLayout, "content");
-    if (!m_viewStack.empty())
-    {
-        if (topOfStack()->getContent() == swallowed)
-        {
-            BROWSER_LOGD("[%s:%d] Top of stack is already visible!!!",
-                         __PRETTY_FUNCTION__, __LINE__);
+    if (!m_viewStack.empty()) {
+        if (topOfStack()->getContent() == swallowed) {
+            BROWSER_LOGD(
+                "[%s:%d] Top of stack is already visible!!!",
+                __PRETTY_FUNCTION__, __LINE__);
             return;
         }
         elm_layout_content_unset(m_mainLayout, "content");
-        if (previousView)
-        {
+        if (previousView) {
             previousView->hideUI();
             evas_object_hide(previousView->getContent());
         }
@@ -146,13 +139,10 @@ void ViewManager::updateLayout(interfaces::AbstractUIComponent* previousView)
         evas_object_show(elm_layout_content_get(m_mainLayout, "content"));
 
         topOfStack()->showUI();
-    }
-    else
-    {
+    } else {
         BROWSER_LOGD("[%s:%d] Stack is empty!!!",__PRETTY_FUNCTION__, __LINE__);
         elm_layout_content_unset(m_mainLayout, "content");
-        if (previousView)
-        {
+        if (previousView) {
              previousView->hideUI();
              evas_object_hide(previousView->getContent());
         }
@@ -172,7 +162,7 @@ Evas_Object* ViewManager::getConformant() {
 
 interfaces::AbstractUIComponent* ViewManager::topOfStack()
 {
-    if(!m_viewStack.empty())
+    if (!m_viewStack.empty())
         return m_viewStack.top();
     else
         return nullptr;
