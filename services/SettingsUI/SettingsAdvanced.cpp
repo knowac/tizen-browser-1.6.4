@@ -64,16 +64,9 @@ void SettingsAdvanced::updateButtonMap()
     save_content.sui = this;
     save_content.id = SAVE_CONTENT;
 
-    ItemData manage_web_data;
-    manage_web_data.buttonText = _(Translations::SettingsAdvancedManageWebsiteData.c_str());
-    manage_web_data.subText = _(Translations::SettingsAdvancedManageWebsiteDataSub.c_str());
-    manage_web_data.sui = this;
-    manage_web_data.id = MANAGE_WEB_DATA;
-
     m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS] = enable_js;
     m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS] = block_popups;
     m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT] = save_content;
-    m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA] = manage_web_data;
 
     SPSC.setContentDestination.connect(
         boost::bind(&SettingsAdvanced::setContentDestination, this, _1));
@@ -125,11 +118,8 @@ bool SettingsAdvanced::populateList(Evas_Object* genlist)
         appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS], _block_popups_cb);
     m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT] =
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT], _save_content_cb);
-    m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA] =
-        appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::MANAGE_WEB_DATA], _manage_web_data_cb);
 
     changeGenlistStorage();
-    elm_object_item_disabled_set(m_genlistItems[SettingsAdvancedOptions::MANAGE_WEB_DATA], EINA_TRUE);
 
     return true;
 }
@@ -194,12 +184,6 @@ void SettingsAdvanced::_save_content_cb(void *, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     SPSC.settingsSaveContentToRadioPopup();
-}
-
-void SettingsAdvanced::_manage_web_data_cb(void *, Evas_Object*, void*)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    // TODO Implementation
 }
 
 void SettingsAdvanced::grid_item_check_changed(void* data, Evas_Object* obj, void*)
