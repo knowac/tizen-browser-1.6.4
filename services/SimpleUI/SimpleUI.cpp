@@ -322,6 +322,9 @@ void SimpleUI::connectUISignals()
     m_webPageUI->forwardPage.connect(boost::bind(&basic_webengine::AbstractWebEngine::forward, m_webEngine.get()));
     m_webPageUI->showQuickAccess.connect(boost::bind(&SimpleUI::showQuickAccess, this));
     m_webPageUI->hideQuickAccess.connect(boost::bind(&QuickAccess::hideUI, m_quickAccess));
+    m_webPageUI->getQuickAccessEditUI()->requestQuickAccessGengrid.connect(boost::bind(&QuickAccess::getQuickAccessGengrid, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->editingFinished.connect(boost::bind(&QuickAccess::editingFinished, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->closeUI.connect(boost::bind(&SimpleUI::closeTopView, this));
     m_webPageUI->focusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::setFocus, m_webEngine.get()));
     m_webPageUI->unfocusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::clearFocus, m_webEngine.get()));
     m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
@@ -1094,6 +1097,8 @@ void SimpleUI::onBackPressed()
         m_popupVector.back()->onBackPressed();
     } else if (m_viewManager.topOfStack() == m_bookmarkManagerUI.get()) {
         m_bookmarkManagerUI->onBackPressed();
+    } else if (m_viewManager.topOfStack() == m_webPageUI->getQuickAccessEditUI().get()) {
+        m_webPageUI->getQuickAccessEditUI()->backPressed();
     } else if (m_viewManager.topOfStack() == nullptr) {
         switchViewToQuickAccess();
     } else if ((m_viewManager.topOfStack() == m_webPageUI.get())) {
@@ -1721,6 +1726,7 @@ void SimpleUI::editQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_quickAccess->editQuickAccess();
+    m_viewManager.pushViewToStack(m_webPageUI->getQuickAccessEditUI().get());
 }
 
 void SimpleUI::addQuickAccess()

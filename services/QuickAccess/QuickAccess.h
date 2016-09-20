@@ -29,9 +29,15 @@
 #include "services/HistoryService/HistoryItem.h"
 #include "services/HistoryService/HistoryItemTypedef.h"
 #include "BookmarkItem.h"
+#include "NaviframeWrapper.h"
 
 namespace tizen_browser{
 namespace base_ui{
+
+enum class QuickAccessState {
+    Default,
+    Edit,
+};
 
 class BROWSER_EXPORT QuickAccess
         : public tizen_browser::core::AbstractService
@@ -42,6 +48,8 @@ public:
     ~QuickAccess();
     void init(Evas_Object *main_layout);
     Evas_Object* getContent();
+    Evas_Object* getQuickAccessGengrid() {return m_quickAccessGengrid;}
+    void setQuickAccessState(QuickAccessState state) {m_state = state;}
     void setMostVisitedItems(std::shared_ptr<services::HistoryItemVector> vec);
     void setQuickAccessItems(std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > vec);
     void hideUI();
@@ -56,6 +64,7 @@ public:
     void showMostVisited();
     void showQuickAccess();
     void editQuickAccess();
+    void editingFinished();
 
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, bool)> openURL;
     boost::signals2::signal<void ()> getMostVisitedItems;
@@ -119,9 +128,10 @@ private:
     Elm_Gengrid_Item_Class * m_quickAccess_item_class;
     Elm_Gengrid_Item_Class * m_mostVisited_item_class;
     std::shared_ptr<services::HistoryItemVector> m_mostVisitedItems;
-    bool m_gengridSetup;
     std::string edjFilePath;
     bool m_desktopMode;
+    QuickAccessState m_state;
+    SharedNaviframeWrapper m_naviframe;
 
     Evas_Object* m_index;
     Evas_Object* m_verticalScroller;

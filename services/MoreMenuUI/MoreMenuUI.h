@@ -156,7 +156,6 @@ private:
     Elm_Gengrid_Item_Class * m_item_class;
     std::map<ItemType,Elm_Object_Item*> m_map_menu_views;
     std::string m_edjFilePath;
-    bool m_gengridSetup;
     bool m_desktopMode;
 #if PROFILE_MOBILE
     bool m_shouldShowFindOnPage;

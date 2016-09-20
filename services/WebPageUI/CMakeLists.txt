@@ -4,6 +4,7 @@ set(WebPageUI_SRCS
     WebPageUI.cpp
     WebPageUIStatesManager.cpp
     ButtonBar.cpp
+    EditQuickAccessUI.cpp
     URIEntry.cpp
     UrlHistoryList/UrlHistoryList.cpp
     UrlHistoryList/GenlistManager.cpp

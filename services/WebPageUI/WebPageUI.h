@@ -28,6 +28,7 @@
 #include "ButtonBar.h"
 #include "URIEntry.h"
 #include "AbstractWebEngine/State.h"
+#include "EditQuickAccessUI.h"
 
 namespace tizen_browser {
 namespace base_ui {
@@ -106,6 +107,7 @@ public:
     void switchViewToIncognitoPage();
     void switchViewToQuickAccess(Evas_Object* content);
     URIEntry& getURIEntry() const { return *m_URIEntry.get(); }
+    std::shared_ptr<EditQuickAccessUI> getQuickAccessEditUI() { return m_editQuickAccessUI; }
     void setTabsNumber(int tabs);
     void setBackButtonEnabled(bool enabled) { m_back->setEnabled(enabled); }
     void setForwardButtonEnabled(bool enabled) { m_forward->setEnabled(enabled); }
@@ -212,6 +214,7 @@ private:
     std::unique_ptr<ButtonBar> m_rightButtonBar;
     WPUStatesManagerPtr m_statesMgr;
     std::unique_ptr<URIEntry> m_URIEntry;
+    std::shared_ptr<EditQuickAccessUI> m_editQuickAccessUI;
     UrlHistoryPtr m_urlHistoryList;
     bool m_webviewLocked;
     bool m_WebPageUIvisible;

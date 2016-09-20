@@ -65,6 +65,7 @@
 #include "ViewManager.h"
 #include "MenuButton.h"
 #include "ProgressiveWebApp.h"
+#include "NaviframeWrapper.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -372,6 +373,7 @@ private:
     ViewManager m_viewManager;
     Evas_Object *main_window;
     ProgressiveWebApp m_pwa;
+    SharedNaviframeWrapper m_QAEditNaviframe;
 #if PROFILE_MOBILE
     Evas_Object *m_conformant;
     int m_current_angle;

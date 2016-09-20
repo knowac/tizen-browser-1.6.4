@@ -44,6 +44,7 @@ WebPageUI::WebPageUI()
     , m_bookmarkManagerButton(nullptr)
     , m_statesMgr(std::make_shared<WebPageUIStatesManager>(WPUState::MAIN_WEB_PAGE))
     , m_URIEntry(new URIEntry(m_statesMgr))
+    , m_editQuickAccessUI(std::make_shared<EditQuickAccessUI>())
     , m_urlHistoryList(std::make_shared<UrlHistoryList>(getStatesMgr()))
     , m_webviewLocked(false)
     , m_WebPageUIvisible(false)
@@ -67,6 +68,7 @@ void WebPageUI::init(Evas_Object* parent)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(parent);
     m_parent = parent;
+    m_editQuickAccessUI->init(parent);
 }
 
 Evas_Object* WebPageUI::getContent()

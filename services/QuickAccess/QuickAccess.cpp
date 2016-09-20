@@ -58,6 +58,7 @@ QuickAccess::QuickAccess()
     , m_currPage(QuickAccess::QUICKACCESS_PAGE)
     , m_quickAccess_item_class(nullptr)
     , m_mostVisited_item_class(nullptr)
+    , m_state(QuickAccessState::Default)
     , m_index(nullptr)
     , m_verticalScroller(nullptr)
     , m_quickAccess_tile_class(nullptr)
@@ -170,6 +171,7 @@ void QuickAccess::createQuickAccessLayout(Evas_Object* parent)
 
 void QuickAccess::createBox(Evas_Object* parent)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_box)
         elm_box_clear(m_box);
     m_box = elm_box_add(parent);
@@ -205,7 +207,7 @@ void QuickAccess::createMostVisitedView(Evas_Object * parent)
     evas_object_show(m_mostVisitedGengrid);
 }
 
-void QuickAccess::createQuickAccessView (Evas_Object * parent)
+void QuickAccess::createQuickAccessView(Evas_Object * parent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
@@ -468,11 +470,13 @@ Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object* o
 
             }
         }
-        if (!strcmp(part, "elm.button")) {
-            auto button = elm_button_add(obj);
-            elm_object_style_set(button, "delete_button");
-            evas_object_smart_callback_add(button, "clicked", __quckAccess_del_clicked, data);
-            return button;
+        if (itemData->quickAccess->m_state == QuickAccessState::Edit) {
+            if (!strcmp(part, "elm.button")) {
+                auto button = elm_button_add(obj);
+                elm_object_style_set(button, "delete_button");
+                evas_object_smart_callback_add(button, "clicked", __quckAccess_del_clicked, data);
+                return button;
+            }
         }
     }
     return nullptr;
@@ -490,6 +494,9 @@ void QuickAccess::__quckAccess_del_clicked(void *data, Evas_Object */*obj*/, voi
     BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__);
     auto itemData = static_cast<BookmarkItemData*>(data);
     itemData->quickAccess->deleteQuickAccessItem(itemData->item);
+
+    elm_object_item_del(elm_gengrid_selected_item_get(itemData->quickAccess->m_quickAccessGengrid));
+    elm_gengrid_realized_items_update(itemData->quickAccess->m_quickAccessGengrid);
 }
 
 char *QuickAccess::_grid_mostVisited_text_get(void *data, Evas_Object *, const char *part)
@@ -529,8 +536,10 @@ void QuickAccess::_thumbQuickAccessClicked(void * data, Evas_Object * , void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
-    itemData->quickAccess->openURL(itemData->item, itemData->quickAccess->isDesktopMode());
-    itemData->quickAccess->m_after_history_thumb = false;
+    if (itemData->quickAccess->m_state == QuickAccessState::Default) {
+        itemData->quickAccess->openURL(itemData->item, itemData->quickAccess->isDesktopMode());
+        itemData->quickAccess->m_after_history_thumb = false;
+    }
 }
 
 void QuickAccess::_thumbMostVisitedClicked(void* data, Evas_Object*, void*)
@@ -571,11 +580,17 @@ void QuickAccess::showQuickAccess()
 void QuickAccess::editQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
+    m_state = QuickAccessState::Edit;
+    showUI();
     elm_gengrid_reorder_mode_set(m_quickAccessGengrid, EINA_TRUE);
+}
 
-    //TODO: show delete buttons in corners
-
+void QuickAccess::editingFinished()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    elm_gengrid_reorder_mode_set(m_quickAccessGengrid, EINA_FALSE);
+    m_state = QuickAccessState::Default;
+    showUI();
 }
 
 void QuickAccess::showScrollerPage(int page)
@@ -596,25 +611,18 @@ void QuickAccess::showScrollerPage(int page)
 void QuickAccess::showUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
-    bool currentViewLandscape = isOrientationLandscape();
-    if (currentViewLandscape != m_landscapeView) {
-        m_landscapeView = currentViewLandscape;
-        createBox(m_horizontalScroller);
-    }
-
-    evas_object_show(m_layout);
-    getMostVisitedItems();
-    getQuickAccessItems();
+    orientationChanged();
     showScrollerPage(m_currPage);
 }
 
 void QuickAccess::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    evas_object_hide(m_layout);
-    clearMostVisitedGengrid();
-    clearQuickAccessGengrid();
+    if (m_state == QuickAccessState::Default) {
+        evas_object_hide(m_layout);
+        clearMostVisitedGengrid();
+        clearQuickAccessGengrid();
+    }
 }
 
 void QuickAccess::showNoMostVisitedLabel()
