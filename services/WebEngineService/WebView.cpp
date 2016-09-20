@@ -1551,8 +1551,10 @@ void WebView::clearCache()
 {
     BROWSER_LOGD("Clearing cache");
     M_ASSERT(m_ewkContext);
-    if (m_ewkContext)
+    if (m_ewkContext) {
         ewk_context_cache_clear(m_ewkContext);
+        ewk_context_application_cache_delete_all(m_ewkContext);
+    }
 }
 
 void WebView::clearCookies()
@@ -1571,6 +1573,7 @@ void WebView::clearPrivateData()
         ewk_context_cache_clear(m_ewkContext);
         ewk_context_web_storage_delete_all(m_ewkContext);
         ewk_cookie_manager_cookies_clear(ewk_context_cookie_manager_get(m_ewkContext));
+        ewk_context_application_cache_delete_all(m_ewkContext);
     }
 }
 
