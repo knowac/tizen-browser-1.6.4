@@ -59,7 +59,6 @@ private:
     std::map<std::string, sharedAction> m_actionsMap;
     //map button name to struct ActionButton which contains Evas_Object of button
     std::map<std::string, ActionButton> m_buttonsMap;
-    std::map<std::string, Evas_Object*> m_imgMap;
     Evas_Object* m_layout;
     void refreshButton(const std::string& buttonName);
     void onEnabledChanged(const std::string& buttonName, sharedAction action);

@@ -1,8 +1,10 @@
 #include "ImageButton.edc"
 #include "../../../core/Tools/edc/Spacer.edc"
+#include "../../../core/Tools/edc/ToolbarButton.edc"
 
 #define BUTTON_WIDTH 120
 #define BUTTON_HEIGHT 94
+#define BUTTON_TOP_PADDING 10
 #define TOOLBAR_HEIGHT 96
 #define SPACER_SIZE 20
 #define SPACER_LANDSCAPE 160
@@ -36,15 +38,11 @@
 
 collections { base_scale: 2.6;
 
-    IMAGE_BUTTON("toolbar_prev", ICON_SIZE, ICON_SIZE, "toolbar_ic_back.png")
-
-    IMAGE_BUTTON("toolbar_next", ICON_SIZE, ICON_SIZE, "toolbar_ic_forward.png")
-
-    IMAGE_BUTTON("toolbar_home", ICON_SIZE, ICON_SIZE, "toolbar_ic_home.png")
-
-    IMAGE_BUTTON("toolbar_bookmark", ICON_SIZE, ICON_SIZE, "toolbar_ic_bookmark.png")
-
-    IMAGE_BUTTON("toolbar_tabs", ICON_SIZE, ICON_SIZE, "toolbar_ic_tabs.png")
+    TOOLBAR_BUTTON("toolbar_prev" ,"toolbar_ic_back.png", BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_TOP_PADDING)
+    TOOLBAR_BUTTON("toolbar_next" ,"toolbar_ic_forward.png", BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_TOP_PADDING)
+    TOOLBAR_BUTTON("toolbar_home" ,"toolbar_ic_home.png", BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_TOP_PADDING)
+    TOOLBAR_BUTTON("toolbar_bookmark" ,"toolbar_ic_bookmark.png", BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_TOP_PADDING)
+    TOOLBAR_BUTTON("toolbar_tabs" ,"toolbar_ic_tabs.png", BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_TOP_PADDING)
 
     group {
         name: "bottom_button_bar";
@@ -91,7 +89,7 @@ collections { base_scale: 2.6;
                     visible: 1;
                     fixed: 1 1;
                     align: 0.0 0.0;
-                    color: 255 255 255 255;
+                    color_class: "button_secret";
                     min: BUTTON_WIDTH BUTTON_HEIGHT*3/4;
                     max: BUTTON_WIDTH BUTTON_HEIGHT*3/4;
                     rel1 { relative: 0.0 0.0; to: "tabs_button"; }
@@ -102,6 +100,11 @@ collections { base_scale: 2.6;
                         size: 19;
                         align: 0.5 0.5;
                     }
+                }
+                description {
+                    state: "secret" 0.0;
+                    inherit: "default" 0.0;
+                    color_class: "button_normal";
                 }
             }
 
@@ -126,6 +129,20 @@ collections { base_scale: 2.6;
                 target: "spacer_2";
                 target: "spacer_3";
                 target: "spacer_4";
+            }
+            program {
+                name: "set_normal_mode";
+                signal: "set_normal_mode";
+                source: "ui";
+                action: STATE_SET "default" 0.0;
+                target: "tabs_number";
+            }
+            program {
+                name: "set_secret_mode";
+                signal: "set_secret_mode";
+                source: "ui";
+                action: STATE_SET "secret" 0.0;
+                target: "tabs_number";
             }
         }
     }

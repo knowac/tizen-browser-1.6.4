@@ -134,7 +134,6 @@ void WebPageUI::showUI()
 #endif
 }
 
-
 void WebPageUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -569,14 +568,6 @@ void WebPageUI::createLayout()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_parent);
-
-    // set white base background for button
-    edje_color_class_set("elm/widget/button/default/bg-default", 255, 255, 255, 255,
-                    255, 255, 255, 255,
-                    255, 255, 255, 255);
-    edje_color_class_set("elm/widget/button/default/bg-disabled", 255, 255, 255, 255,
-                        255, 255, 255, 255,
-                        255, 255, 255, 255);
 
     // create web layout
     m_mainLayout = elm_layout_add(m_parent);
