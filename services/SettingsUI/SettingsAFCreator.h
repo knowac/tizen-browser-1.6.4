@@ -42,7 +42,7 @@ public:
     virtual bool populateLayout(Evas_Object* genlist);
     Evas_Object* createScroller(Evas_Object *parent);
     bool loadProfile(void);
-    void createNewAutoFillFormItem(Ewk_Autofill_Profile*);
+    void createNewAutoFillFormItem();
 private:
     Eina_Bool isEntryHasOnlySpace(const char* field);
     Eina_Bool applyEntryData(void);
@@ -76,6 +76,7 @@ private:
         Evas_Object* it;
     };
     void createInputLayout(Evas_Object* parent, char* fieldName, genlistCallbackData* cb_data);
+    void clearFields();
     void addItems();
 protected:
     std::map<unsigned, ItemData> m_buttonsMap;
@@ -84,7 +85,6 @@ protected:
 
     profileEditErrorcode m_editErrorcode;
     profileSaveErrorcode m_saveErrorcode;
-    Elm_Genlist_Item_Class *m_editFieldItemClass;
     Elm_Entry_Filter_Limit_Size m_entryLimitSize;
 
     genlistCallbackData m_fullNameItemCallbackData;
@@ -100,6 +100,7 @@ protected:
     std::shared_ptr<AutoFillFormItem> m_item;
     Ewk_Context* m_ewkContext;
     bool m_profile_exists;
+    Ewk_Autofill_Profile* m_profile;
 };
 
 }

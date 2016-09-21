@@ -27,6 +27,10 @@ SettingsAFProfile::SettingsAFProfile(Evas_Object* parent)
 {
     init(parent);
     SPSC.setProfileName.connect([this](std::string name){m_profileName = name;});
+    SPSC.autoFillCleared.connect([this](){
+        m_profileName.clear();
+        m_profile = nullptr;
+    });
 };
 
 SettingsAFProfile::~SettingsAFProfile()
@@ -50,11 +54,11 @@ void SettingsAFProfile::updateButtonMap()
             break;
         }
     }
-    if (!m_profile)
+    profileName.buttonText = m_profile ?
+        profileName.buttonText = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_NAME) :
         profileName.buttonText = _(Translations::SettingsAutoFillProfileSetMyProfile.c_str());
-    else if (m_profileName.empty())
-        profileName.buttonText = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_NAME);
-    else
+
+    if (!m_profileName.empty())
         profileName.buttonText = m_profileName;
     m_itemData = std::make_shared<ItemData>(profileName);
 }

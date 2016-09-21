@@ -37,12 +37,16 @@ SettingsAFCreator::SettingsAFCreator(Evas_Object* parent, bool profile_exists)
     , m_box(nullptr)
     , m_editErrorcode(update_error_none)
     , m_saveErrorcode(save_error_none)
-    , m_editFieldItemClass(nullptr)
     , m_item(nullptr)
     , m_ewkContext(ewk_context_default_get())
     , m_profile_exists(profile_exists)
+    , m_profile(nullptr)
 {
     init(parent);
+    SPSC.autoFillCleared.connect([this](){
+        m_profile_exists = false;
+        clearFields();
+    });
 };
 
 SettingsAFCreator::~SettingsAFCreator()
@@ -54,7 +58,6 @@ bool SettingsAFCreator::loadProfile(void)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    Ewk_Autofill_Profile* profile = nullptr;
     if (m_profile_exists) {
         void* item_data(nullptr);
         Eina_List* list(nullptr);
@@ -63,21 +66,21 @@ bool SettingsAFCreator::loadProfile(void)
 
         EINA_LIST_FOREACH(entire_item_list, list, item_data) {
             if (item_data) {
-                profile = static_cast<Ewk_Autofill_Profile*>(item_data);
+                m_profile = static_cast<Ewk_Autofill_Profile*>(item_data);
                 break;
             }
         }
     }
 
-    createNewAutoFillFormItem(profile);
+    createNewAutoFillFormItem();
 
     return false;
 }
 
-void SettingsAFCreator::createNewAutoFillFormItem(Ewk_Autofill_Profile* profile)
+void SettingsAFCreator::createNewAutoFillFormItem()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (!profile)
+    if (!m_profile)
         m_item  = std::make_shared<AutoFillFormItem>(nullptr);
     else {
         auto item_data = new AutoFillFormItemData;
@@ -86,17 +89,17 @@ void SettingsAFCreator::createNewAutoFillFormItem(Ewk_Autofill_Profile* profile)
             return;
         }
         memset(item_data, 0x00, sizeof(AutoFillFormItemData));
-        item_data->profile_id = ewk_autofill_profile_id_get(profile);
-        item_data->name = ewk_autofill_profile_data_get(profile, EWK_PROFILE_NAME);
-        item_data->company = ewk_autofill_profile_data_get(profile, EWK_PROFILE_COMPANY);
-        item_data->primary_address = ewk_autofill_profile_data_get(profile, EWK_PROFILE_ADDRESS1);
-        item_data->secondary_address = ewk_autofill_profile_data_get(profile, EWK_PROFILE_ADDRESS2);
-        item_data->city_town = ewk_autofill_profile_data_get(profile, EWK_PROFILE_CITY_TOWN);
-        item_data->state_province_region = ewk_autofill_profile_data_get(profile, EWK_PROFILE_STATE_PROVINCE_REGION);
-        item_data->post_code = ewk_autofill_profile_data_get(profile, EWK_PROFILE_ZIPCODE);
-        item_data->country = ewk_autofill_profile_data_get(profile, EWK_PROFILE_COUNTRY);
-        item_data->phone_number = ewk_autofill_profile_data_get(profile, EWK_PROFILE_PHONE);
-        item_data->email_address = ewk_autofill_profile_data_get(profile, EWK_PROFILE_EMAIL);
+        item_data->profile_id = ewk_autofill_profile_id_get(m_profile);
+        item_data->name = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_NAME);
+        item_data->company = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_COMPANY);
+        item_data->primary_address = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_ADDRESS1);
+        item_data->secondary_address = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_ADDRESS2);
+        item_data->city_town = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_CITY_TOWN);
+        item_data->state_province_region = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_STATE_PROVINCE_REGION);
+        item_data->post_code = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_ZIPCODE);
+        item_data->country = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_COUNTRY);
+        item_data->phone_number = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_PHONE);
+        item_data->email_address = ewk_autofill_profile_data_get(m_profile, EWK_PROFILE_EMAIL);
         item_data->activation = false;
         item_data->compose_mode = profile_edit;
 
@@ -192,6 +195,22 @@ void SettingsAFCreator::createInputLayout(
     evas_object_show(cb_data->entry);
     evas_object_show(cb_data->it);
     evas_object_show(layout);
+}
+
+void SettingsAFCreator::clearFields()
+{
+    if (m_item) {
+        elm_object_part_text_set(m_fullNameItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_companyNameItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_addressLine1ItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_addressLine2ItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_cityTownItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_countryItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_postCodeItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_countryRegionItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_phoneItemCallbackData.entry, "elm.text", "");
+        elm_object_part_text_set(m_emailItemCallbackData.entry, "elm.text", "");
+    }
 }
 
 void SettingsAFCreator::addItems()

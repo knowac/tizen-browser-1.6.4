@@ -74,6 +74,7 @@ public:
     B_SIG<void (int)> setContentDestination;
     B_SIG<void ()> showTextPopup;
     B_SIG<void (std::string)> setProfileName;
+    B_SIG<void ()> autoFillCleared;
 
 private:
     SettingsPrettySignalConnector(){};

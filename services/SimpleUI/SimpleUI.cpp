@@ -1886,6 +1886,7 @@ void SimpleUI::onDeleteSelectedDataButton(const PopupButtons& button, const std:
             } else if (it.first == DEL_PERS_AUTO_FILL && it.second) {
                 BROWSER_LOGD("clear autofill forms");
                 m_webEngine->clearFormData();
+                SPSC.autoFillCleared();
             } else if (it.first == LOCATION && it.second) {
                 BROWSER_LOGD("clear location");
             }

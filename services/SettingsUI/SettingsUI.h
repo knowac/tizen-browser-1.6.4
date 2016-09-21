@@ -72,6 +72,7 @@ public:
             Elm_Gengrid_Item_Class* it_class,
             const void *data,
             Evas_Smart_Cb func);
+    void prepareLayout(Evas_Object* layout);
     Evas_Object* createActionBar(Evas_Object* settings_layout);
     Evas_Object* createSettingsMobilePage(Evas_Object* settings_layout);
     Evas_Object* createMainView(Evas_Object* settings_layout);
