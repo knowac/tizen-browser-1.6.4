@@ -81,7 +81,9 @@ SimpleUI::SimpleUI()
     , m_tabLimit(0)
     , m_favoritesLimit(0)
     , m_wvIMEStatus(false)
+#if PWA
     , m_pwa()
+#endif
 #if PROFILE_MOBILE
     , m_current_angle(0)
     , m_temp_angle(0)
@@ -190,7 +192,7 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
 #endif
         }
-
+#if PWA
         // Progressive web app
         if (!strncmp(url.c_str(), "browser_shortcut:", strlen("browser_shortcut:"))) {
             BROWSER_LOGD("Progressive web app");
@@ -205,7 +207,7 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
                 rotationType(rotationLock::landscape);
         }
-
+#endif
         if (url.empty())
         {
             BROWSER_LOGD("[%s]: restore last session", __func__);

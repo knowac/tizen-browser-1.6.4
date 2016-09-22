@@ -48,7 +48,9 @@ WebPageUI::WebPageUI()
     , m_urlHistoryList(std::make_shared<UrlHistoryList>(getStatesMgr()))
     , m_webviewLocked(false)
     , m_WebPageUIvisible(false)
+#if PWA
     , m_pwaInfo(nullptr)
+#endif
 #if GESTURE
     , m_gestureLayer(nullptr)
 #endif
@@ -822,6 +824,7 @@ Eina_Bool WebPageUI::_hideDelay(void *data)
     return ECORE_CALLBACK_CANCEL;
 }
 
+#if PWA
 void WebPageUI::setDisplayMode(WebPageUI::WebDisplayMode mode)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -834,6 +837,7 @@ void WebPageUI::setDisplayMode(WebPageUI::WebDisplayMode mode)
     else if (mode == WebDisplayMode::WebDisplayModeBrowser)
         elm_object_signal_emit(m_mainLayout, "webview_default", "ui");
 }
+#endif
 
 void WebPageUI:: launch_share(const char *uri)
 {

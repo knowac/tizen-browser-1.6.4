@@ -45,6 +45,8 @@ class BROWSER_EXPORT WebPageUI
         , public tizen_browser::interfaces::AbstractRotatable
 {
 public:
+
+#if PWA
     typedef enum OrientationType {
         portrait_primary = 0,
         portrait_secondary,
@@ -72,6 +74,7 @@ public:
         long            themeColor;
         long            backgroundColor;
     };
+#endif
 
     WebPageUI();
     virtual ~WebPageUI();
@@ -122,8 +125,9 @@ public:
     static Eina_Bool _hideDelay(void *data);
     void setDesktopMode(bool desktopMode) {m_desktopMode = desktopMode;}
     bool getDesktopMode() { return m_desktopMode; }
+#if PWA
     void setDisplayMode(WebDisplayMode mode);
-
+#endif
     std::string getURI();
 
     boost::signals2::signal<void ()> backPage;
@@ -227,7 +231,9 @@ private:
     sharedAction m_bookmarks;
     sharedAction m_tabs;
 
+#if PWA
     std::shared_ptr<pwaInfo> m_pwaInfo;
+#endif
 
 #if GESTURE
     Evas_Object* m_gestureLayer;

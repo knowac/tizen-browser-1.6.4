@@ -64,8 +64,10 @@
 #include "WebConfirmation.h"
 #include "ViewManager.h"
 #include "MenuButton.h"
-#include "ProgressiveWebApp.h"
 #include "NaviframeWrapper.h"
+#if PWA
+#include "ProgressiveWebApp.h"
+#endif
 
 namespace tizen_browser{
 namespace base_ui{
@@ -372,7 +374,9 @@ private:
     //helper object used to view management
     ViewManager m_viewManager;
     Evas_Object *main_window;
+#if PWA
     ProgressiveWebApp m_pwa;
+#endif
     SharedNaviframeWrapper m_QAEditNaviframe;
 #if PROFILE_MOBILE
     Evas_Object *m_conformant;
