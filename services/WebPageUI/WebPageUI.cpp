@@ -549,7 +549,7 @@ void WebPageUI::_cm_add_to_hs_clicked(void* data, Evas_Object*, void* )
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
 
         // send request API.
-        pwaRequestManifest();
+        webPageUI->pwaRequestManifest();
     }
     else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);

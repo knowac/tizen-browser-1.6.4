@@ -286,7 +286,6 @@ public:
     boost::signals2::signal<void()> unsecureConnection;
     boost::signals2::signal<void(bool)> fullscreenModeSet;
 #if PWA
-    boost::signals2::signal<void (std::string)> resultDataManifest;
     boost::signals2::signal<void (std::string)> iconDownload;
 #endif
 

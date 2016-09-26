@@ -676,11 +676,9 @@ void WebView::requestManifest(void)
     ewk_view_request_manifest(m_ewkView, dataSetManifest, this);
 }
 
-void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void* data)
+void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void* /*data*/)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
-    WebView * self = reinterpret_cast<WebView *>(data);
 
     if (view) {
         const char* short_name(ewk_manifest_short_name_get(manifest));
@@ -751,7 +749,6 @@ void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* mani
             BROWSER_LOGE("[%s:%d] Fail to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
         } else {
             BROWSER_LOGE("[%s:%d] Success to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
-            self->resultDataManifest(m_pwaData);
         }
         BROWSER_LOGD("[%s:%d] dataSetManifest callback function end!", __PRETTY_FUNCTION__, __LINE__);
     }

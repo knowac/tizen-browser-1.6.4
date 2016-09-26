@@ -630,9 +630,6 @@ void SimpleUI::connectModelSignals()
     m_webEngine->setCertificatePem.connect(boost::bind(&services::CertificateContents::saveCertificateInfo, m_certificateContents, _1, _2));
     m_webEngine->setWrongCertificatePem.connect(boost::bind(&services::CertificateContents::saveWrongCertificateInfo, m_certificateContents, _1, _2));
     m_webEngine->fullscreenModeSet.connect(boost::bind(&WebPageUI::fullscreenModeSet, m_webPageUI.get(), _1));
-#if PWA
-    m_webEngine->resultDataManifest.connect(boost::bind(&SimpleUI::resultDataManifest, this, _1));
-#endif
 #if PROFILE_MOBILE
     m_webEngine->confirmationRequest.connect(boost::bind(&SimpleUI::handleConfirmationRequest, this, _1));
     m_webEngine->getRotation.connect(boost::bind(&SimpleUI::getRotation, this));
@@ -1664,14 +1661,6 @@ std::string SimpleUI::requestSettingsCurrentPage()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     return m_webEngine->getURI();
 }
-
-#if PWA
-void SimpleUI::resultDataManifest(std::string pwaData)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_webPageUI->resultDataManifest(pwaData);
-}
-#endif
 
 void SimpleUI::selectSettingsOtherPageChange()
 {

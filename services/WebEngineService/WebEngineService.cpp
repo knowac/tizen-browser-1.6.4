@@ -148,7 +148,6 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
     webView->setWrongCertificatePem.connect(boost::bind(&WebEngineService::_setWrongCertificatePem, this, _1, _2));
     webView->fullscreenModeSet.connect([this](auto state){fullscreenModeSet(state);});
 #if PWA
-    webView->resultDataManifest.connect(boost::bind(&WebEngineService::_resultDataManifest, this, _1));
     webView->iconDownload.connect(boost::bind(&WebEngineService::_iconDownload, this, _1));
 #endif
 #if PROFILE_MOBILE
@@ -177,7 +176,6 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
     webView->redirectedWebPage.disconnect(boost::bind(&WebEngineService::_redirectedWebPage, this, _1, _2));
     webView->fullscreenModeSet.disconnect_all_slots();
 #if PWA
-    webView->resultDataManifest.disconnect(boost::bind(&WebEngineService::_resultDataManifest, this));
     webView->iconDownload.disconnect(boost::bind(&WebEngineService::_iconDownload, this));
 #endif
 #if PROFILE_MOBILE
@@ -242,12 +240,6 @@ void WebEngineService::requestManifest()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_currentWebView->requestManifest();
-}
-
-void WebEngineService::_resultDataManifest(std::string pwaData)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    resultDataManifest(pwaData);
 }
 
 void WebEngineService::_iconDownload(std::string download_uri)

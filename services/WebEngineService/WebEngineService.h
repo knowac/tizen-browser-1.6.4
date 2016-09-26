@@ -247,7 +247,6 @@ private:
     void _setCertificatePem(const std::string& uri, const std::string& pem);
     void _setWrongCertificatePem(const std::string& uri, const std::string& pem);
 #if PWA
-    void _resultDataManifest(std::string pwaData);
     void _iconDownload(std::string download_uri);
 #endif
 #if PROFILE_MOBILE
