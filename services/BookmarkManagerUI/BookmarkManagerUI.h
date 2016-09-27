@@ -30,6 +30,7 @@
 #include "BookmarkItem.h"
 #include "BookmarkFolder.h"
 #include "NaviframeWrapper.h"
+#include "Tools/EflTools.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -89,20 +90,11 @@ public:
     boost::signals2::signal<bool ()> isEngineSecretMode;
 
 private:
-    using FolderData = struct
-    {
-        std::string name;
-        int count;
-        unsigned int folder_id;
-        BookmarkManagerUI* bookmarkManagerUI;
-    };
-
-    using BookmarkData = struct
+    struct BookmarkData
     {
         services::SharedBookmarkItem bookmarkItem;
         BookmarkManagerUI* bookmarkManagerUI;
     };
-
     void createBookmarksLayout();
     void createTopContent();
     void createModulesToolbar();

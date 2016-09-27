@@ -23,26 +23,13 @@
 #include "QuickAccess.h"
 #include "ServiceManager.h"
 #include "BrowserLogger.h"
-#include "Tools/EflTools.h"
-#include "../Tools/BrowserImage.h"
+#include "Tools/BrowserImage.h"
 #include "Tools/GeneralTools.h"
 
 namespace tizen_browser{
 namespace base_ui{
 
 EXPORT_SERVICE(QuickAccess, "org.tizen.browser.quickaccess")
-
-typedef struct _HistoryItemData
-{
-        std::shared_ptr<tizen_browser::services::HistoryItem> item;
-        QuickAccess* quickAccess;
-} HistoryItemData;
-
-typedef struct _BookmarkItemData
-{
-        std::shared_ptr<tizen_browser::services::BookmarkItem> item;
-        QuickAccess* quickAccess;
-} BookmarkItemData;
 
 QuickAccess::QuickAccess()
     : m_parent(nullptr)

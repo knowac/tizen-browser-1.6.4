@@ -58,10 +58,10 @@ public:
     //TODO: create bool with a value when database is updated
     bool getPrivate() const { return false; }
 
-    void setThumbnail(std::shared_ptr<tizen_browser::tools::BrowserImage> thumbnail);
+    void setThumbnail(std::shared_ptr<tools::BrowserImage> thumbnail);
     std::shared_ptr<tizen_browser::tools::BrowserImage> getThumbnail() const ;
 
-    void setFavicon(std::shared_ptr<tizen_browser::tools::BrowserImage> favicon);
+    void setFavicon(std::shared_ptr<tools::BrowserImage> favicon);
     std::shared_ptr<tizen_browser::tools::BrowserImage> getFavicon() const;
 
     void setParent(int parent) { m_parent = parent; }
@@ -86,8 +86,8 @@ private:
     std::string m_url;
     std::string m_title;
     std::string m_note;
-    std::shared_ptr<tizen_browser::tools::BrowserImage> m_thumbnail;
-    std::shared_ptr<tizen_browser::tools::BrowserImage> m_favicon;
+    std::shared_ptr<tools::BrowserImage> m_thumbnail;
+    std::shared_ptr<tools::BrowserImage> m_favicon;
     int m_parent;
     int m_order;
     std::vector<unsigned int> m_tags;
@@ -97,8 +97,8 @@ private:
     bool m_is_editable;
 };
 
-typedef std::shared_ptr<BookmarkItem> SharedBookmarkItem;
-typedef std::vector<SharedBookmarkItem> SharedBookmarkItemList;
+using SharedBookmarkItem = std::shared_ptr<BookmarkItem>;
+using SharedBookmarkItemList = std::vector<SharedBookmarkItem>;
 
 enum FolderIDType {
       ROOT_FOLDER_ID = 0,

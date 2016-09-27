@@ -30,18 +30,6 @@ namespace base_ui{
 
 EXPORT_SERVICE(MoreMenuUI, "org.tizen.browser.moremenuui")
 
-struct ItemData{
-        tizen_browser::base_ui::MoreMenuUI * m_moreMenu;
-        std::shared_ptr<tizen_browser::services::HistoryItem> h_item;
-        Elm_Object_Item * e_item;
-    };
-
-typedef struct _MoreItemData
-{
-    ItemType item;
-    std::shared_ptr<tizen_browser::base_ui::MoreMenuUI> moreMenuUI;
-} MoreMenuItemData;
-
 MoreMenuUI::MoreMenuUI()
     : m_current_tab_bar(nullptr)
     , m_mm_layout(nullptr)
@@ -80,7 +68,7 @@ Elm_Gengrid_Item_Class* MoreMenuUI::createItemClass()
     item_class->func.text_get = _grid_text_get;
     item_class->func.content_get =  _grid_content_get;
     item_class->func.state_get = NULL;
-    item_class->func.del = NULL;
+    item_class->func.del = _genlist_del<MoreMenuItemData>;
     return item_class;
 }
 

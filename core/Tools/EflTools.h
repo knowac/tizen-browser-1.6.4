@@ -31,6 +31,19 @@
 // counts size exactly as is in Z3 device
 #define Z3_SCALE_SIZE(x) (int)(((double)(x) * elm_config_scale_get()) / 2.6)
 
+// Default function for deletion callback (func.del) for genlist/gengrid
+// Usage example:
+// item data struct is ItemData so in func.del use
+// item_class->func.del = _genlist_del<ItemData>
+template <typename T>
+static void _genlist_del(void* data, Evas_Object*)
+{
+    if (data) {
+        auto itemData = static_cast<T*>(data);
+        delete itemData;
+    }
+}
+
 namespace tizen_browser {
 namespace tools {
 namespace EflTools {

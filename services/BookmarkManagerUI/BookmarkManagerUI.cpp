@@ -23,22 +23,14 @@
 #include "BookmarkManagerUI.h"
 #include "ServiceManager.h"
 #include "BrowserLogger.h"
-#include "Tools/EflTools.h"
-#include "../Tools/BrowserImage.h"
 #include "app_i18n.h"
 #include "Tools/BookmarkItem.h"
+#include "Tools/BrowserImage.h"
 
 namespace tizen_browser{
 namespace base_ui{
 
 EXPORT_SERVICE(BookmarkManagerUI, "org.tizen.browser.bookmarkmanagerui")
-
-struct ItemData
-{
-    tizen_browser::base_ui::BookmarkManagerUI * m_bookmarkManager;
-    tizen_browser::services::BookmarkItem * h_item;
-    Elm_Object_Item * e_item;
-};
 
 BookmarkManagerUI::BookmarkManagerUI()
     : m_parent(nullptr)
@@ -109,7 +101,7 @@ void BookmarkManagerUI::createGenlistItemClasses()
     m_bookmark_item_class->func.text_get = _genlist_bookmark_text_get;
     m_bookmark_item_class->func.content_get =  _genlist_bookmark_content_get;
     m_bookmark_item_class->func.state_get = nullptr;
-    m_bookmark_item_class->func.del = nullptr;
+    m_bookmark_item_class->func.del = _genlist_del<BookmarkData>;
     m_bookmark_item_class->decorate_all_item_style = "edit_default";
 }
 

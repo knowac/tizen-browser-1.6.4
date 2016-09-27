@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <EflTools.h>
+
 #include "HistoryDayItemDataTypedef.h"
 #include "HistoryDaysListManager.h"
 #include "HistoryDaysListManagerEdje.h"
@@ -39,7 +41,6 @@ public:
     virtual ~HistoryDaysListManagerMob();
 
     void createGenlistItemClasses();
-
     static char* _genlist_history_day_text_get(void *data, Evas_Object *, const char *part);
     static char* _genlist_history_download_text_get(void* data, Evas_Object*, const char *part);
     static char* _genlist_history_item_text_get(void *data, Evas_Object *, const char *part);
@@ -67,14 +68,13 @@ public:
     void removeSelectedItems();
     bool isSelectAllChecked() const { return m_isSelectAllChecked == EINA_TRUE; }
 
+private:
     struct ItemData {
         HistoryDaysListManagerMob* self;
         WebsiteVisitItemDataPtr websiteVisitItem;
         WebsiteHistoryItemDataPtr websiteHistoryItemData;
         const char* str;
     };
-
-private:
     void connectSignals();
     void appendDayItem(HistoryDayItemDataPtr dayItemData);
     void showNoHistoryMessage(bool show);

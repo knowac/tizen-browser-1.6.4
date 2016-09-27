@@ -36,6 +36,7 @@
 #include "BookmarkItem.h"
 #include "BookmarkFolder.h"
 #include "app_i18n.h"
+#include "Tools/EflTools.h"
 
 #define BOOKMARK_FLOW_SERVICE "org.tizen.browser.bookmarkflowui"
 #define M_UNUSED(x) (void)(x)
@@ -81,24 +82,27 @@ private:
     struct FolderData {
         std::string name;
         unsigned int folder_id;
-        std::shared_ptr<tizen_browser::base_ui::BookmarkFlowUI> bookmarkFlowUI;
+        std::shared_ptr<BookmarkFlowUI> bookmarkFlowUI;
     };
 
     struct EntryData {
         std::string category;
         std::string entry;
-        std::shared_ptr<tizen_browser::base_ui::BookmarkFlowUI> bookmarkFlowUI;
+        std::shared_ptr<BookmarkFlowUI> bookmarkFlowUI;
     };
 
     struct ObjectData {
         Evas_Object* object;
-        std::shared_ptr<tizen_browser::base_ui::BookmarkFlowUI> bookmarkFlowUI;
+        std::shared_ptr<BookmarkFlowUI> bookmarkFlowUI;
     };
 
     Evas_Object* createBookmarkFlowLayout();
     void createGenlistItemClasses();
-    Elm_Genlist_Item_Class* createGenlistItemClass(const char* style,
-        Elm_Gen_Item_Text_Get_Cb text_cb = nullptr, Elm_Gen_Item_Content_Get_Cb content_cb = nullptr);
+    Elm_Genlist_Item_Class* createGenlistItemClass(
+        const char* style,
+        Elm_Gen_Item_Text_Get_Cb text_cb = nullptr,
+        Elm_Gen_Item_Content_Get_Cb content_cb = nullptr,
+        Elm_Gen_Item_Del_Cb del_cb = nullptr);
     void createTopContent();
     void createGenlist();
     void fillGenlist();

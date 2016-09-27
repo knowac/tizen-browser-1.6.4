@@ -30,6 +30,7 @@
 #include "services/HistoryService/HistoryItemTypedef.h"
 #include "BookmarkItem.h"
 #include "NaviframeWrapper.h"
+#include "Tools/EflTools.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -74,6 +75,18 @@ public:
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> deleteQuickAccessItem;
 
 private:
+    struct HistoryItemData
+    {
+        std::shared_ptr<tizen_browser::services::HistoryItem> item;
+        QuickAccess* quickAccess;
+    };
+
+    struct BookmarkItemData
+    {
+        std::shared_ptr<tizen_browser::services::BookmarkItem> item;
+        QuickAccess* quickAccess;
+    };
+
     void createItemClasses();
     void addMostVisitedItem(std::shared_ptr<services::HistoryItem>);
     void addQuickAccessItem(std::shared_ptr<tizen_browser::services::BookmarkItem>);

@@ -30,7 +30,6 @@
 #include "BookmarkFlowUI.h"
 #include "ServiceManager.h"
 #include "BrowserLogger.h"
-#include "Tools/EflTools.h"
 #include "../Tools/BrowserImage.h"
 
 namespace tizen_browser{
@@ -170,23 +169,26 @@ void BookmarkFlowUI::createGenlistItemClasses()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_entry_item_class = createGenlistItemClass("entry_custom_layout", _genlist_entry_text_get,
-        _genlist_entry_content_get);
+        _genlist_entry_content_get, _genlist_del<EntryData>);
     m_group_item_class = createGenlistItemClass("group_index", _genlist_text_get);
     m_folder_item_class = createGenlistItemClass("type1", _genlist_folder_text_get,
-        _genlist_folder_content_get);
+        _genlist_folder_content_get, _genlist_del<FolderData>);
     m_add_to_qa_item_class = createGenlistItemClass("type1", _genlist_add_to_qa_text_get,
         _genlist_add_to_qa_content_get);
 }
 
 Elm_Genlist_Item_Class* BookmarkFlowUI::createGenlistItemClass(
-    const char* style, Elm_Gen_Item_Text_Get_Cb text_cb, Elm_Gen_Item_Content_Get_Cb content_cb)
+    const char* style,
+    Elm_Gen_Item_Text_Get_Cb text_cb,
+    Elm_Gen_Item_Content_Get_Cb content_cb,
+    Elm_Gen_Item_Del_Cb del_cb)
 {
     auto ic = elm_genlist_item_class_new();
     ic->item_style = style;
     ic->func.text_get = text_cb;
     ic->func.content_get = content_cb;
     ic->func.state_get = nullptr;
-    ic->func.del = nullptr;
+    ic->func.del = del_cb;
     ic->decorate_all_item_style = "edit_default";
     return ic;
 }

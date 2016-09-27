@@ -31,6 +31,7 @@
 
 #include "BookmarkItem.h"
 #include "services/HistoryService/HistoryItem.h"
+#include "Tools/EflTools.h"
 
 #if !PROFILE_MOBILE
 #include "FocusManager.h"
@@ -72,8 +73,8 @@ enum ItemType {
 } item;
 
 class BROWSER_EXPORT MoreMenuUI
-        : public tizen_browser::interfaces::AbstractUIComponent
-        , public tizen_browser::core::AbstractService
+        : public interfaces::AbstractUIComponent
+        , public core::AbstractService
 {
 public:
     MoreMenuUI();
@@ -119,6 +120,11 @@ public:
     boost::signals2::signal<bool ()> isBookmark;
     boost::signals2::signal<void ()> bookmarkFlowClicked;
 private:
+    struct MoreMenuItemData
+    {
+        ItemType item;
+        std::shared_ptr<MoreMenuUI> moreMenuUI;
+    };
     Elm_Gengrid_Item_Class* createItemClass();
     void createMoreMenuLayout();
 #if PROFILE_MOBILE

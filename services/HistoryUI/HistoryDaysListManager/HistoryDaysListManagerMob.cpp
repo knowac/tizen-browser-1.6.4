@@ -27,7 +27,6 @@
 #include <services/HistoryUI/HistoryDeleteManager.h>
 
 #include <GeneralTools.h>
-#include <EflTools.h>
 
 namespace tizen_browser {
 namespace base_ui {
@@ -54,9 +53,6 @@ HistoryDaysListManagerMob::HistoryDaysListManagerMob()
 
 HistoryDaysListManagerMob::~HistoryDaysListManagerMob()
 {
-    for (auto& data : m_itemDataVector)
-        delete data;
-
     for (auto& dayItem : m_dayItems)
         dayItem->setEflObjectsAsDeleted();
 
@@ -82,14 +78,14 @@ void HistoryDaysListManagerMob::createGenlistItemClasses()
     m_history_download_item_class->func.text_get = _genlist_history_download_text_get;
     m_history_download_item_class->func.content_get =  _genlist_history_download_content_get;
     m_history_download_item_class->func.state_get = nullptr;
-    m_history_download_item_class->func.del = nullptr;
+    m_history_download_item_class->func.del = _genlist_del<ItemData>;
     m_history_download_item_class->decorate_all_item_style = "edit_default";
 
     m_history_item_item_class->item_style = "type1";
     m_history_item_item_class->func.text_get = _genlist_history_item_text_get;
     m_history_item_item_class->func.content_get =  _genlist_history_item_content_get;
     m_history_item_item_class->func.state_get = nullptr;
-    m_history_item_item_class->func.del = nullptr;
+    m_history_item_item_class->func.del = _genlist_del<ItemData>;
     m_history_item_item_class->decorate_all_item_style = "edit_default";
 }
 
@@ -323,7 +319,6 @@ Evas_Object* HistoryDaysListManagerMob::createDaysList(
             nullptr, ELM_GENLIST_ITEM_NONE,
             nullptr, nullptr);
     }
-    m_itemDataVector.push_back(id);
     return m_genlist;
 }
 
@@ -403,7 +398,6 @@ void HistoryDaysListManagerMob::_tree_item_expanded(void* data, Evas_Object* gen
                 itData));
         self->m_itemsToDelete[listItem] = EINA_FALSE;
         self->m_visitItemData[listItem] = el->websiteVisitItem;
-        self->m_itemDataVector.push_back(itData);
     }
     self->m_itemData[it]->expanded = true;
     auto arrow_layout(

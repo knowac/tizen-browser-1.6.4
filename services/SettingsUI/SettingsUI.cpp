@@ -28,12 +28,6 @@
 namespace tizen_browser{
 namespace base_ui{
 
-typedef struct _genlistCallbackData
-{
-    void *user_data;
-    Elm_Object_Item *it;
-} genlistCallbackData;
-
 SettingsUI::SettingsUI()
     : m_naviframe(nullptr)
     , m_genlist(nullptr)
