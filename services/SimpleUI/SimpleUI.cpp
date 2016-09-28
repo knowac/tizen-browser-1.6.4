@@ -1963,6 +1963,13 @@ void SimpleUI::updateView()
 {
     int tabs = m_webEngine->tabsCount();
     BROWSER_LOGD("[%s] Opened tabs: %d", __func__, tabs);
+    if (m_viewManager.topOfStack() == m_webPageUI.get()) {
+        if (tabs == 0) {
+            switchViewToQuickAccess();
+        } else if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS)) {
+            switchViewToWebPage();
+        }
+    }
     m_webPageUI->setTabsNumber(tabs);
 }
 
