@@ -42,19 +42,24 @@ public:
     void init(Evas_Object *parent);
     Evas_Object* getContent();
     void backPressed();
+    void setMVSelectedItems(int count);
 
     boost::signals2::signal<Evas_Object* ()> requestQuickAccessGengrid;
+    boost::signals2::signal<Evas_Object* ()> requestMostVisitedGengrid;
+    boost::signals2::signal<QuickAccessState ()> requestQuickAccessState;
     boost::signals2::signal<void ()> editingFinished;
+    boost::signals2::signal<void ()> deleteSelectedMostVisitedItems;
 
 private:
 
     static void _cancel_clicked(void *data, Evas_Object *, void *);
     static void _done_clicked(void *data, Evas_Object *, void *);
 
-    void createEditQuickAccessLayout();
+    void createEditLayout();
     SharedNaviframeWrapper m_naviframe;
     Evas_Object *m_parent;
     std::shared_ptr<QuickAccess> m_quickAccess;
+    QuickAccessState m_editState;
 };
 
 }   // namespace tizen_browser

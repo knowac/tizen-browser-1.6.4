@@ -112,6 +112,7 @@ public:
     void switchViewToQuickAccess(Evas_Object* content);
     URIEntry& getURIEntry() const { return *m_URIEntry.get(); }
     std::shared_ptr<EditQuickAccessUI> getQuickAccessEditUI() { return m_editQuickAccessUI; }
+    void setMostVisitedSelectedItemsCountInEditMode(int count);
     void setTabsNumber(int tabs);
     void setBackButtonEnabled(bool enabled) { m_back->setEnabled(enabled); }
     void setForwardButtonEnabled(bool enabled) { m_forward->setEnabled(enabled); }
@@ -154,6 +155,7 @@ public:
     boost::signals2::signal<void ()> switchToMobileMode;
     boost::signals2::signal<void ()> switchToDesktopMode;
     boost::signals2::signal<void ()> quickAccessEdit;
+    boost::signals2::signal<void ()> deleteMostVisited;
     boost::signals2::signal<void ()> addToQuickAccess;
     boost::signals2::signal<bool ()> isMostVisited;
 
@@ -176,6 +178,7 @@ private:
     static Evas_Event_Flags _gesture_move(void *data, void *event_info);
 #endif
     static void _cm_edit_qa_clicked(void*, Evas_Object*, void*);
+    static void _cm_delete_mv_clicked(void*, Evas_Object*, void*);
     static void _cm_share_clicked(void*, Evas_Object*, void*);
     static void _cm_find_on_page_clicked(void*, Evas_Object*, void*);
     static void _cm_delete_bookmark_clicked(void*, Evas_Object*, void*);

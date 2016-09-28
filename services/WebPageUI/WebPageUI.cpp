@@ -266,6 +266,12 @@ void WebPageUI::switchViewToQuickAccess(Evas_Object* content)
     setQuickAccessView();
 }
 
+void WebPageUI::setMostVisitedSelectedItemsCountInEditMode(int count)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_editQuickAccessUI->setMVSelectedItems(count);
+}
+
 void WebPageUI::faviconClicked(void* data, Evas_Object*, const char*, const char*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -385,7 +391,7 @@ void WebPageUI::showContextMenu()
             if (!isMostVisitedOpt || !(*isMostVisitedOpt))
                 elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"), nullptr, _cm_edit_qa_clicked, this);
             else
-                elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_DELETE"), nullptr, nullptr, nullptr);
+                elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_DELETE"), nullptr, _cm_delete_mv_clicked, this);
         } else if (m_statesMgr->equals(WPUState::MAIN_WEB_PAGE)) {
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_SHARE"), nullptr, _cm_share_clicked, this);
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_FIND_ON_PAGE"), nullptr, _cm_find_on_page_clicked, this);
@@ -432,6 +438,18 @@ void WebPageUI::_cm_edit_qa_clicked(void* data, Evas_Object*, void* )
         webPageUI->quickAccessEdit();
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+}
+
+void WebPageUI::_cm_delete_mv_clicked(void *data, Evas_Object *, void *)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (data) {
+        WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
+        _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
+        webPageUI->deleteMostVisited();
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+    }
 }
 
 void WebPageUI::_cm_share_clicked(void* data, Evas_Object*, void* )

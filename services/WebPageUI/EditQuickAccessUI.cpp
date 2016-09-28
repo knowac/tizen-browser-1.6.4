@@ -17,17 +17,20 @@
 #include "EditQuickAccessUI.h"
 
 #include <Elementary.h>
+#include <boost/format.hpp>
 #include <AbstractMainWindow.h>
 #include "ServiceManager.h"
 #include "BrowserLogger.h"
 #include "Tools/EflTools.h"
 #include "QuickAccess.h"
+#include "app_i18n.h"
 
 namespace tizen_browser{
 namespace base_ui{
 
 EditQuickAccessUI::EditQuickAccessUI()
     : m_parent(nullptr)
+    , m_editState(QuickAccessState::Edit)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 }
@@ -42,6 +45,8 @@ void EditQuickAccessUI::showUI()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
     m_naviframe->show();
+    if (m_editState == QuickAccessState::Edit)
+        m_naviframe->setRightButtonEnabled(true);
 }
 
 void EditQuickAccessUI::hideUI()
@@ -62,14 +67,38 @@ Evas_Object *EditQuickAccessUI::getContent()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_parent);
-    if (!m_naviframe)
-        createEditQuickAccessLayout();
 
-    auto signal = requestQuickAccessGengrid();
+    auto signal = requestQuickAccessState();
     if (signal)
-        m_naviframe->setContent(*signal);
+        m_editState = *signal;
     else
         BROWSER_LOGW("Missing signal value");
+
+    if (!m_naviframe)
+        createEditLayout();
+
+    if (m_editState == QuickAccessState::Edit) {
+        m_naviframe->setTitle(_("IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"));
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
+        auto signal = requestQuickAccessGengrid();
+        if (signal)
+            m_naviframe->setContent(*signal);
+        else
+            BROWSER_LOGW("Missing signal value");
+    } else if (m_editState == QuickAccessState::DeleteMostVisited) {
+        //TODO: add translation IDS_BR_HEADER_SELECT_ITEMS_ABB2
+        m_naviframe->setTitle("Select items");
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE_ABB"));
+        auto signal = requestMostVisitedGengrid();
+        if (signal)
+            m_naviframe->setContent(*signal);
+        else
+            BROWSER_LOGW("Missing signal value");
+    } else {
+        BROWSER_LOGE("No correct Edit state");
+    }
+    m_naviframe->setRightButtonVisible(true);
+    m_naviframe->setRightButtonEnabled(false);
 
     return m_naviframe->getLayout();
 }
@@ -79,6 +108,16 @@ void EditQuickAccessUI::backPressed()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     editingFinished();
     closeUI();
+}
+
+void EditQuickAccessUI::setMVSelectedItems(int count)
+{
+    if (count)
+        m_naviframe->setTitle((boost::format(_("IDS_BR_HEADER_PD_SELECTED_ABB")) % count).str());
+    else
+        //TODO: Add translation
+        m_naviframe->setTitle("Select items");
+    m_naviframe->setRightButtonEnabled(count);
 }
 
 void EditQuickAccessUI::_cancel_clicked(void *data, Evas_Object *, void *)
@@ -93,25 +132,27 @@ void EditQuickAccessUI::_done_clicked(void *data, Evas_Object *, void *)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     auto self = static_cast<EditQuickAccessUI*>(data);
     self->editingFinished();
-    //TODO: save reordered items
+    if (self->m_editState == QuickAccessState::Edit) {
+        //TODO: save reordered items
+    } else if (self->m_editState == QuickAccessState::DeleteMostVisited) {
+        self->deleteSelectedMostVisitedItems();
+    }
+
     self->closeUI();
 }
 
-void EditQuickAccessUI::createEditQuickAccessLayout()
+void EditQuickAccessUI::createEditLayout()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_parent);
 
     m_naviframe = std::make_shared<NaviframeWrapper>(m_parent);
-    m_naviframe->setTitle("Edit quick access");
 
     m_naviframe->addLeftButton(_cancel_clicked, this);
-    m_naviframe->setLeftButtonText("Cancel");
+    m_naviframe->setLeftButtonText(_("IDS_BR_SK_CANCEL_ABB"));
     m_naviframe->setLeftButtonVisible(true);
 
     m_naviframe->addRightButton(_done_clicked, this);
-    m_naviframe->setRightButtonText("Done");
-    m_naviframe->setRightButtonVisible(true);
 }
 
 }   // namespace tizen_browser

@@ -311,8 +311,6 @@ void QuickAccess::setMostVisitedItems(std::shared_ptr<services::HistoryItemVecto
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     clearMostVisitedGengrid();
-    m_mostVisitedItems = items;
-
 
     for (auto it = items->begin(); it != items->end(); ++it)
          addMostVisitedItem(*it);
@@ -339,7 +337,6 @@ void QuickAccess::clearMostVisitedGengrid()
 void QuickAccess::setQuickAccessItems(std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > items)
 {
     clearQuickAccessGengrid();
-    m_QuickAccessItems = items;
 
     for (auto it = items.begin(); it != items.end(); ++it)
          addQuickAccessItem(*it);
@@ -480,17 +477,28 @@ char *QuickAccess::_grid_mostVisited_text_get(void *data, Evas_Object *, const c
     return strdup("");
 }
 
-Evas_Object *QuickAccess::_grid_mostVisited_content_get(void *data, Evas_Object *, const char *part)
+Evas_Object *QuickAccess::_grid_mostVisited_content_get(void *data, Evas_Object *obj, const char *part)
 {
-    HistoryItemData *itemData = reinterpret_cast<HistoryItemData*>(data);
-    if (!strcmp(part, "elm.swallow.icon")) {
-        if (itemData->item->getThumbnail()) {
-                Evas_Object * thumb = itemData->item->getThumbnail()->getEvasImage(itemData->quickAccess->m_parent);
-                return thumb;
+    if (data) {
+        HistoryItemData *itemData = reinterpret_cast<HistoryItemData*>(data);
+
+        if (!strcmp(part, "elm.swallow.icon")) {
+            if (itemData->item->getThumbnail()) {
+                    Evas_Object * thumb = itemData->item->getThumbnail()->getEvasImage(itemData->quickAccess->m_parent);
+                    return thumb;
+            }
         }
-        else {
-                return nullptr;
+        if (itemData->quickAccess->m_state == QuickAccessState::DeleteMostVisited) {
+            if (!strcmp(part, "elm.check")) {
+                Evas_Object* checkbox = elm_check_add(obj);
+                evas_object_propagate_events_set(checkbox, EINA_FALSE);
+                evas_object_smart_callback_add(checkbox, "changed", _check_state_changed, data);
+                evas_object_show(checkbox);
+                return checkbox;
+            }
         }
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
     return nullptr;
 }
@@ -518,8 +526,25 @@ void QuickAccess::_thumbMostVisitedClicked(void* data, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
-    itemData->quickAccess->openURL(itemData->item, false);
+    if (itemData->quickAccess->m_state == QuickAccessState::Default) {
+        itemData->quickAccess->openURL(itemData->item, false);
+    }
+}
 
+void QuickAccess::_check_state_changed(void *data, Evas_Object *obj, void *)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (data) {
+        HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
+        if (elm_check_state_get(obj))
+            itemData->quickAccess->m_mv_delete_list.push_back(itemData->item);
+        else
+            itemData->quickAccess->m_mv_delete_list.remove(itemData->item);
+
+        itemData->quickAccess->sendSelectedMVItemsCount(static_cast<int>(itemData->quickAccess->m_mv_delete_list.size()));
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+    }
 }
 
 void QuickAccess::showMostVisited()
@@ -531,6 +556,7 @@ void QuickAccess::showMostVisited()
     elm_object_translatable_part_text_set(m_layout, "screen_title", "Most visited websites");  //TODO: translate
     setIndexPage(QuickAccess::MOST_VISITED_PAGE);
 
+    m_mv_delete_list.clear();
 }
 
 void QuickAccess::clearQuickAccessGengrid()
@@ -553,8 +579,24 @@ void QuickAccess::editQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_state = QuickAccessState::Edit;
-    showUI();
+    getQuickAccessItems();
     elm_gengrid_reorder_mode_set(m_quickAccessGengrid, EINA_TRUE);
+}
+
+void QuickAccess::deleteMostVisited()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_state = QuickAccessState::DeleteMostVisited;
+    getMostVisitedItems();
+}
+
+void QuickAccess::deleteSelectedMostVisitedItems()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    for (auto item : m_mv_delete_list) {
+        removeMostVisitedItem(item, 0);
+    }
+    getMostVisitedItems();
 }
 
 void QuickAccess::editingFinished()
@@ -562,7 +604,7 @@ void QuickAccess::editingFinished()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     elm_gengrid_reorder_mode_set(m_quickAccessGengrid, EINA_FALSE);
     m_state = QuickAccessState::Default;
-    showUI();
+    getQuickAccessItems();
 }
 
 void QuickAccess::showScrollerPage(int page)

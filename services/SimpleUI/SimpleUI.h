@@ -144,6 +144,8 @@ private:
 
     std::shared_ptr<services::HistoryItemVector> getHistory();
     std::shared_ptr<services::HistoryItemVector> getMostVisitedItems();
+    void setMostVisitedFrequencyValue(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem,
+        int visitFrequency);
 
     void onBookmarkClicked(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
     void onNewQuickAccessClicked();
@@ -248,6 +250,7 @@ private:
     void switchToMobileMode();
     void switchToDesktopMode();
     void editQuickAccess();
+    void deleteMostVisited();
     void addQuickAccess();
     Evas_Object* showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode = false);
     void closeHistoryUI();

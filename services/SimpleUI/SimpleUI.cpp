@@ -160,6 +160,12 @@ std::shared_ptr<services::HistoryItemVector> SimpleUI::getMostVisitedItems()
     return m_historyService->getMostVisitedHistoryItems();
 }
 
+void SimpleUI::setMostVisitedFrequencyValue(
+    std::shared_ptr<services::HistoryItem> historyItem, int visitFrequency)
+{
+    m_historyService->setMostVisitedFrequency(historyItem->getId(), visitFrequency);
+}
+
 std::shared_ptr<services::HistoryItemVector> SimpleUI::getHistory()
 {
     return m_historyService->getHistoryToday();
@@ -357,9 +363,18 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->forwardPage.connect(boost::bind(&basic_webengine::AbstractWebEngine::forward, m_webEngine.get()));
     m_webPageUI->showQuickAccess.connect(boost::bind(&SimpleUI::showQuickAccess, this));
     m_webPageUI->hideQuickAccess.connect(boost::bind(&QuickAccess::hideUI, m_quickAccess));
-    m_webPageUI->getQuickAccessEditUI()->requestQuickAccessGengrid.connect(boost::bind(&QuickAccess::getQuickAccessGengrid, m_quickAccess.get()));
-    m_webPageUI->getQuickAccessEditUI()->editingFinished.connect(boost::bind(&QuickAccess::editingFinished, m_quickAccess.get()));
-    m_webPageUI->getQuickAccessEditUI()->closeUI.connect(boost::bind(&SimpleUI::closeTopView, this));
+    m_webPageUI->getQuickAccessEditUI()->requestQuickAccessGengrid.connect(
+        boost::bind(&QuickAccess::getQuickAccessGengrid, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->requestMostVisitedGengrid.connect(
+        boost::bind(&QuickAccess::getMostVisitedGengrid, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->requestQuickAccessState.connect(
+        boost::bind(&QuickAccess::getQuickAccessState, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->editingFinished.connect(
+        boost::bind(&QuickAccess::editingFinished, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->deleteSelectedMostVisitedItems.connect(
+        boost::bind(&QuickAccess::deleteSelectedMostVisitedItems, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->closeUI.connect(
+        boost::bind(&SimpleUI::closeTopView, this));
     m_webPageUI->focusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::setFocus, m_webEngine.get()));
     m_webPageUI->unfocusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::clearFocus, m_webEngine.get()));
     m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
@@ -385,6 +400,7 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->switchToMobileMode.connect(boost::bind(&SimpleUI::switchToMobileMode, this));
     m_webPageUI->switchToDesktopMode.connect(boost::bind(&SimpleUI::switchToDesktopMode, this));
     m_webPageUI->quickAccessEdit.connect(boost::bind(&SimpleUI::editQuickAccess, this));
+    m_webPageUI->deleteMostVisited.connect(boost::bind(&SimpleUI::deleteMostVisited, this));
     m_webPageUI->addToQuickAccess.connect(boost::bind(&SimpleUI::addQuickAccess, this));
     m_webPageUI->getEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::getState, m_webEngine.get()));
     // WPA
@@ -404,6 +420,10 @@ void SimpleUI::connectQuickAccessSignals()
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
     m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
     m_quickAccess->deleteQuickAccessItem.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
+    m_quickAccess->removeMostVisitedItem.connect(
+        boost::bind(&SimpleUI::setMostVisitedFrequencyValue, this, _1, _2));
+    m_quickAccess->sendSelectedMVItemsCount.connect(
+        boost::bind(&WebPageUI::setMostVisitedSelectedItemsCountInEditMode, m_webPageUI.get(), _1));
     m_quickAccess->isLandscape.connect(boost::bind(&SimpleUI::isLandscape, this));
 }
 
@@ -1707,6 +1727,13 @@ void SimpleUI::editQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_quickAccess->editQuickAccess();
+    pushViewToStack(m_webPageUI->getQuickAccessEditUI().get());
+}
+
+void SimpleUI::deleteMostVisited()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_quickAccess->deleteMostVisited();
     pushViewToStack(m_webPageUI->getQuickAccessEditUI().get());
 }
 

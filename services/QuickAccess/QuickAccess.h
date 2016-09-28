@@ -20,6 +20,7 @@
 #include <Evas.h>
 #include <boost/signals2/signal.hpp>
 #include <cstdint>
+#include <list>
 
 #include "AbstractUIComponent.h"
 #include "AbstractService.h"
@@ -29,7 +30,6 @@
 #include "services/HistoryService/HistoryItem.h"
 #include "services/HistoryService/HistoryItemTypedef.h"
 #include "BookmarkItem.h"
-#include "NaviframeWrapper.h"
 #include "Tools/EflTools.h"
 
 namespace tizen_browser{
@@ -38,6 +38,7 @@ namespace base_ui{
 enum class QuickAccessState {
     Default,
     Edit,
+    DeleteMostVisited,
 };
 
 class BROWSER_EXPORT QuickAccess
@@ -50,7 +51,9 @@ public:
     void init(Evas_Object *main_layout);
     Evas_Object* getContent();
     Evas_Object* getQuickAccessGengrid() {return m_quickAccessGengrid;}
+    Evas_Object* getMostVisitedGengrid() {return m_mostVisitedGengrid;}
     void setQuickAccessState(QuickAccessState state) {m_state = state;}
+    QuickAccessState getQuickAccessState() {return m_state;}
     void setMostVisitedItems(std::shared_ptr<services::HistoryItemVector> vec);
     void setQuickAccessItems(std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > vec);
     void hideUI();
@@ -65,14 +68,21 @@ public:
     void showMostVisited();
     void showQuickAccess();
     void editQuickAccess();
+    void deleteMostVisited();
+    void deleteSelectedMostVisitedItems();
     void editingFinished();
 
-    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, bool)> openURL;
+    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, bool)>
+        openURL;
     boost::signals2::signal<void ()> getMostVisitedItems;
     boost::signals2::signal<void ()> getQuickAccessItems;
     boost::signals2::signal<void ()> addQuickAccessClicked;
     boost::signals2::signal<void ()> switchViewToWebPage;
-    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)> deleteQuickAccessItem;
+    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)>
+        deleteQuickAccessItem;
+    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, int)>
+        removeMostVisitedItem;
+    boost::signals2::signal<void (int)> sendSelectedMVItemsCount;
 
 private:
     struct HistoryItemData
@@ -116,6 +126,7 @@ private:
     static void _grid_mostVisited_del(void *data, Evas_Object *obj);
     static void _thumbQuickAccessClicked(void * data, Evas_Object * obj, void * event_info);
     static void _thumbMostVisitedClicked(void * data, Evas_Object * obj, void * event_info);
+    static void _check_state_changed(void *data, Evas_Object *obj, void *);
     void setEmptyView(bool empty);
     void showNoMostVisitedLabel();
     static void setButtonColor(Evas_Object* button, int r, int b, int g, int a);
@@ -141,16 +152,14 @@ private:
     int m_currPage;
     Elm_Gengrid_Item_Class * m_quickAccess_item_class;
     Elm_Gengrid_Item_Class * m_mostVisited_item_class;
-    std::shared_ptr<services::HistoryItemVector> m_mostVisitedItems;
     std::string edjFilePath;
     bool m_desktopMode;
     QuickAccessState m_state;
-    SharedNaviframeWrapper m_naviframe;
 
     Evas_Object* m_index;
     Evas_Object* m_verticalScroller;
     Elm_Gengrid_Item_Class * m_quickAccess_tile_class;
-    std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > m_QuickAccessItems;
+    std::list<std::shared_ptr<tizen_browser::services::HistoryItem>> m_mv_delete_list;
     bool m_landscapeView;
     static const int MOST_VISITED_PAGE = 1;
     static const int QUICKACCESS_PAGE = 0;

@@ -54,6 +54,7 @@ public:
     void clearAllHistory();
     void clearURLHistory(const std::string & url);
     void deleteHistoryItem(int id);
+    void setMostVisitedFrequency(int id, int frequency);
     std::shared_ptr<HistoryItem> getHistoryItem(const std::string & url);
     std::shared_ptr<HistoryItemVector> getHistoryAll();
     std::shared_ptr<HistoryItemVector> getHistoryToday();

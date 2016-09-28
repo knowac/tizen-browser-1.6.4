@@ -437,6 +437,12 @@ void HistoryService::deleteHistoryItem(int id) {
     }
 }
 
+void HistoryService::setMostVisitedFrequency(int id, int frequency)
+{
+    if (bp_history_adaptor_set_frequency(id, frequency) < 0 )
+        errorPrint("bp_history_adaptor_set_frequency");
+}
+
 std::shared_ptr<HistoryItem> HistoryService::getHistoryItem(int * ids, int idNumber)
 {
     bp_history_offset offset = (BP_HISTORY_O_URL | BP_HISTORY_O_TITLE | BP_HISTORY_O_FAVICON | BP_HISTORY_O_DATE_VISITED);
