@@ -118,6 +118,7 @@ private:
     static void _thumbMostVisitedClicked(void * data, Evas_Object * obj, void * event_info);
     void setEmptyView(bool empty);
     void showNoMostVisitedLabel();
+    static void setButtonColor(Evas_Object* button, int r, int b, int g, int a);
 
     static void _mostVisited_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _quickAccess_clicked(void * data, Evas_Object * obj, void * event_info);
@@ -154,14 +155,15 @@ private:
     static const int MOST_VISITED_PAGE = 1;
     static const int QUICKACCESS_PAGE = 0;
     static const int BOOKMARK_ITEM_WIDTH = 150;
-    static const int BOOKAMRK_ITEM_HEIGHT = 196;
+    static const int BOOKAMRK_ITEM_HEIGHT = 204;
     static const int BOOKMARK_ITEM_WIDTH_LANDSCAPE = 150;
-    static const int BOOKAMRK_ITEM_HEIGHT_LANDSCAPE = 196;
+    static const int BOOKAMRK_ITEM_HEIGHT_LANDSCAPE = 204;
     static const int MOSTVISITED_ITEM_WIDTH = 200;
     static const int MOSTVISITED_ITEM_HEIGHT = 208;
     static const int MOSTVISITED_ITEM_WIDTH_LANDSCAPE = 200;
     static const int MOSTVISITED_ITEM_HEIGHT_LANDSCAPE = 208;
     static const int HEADER_HEIGHT = 116+38;
+    static const int DEFAULT_BUTTON_COLOR = 190;
 };
 
 }

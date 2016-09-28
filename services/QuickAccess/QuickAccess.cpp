@@ -18,6 +18,7 @@
 #include <boost/concept_check.hpp>
 #include <vector>
 #include <AbstractMainWindow.h>
+#include <cstdlib>
 
 #include "app_i18n.h"
 #include "QuickAccess.h"
@@ -91,7 +92,7 @@ void QuickAccess::createItemClasses()
     if (!m_quickAccess_item_class) {
         m_quickAccess_item_class = elm_gengrid_item_class_new();
         m_quickAccess_item_class->item_style = "quickAccess";
-        m_quickAccess_item_class->func.text_get = _grid_bookmark_text_get;
+        m_quickAccess_item_class->func.text_get = nullptr;
         m_quickAccess_item_class->func.content_get =  _grid_bookmark_content_get;
         m_quickAccess_item_class->func.state_get = nullptr;
         m_quickAccess_item_class->func.del = _grid_bookmark_del;
@@ -412,17 +413,6 @@ void QuickAccess::_layout_resize_cb(void* data, Evas* /*e*/, Evas_Object* /*obj*
     }
 }
 
-
-char* QuickAccess::_grid_bookmark_text_get(void *data, Evas_Object *, const char *part)
-{
-    if (data) {
-        BookmarkItemData *itemData = reinterpret_cast<BookmarkItemData*>(data);
-        if (!strcmp(part, "elm.text"))
-                return strdup(itemData->item->getTitle().c_str());
-    }
-    return strdup("");
-}
-
 Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object* obj, const char *part)
 {
     BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__, part);
@@ -430,33 +420,28 @@ Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object* o
         BookmarkItemData *itemData = reinterpret_cast<BookmarkItemData*>(data);
 
         if (!strcmp(part, "elm.swallow.icon")) {
-            if (itemData->item->getThumbnail()) {
+            Evas_Object *button = elm_button_add(obj);
+            elm_object_style_set(button, "roundedrect");
+            elm_object_part_text_set(button, "button_text", itemData->item->getTitle().c_str());
+
+            if (itemData->item->getFavicon()) {
                 // Favicon
                 Evas_Object * thumb = itemData->item->getFavicon()->getEvasImage(obj);
-                elm_image_resizable_set(thumb, EINA_TRUE, EINA_TRUE);
-                evas_object_size_hint_min_set(thumb, ELM_SCALE_SIZE(114), ELM_SCALE_SIZE(114));
-                evas_object_size_hint_max_set(thumb, ELM_SCALE_SIZE(114), ELM_SCALE_SIZE(114));
-                return thumb;
+                elm_object_part_content_set(button, "button_image", thumb);
+                elm_layout_signal_emit(button, "show,bg,favicon", "event");
             } else {
-                // Default color
-                Evas_Object *textblock = evas_object_textblock_add(obj);
-                Evas_Textblock_Style *st = evas_textblock_style_new();
-                evas_textblock_style_set(st, "DEFAULT='font=Sans font_size=45 color=#555 align=center valign=center'");
-                evas_object_textblock_style_set(textblock, st);
-                evas_object_textblock_valign_set(textblock, 0.5);
-                evas_textblock_style_free(st);
-                const char *fName = itemData->item->getTitle().substr(0, 1).c_str();
-                evas_object_textblock_text_markup_set(textblock, fName);
+                if (itemData->item->getTitle().length() > 0) {
+                    auto firstLetter = std::string(1, static_cast<char>(std::toupper(itemData->item->getTitle()[0])));
+                    elm_object_part_text_set(button, "center_label", firstLetter.c_str());
+                }
 
-
-                Evas_Object *button = elm_button_add(obj);
-                evas_object_color_set(button, 190, 190, 190, 255);
-                elm_object_content_set(button, textblock);
-
-                return button;
-
+                elm_layout_signal_emit(button, "show,bg,rectangle", "event");
+                setButtonColor(button, DEFAULT_BUTTON_COLOR, DEFAULT_BUTTON_COLOR, DEFAULT_BUTTON_COLOR, 255);
             }
+
+            return button;
         }
+
         if (itemData->quickAccess->m_state == QuickAccessState::Edit) {
             if (!strcmp(part, "elm.button")) {
                 auto button = elm_button_add(obj);
@@ -616,6 +601,19 @@ void QuickAccess::showNoMostVisitedLabel()
 {
     elm_object_translatable_part_text_set(m_mostVisitedView, "elm.text.empty", "IDS_BR_BODY_NO_VISITED_SITES");
     elm_layout_signal_emit(m_mostVisitedView, "empty,view", "quickaccess");
+}
+
+void QuickAccess::setButtonColor(Evas_Object* button, int r, int b, int g, int a)
+{
+    // setting color of inner rect
+    Edje_Message_Int_Set* msg = (Edje_Message_Int_Set *) malloc(sizeof(*msg) + 3 * sizeof(int));
+    msg->count = 4;
+    msg->val[0] = r;
+    msg->val[1] = b;
+    msg->val[2] = g;
+    msg->val[3] = a;
+    edje_object_message_send(elm_layout_edje_get(button), EDJE_MESSAGE_INT_SET, 0, msg);
+    free(msg);
 }
 
 void QuickAccess::setEmptyView(bool empty)

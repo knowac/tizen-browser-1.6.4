@@ -1,4 +1,5 @@
 #include "ImageButton.edc"
+#include "../../../core/Tools/edc/ColorClasses.edc"
 
 #define BUTTON_MIN_WIDTH_INC 50
 #define BUTTON_MIN_HEIGHT_INC 50
@@ -26,10 +27,6 @@ IMAGE_BUTTON("toolbar_input_ic_security_off.png", BUTTON_ICON_DEFAULT_HEIGHT_INC
          color_class{
             name: "uri_bg";
             color: 255 255 255 255;
-         }
-         color_class {
-             name: "highlight";
-             color: 224 237 251 255;
          }
       }
       script {
@@ -118,9 +115,10 @@ IMAGE_BUTTON("toolbar_input_ic_security_off.png", BUTTON_ICON_DEFAULT_HEIGHT_INC
             description { state: "ready" 0.0;
                inherit: "default" 0.0;
                visible: 1;
+               color_class: "transparent";
             }
             description { state: "pressed" 0.0;
-               color_class: "highlight";
+               color_class: "B042";
             }
          }
          part { name: "padding_left_top";

@@ -1,5 +1,6 @@
 #include "../../../core/Tools/edc/InvisibleButton.edc"
 #include "../../../core/Tools/edc/Spacer.edc"
+#include "../../../core/Tools/edc/ColorClasses.edc"
 #include "BrowserPageControl_mob.edc"
 
 #define URI_INPUTBOX_LENGTH 1720
@@ -25,25 +26,43 @@
 #define TOTAL_TILES_HEIGHT_LANDSCAPE 652
 #define TOTAL_TILES_WIDTH_LANDSCAPE 1214
 
+#define GLIDE_EASE_OUT(duration) CUBIC_BEZIER (duration) 0.25 0.46 0.45 1.0
+#define BUTTON_NAVIFRAME_BACK_CORNER_RADIUS "10"
+#define QA_BTN_WIDTH 138
+#define QA_BTN_HEIGHT 196
+#define TOP_PADDING 8
+#define ICON_SIZE 114
+
 #define DEVELOPMENT 1
+
 
 
 collections { base_scale: 2.6;
 
-color_classes{
-    color_class{
-        name: "lbBgColor";
-        color: 255 255 255 255;
+    color_classes {
+        color_class {
+            name: "button_normal";
+            color: 190 190 190 255;
+        }
+        color_class {
+            name: "lbBgColor";
+            color: 255 255 255 255;
+        }
+        color_class {
+            name: "focusBgColor";
+            color: 0 119 246 255;
+        }
+        color_class {
+            name: "mainBgColor";
+            color: 244 244 244 255;
+        }
     }
-    color_class{
-        name: "focusBgColor";
-        color: 0 119 246 255;
+
+    styles {
+        style { name: "bottom_lb";
+            base: "font=Tizen:style=Regular font_size="26" align=center color=#ffffffff text_class=tizen wrap=mixed ellipsis=1.0";
+        }
     }
-    color_class{
-        name: "transparent";
-        color: 0 0 0 0;
-    }
-}
 
 group {
     name: "elm/button/base/thumbButton";
@@ -82,7 +101,7 @@ group {
             type: RECT;
             scale: 1;
             description {
-                color: 244 244 244 255;
+                color_class: "mainBgColor";
                 state: "default" 0.0;
                 align: 0.0 0.0;
                 min: LAYOUT_WIDTH 0;
@@ -409,9 +428,7 @@ group {
             scale: 1;
             description { state: "default" 0.0;
                 fixed: 1 0;
-                align: 0.5 0.1;
-                min: 114 114;
-                max: 114 114;
+                align: 0.5 0.0;
                 rel1 {
                     relative: 0.0  0.0; to: "bg";
                 }
@@ -422,14 +439,10 @@ group {
             description { state: "selected";
                 inherit: "default" 0.0;
             }
-            description { state: "landscape" 0.0;
-                inherit: "default" 0.0;
-                min: 114 114;
-                max: 114 114;
-            }
         }
 
-        swallow { "elm.button"; scale;
+        swallow { name: "elm.button";
+            scale: 1;
             mouse_events: 1;
             repeat_events: 0;
             description { "default";
@@ -440,66 +453,7 @@ group {
                 rel2.to: "bg";
             }
         }
-
-        ADD_SPACER_BELOW("title_spacer", "elm.swallow.icon", 0, 8)
-
-        part { name: "text_bg";
-            type: RECT;
-            scale: 1;
-            description { state: "default" 0.0;
-                min: 114 64;
-                max: 114 64;
-                align: 0.0 0.0;
-                visible: 0;
-                rel1 {
-                    to: "title_spacer";
-                    relative: 0.0 1.0;
-                }
-                rel2 {
-                    to: "bg";
-                    relative: 1.0  1.0;
-                }
-            }
-            description { state: "selected" 0.0;
-                inherit: "default" 0.0;
-                color_class: "focusBgColor";
-            }
-            description { state: "landscape" 0.0;
-                inherit: "default" 0.0;
-                min: 114 64;
-                max: 114 64;
-            }
-            description { state: "selected_landscape" 0.0;
-                inherit: "landscape" 0.0;
-                color_class: "focusBgColor";
-            }
-        }
-
-        part { name: "elm.text";
-            type: TEXT;
-            scale: 1;
-            description { state: "default" 0.0;
-                min: 114 64;
-                max: 114 64;
-                align: 0.5 0.0;
-                color: 80 80 80 255;
-                rel1 {
-                    to: "text_bg";
-                    relative: 0.0 0.0;
-                }
-                rel2 {
-                    to: "text_bg";
-                    relative: 1.0  1.0;
-                }
-                text {
-                    font: "Sans";
-                    size: 26;
-                    align: 0.5 0;
-                }
-            }
-        }
     }
-    programs {}
 }
 
 group {
@@ -745,5 +699,314 @@ group {
     }
     programs {}
 }
+
+group { name: "elm/button/base/roundedrect";
+    data.item: "vector_ux" "no_bg";
+    data.item: "corner_radius" BUTTON_NAVIFRAME_BACK_CORNER_RADIUS;
+
+    images {
+        image: "mask.png" COMP;
+    }
+
+    parts {
+        part { name: "button_bg";
+            type: SPACER;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                min: QA_BTN_WIDTH QA_BTN_HEIGHT;
+                max: QA_BTN_WIDTH QA_BTN_HEIGHT;
+                fixed: 1 1;
+            }
+        }
+        part { name: "icon_spacer";
+            type: RECT;
+            scale: 1;
+            mouse_events: 0;
+            description {
+                visible: 0;
+                align: 0.0 0.0;
+                min: QA_BTN_WIDTH TOP_PADDING;
+                max: QA_BTN_WIDTH TOP_PADDING;
+                rel1 { relative: 0.0 0.0; to: "button_bg"; }
+                rel2 { relative: 1.0 1.0; to: "button_bg"; }
+            }
+        }
+        part { name: "button_icon";
+            type: RECT;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                min: ICON_SIZE ICON_SIZE;
+                max: ICON_SIZE ICON_SIZE;
+                fixed: 1 1;
+                color_class: "button_normal";
+                align: 0.5 0.0;
+                rel1 { relative: 0.0 1.0; to: "icon_spacer"; }
+                rel2 { relative: 1.0 1.0; to: "button_bg"; }
+            }
+            description { state: "favicon" 0.0;
+                inherit: "default" 0.0;
+                visible: 0;
+            }
+        }
+        part { name: "button_image";
+            type: SWALLOW;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                visible: 0;
+                rel1 { relative: 0.0 0.0; to: "button_icon"; }
+                rel2 { relative: 1.0 1.0; to: "button_icon"; }
+            }
+            description { state: "favicon" 0.0;
+                inherit: "default" 0.0;
+                visible: 1;
+            }
+        }
+        part { name: "mask";
+            type: IMAGE;
+            scale: 1;
+            mouse_events: 0;
+            description {
+                image.normal: "mask.png";
+                rel1 { relative: 0.0 0.0; to: "button_icon"; }
+                rel2 { relative: 1.0 1.0; to: "button_icon"; }
+            }
+        }
+        part { name: "center_label";
+            type: TEXT;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                align: 0.0 0.0;
+                color_class: "ATO003";
+                rel1 { relative: 0.0 0.0; to: "button_icon"; }
+                rel2 { relative: 1.0 1.0; to: "button_icon"; }
+                text {
+                    text: "";
+                    font: "Tizen";
+                    size: 45;
+                    align: 0.5 0.5;
+                }
+            }
+        }
+        part { name: "text_spacer";
+            type: RECT;
+            scale: 1;
+            mouse_events: 0;
+            description {
+                visible: 0;
+                align: 0.0 0.0;
+                color: 255 0 0 255;
+                min: 0 8;
+                max: 0 8;
+                rel1 { relative: 0.0 1.0; to: "button_icon"; }
+                rel2 { relative: 1.0 1.0; to: "button_bg"; }
+            }
+        }
+        part { name: "button_text";
+            type: TEXTBLOCK;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                align: 0.5 0.0;
+                color: 0 0 0 255;
+                min: ICON_SIZE 64;
+                max: ICON_SIZE 64;
+                rel1 { relative: 0.0 1.0;
+                    to_x: "button_bg";
+                    to_y: "text_spacer";
+                }
+                rel2 { relative: 1.0 1.0; to: "button_bg"; }
+                text {
+                    style: "bottom_lb";
+                    align: 0.5 0.0;
+                }
+            }
+        }
+        part { name: "effect_spacer";
+            type: SPACER;
+            scale: 1;
+            description { state: "default" 0.0;
+                fixed: 1 1;
+                rel1.relative: 0.5 0.5;
+                rel2.relative: 0.5 0.5;
+                min: QA_BTN_WIDTH QA_BTN_HEIGHT;
+                max: QA_BTN_WIDTH QA_BTN_HEIGHT;
+            }
+        }
+        part { name: "tizen_vg_shape";
+            type: SWALLOW;
+            clip_to: "tizen_vg_shape_clipper";
+            scale: 1;
+            description { state: "default" 0.0;
+                fixed: 1 1;
+                rel1.relative: 0.5 0.5;
+                rel2.relative: 0.5 0.5;
+            }
+            description { state: "ready" 0.0;
+                rel1.to: "effect_spacer";
+                rel2.to: "effect_spacer";
+                rel1.relative: 0.15 0.15;
+                rel2.relative: 0.85 0.85;
+            }
+            description { state: "pressed" 0.0;
+                inherit: "ready" 0.0;
+                rel1.relative: 0.0 0.0;
+                rel2.relative: 1.0 1.0;
+            }
+        }
+        part { name: "tizen_vg_shape_clipper";
+            type: RECT;
+            description { state: "default" 0.0;
+                color_class: "transparent";
+                visible: 0;
+                fixed: 1 1;
+                rel1.to: "tizen_vg_shape";
+                rel2.to: "tizen_vg_shape";
+            }
+            description { state: "ready" 0.0;
+                inherit: "default" 0.0;
+                visible: 1;
+                color_class: "B042";
+            }
+            description { state: "pressed" 0.0;
+                inherit: "default" 0.0;
+                visible: 1;
+                color_class: "B042";
+            }
+        }
+        part { name: "event";
+            type: RECT;
+            description { state: "default" 0.0;
+                rel1.to: "button_bg";
+                rel2.to: "button_bg";
+                color: 0 0 0 0;
+            }
+        }
+    }
+    script {
+        public mouse_down = 0;
+        public multi_down = 0;
+        public animate = 0;
+        public disabled = 0;
+
+        public message(Msg_Type:type, id, ...) {
+            if ((type == MSG_INT_SET) && (id == 0)) {
+                new r, g, b, a;
+                r = getarg(2);
+                g = getarg(3);
+                b = getarg(4);
+                a = getarg(5);
+                custom_state(PART:"button_icon","default",0.0);
+                set_state_val(PART:"button_icon", STATE_COLOR, r, g, b, a);
+                set_state(PART:"button_icon","custom",0.0);
+            }
+        }
+    }
+    programs {
+        program { name: "pressed_effect";
+            action: STATE_SET "ready" 0.0;
+            target: "tizen_vg_shape_clipper";
+            target: "tizen_vg_shape";
+            after: "pressed_effect2";
+        }
+        program { name: "pressed_effect2";
+            action: STATE_SET "pressed" 0.0;
+            target: "tizen_vg_shape_clipper";
+            target: "tizen_vg_shape";
+            transition: GLIDE_EASE_OUT(0.15);
+            after: "pressed_effect3";
+        }
+        program { name: "pressed_effect3";
+            script {
+                set_int(animate, 0);
+            }
+        }
+        program { name: "delay_unpressed_effect";
+            in: 0.1 0.0;
+            after: "unpressed_effect";
+        }
+        program { name: "unpressed_effect";
+            script {
+                run_program(PROGRAM:"unpressed_effect2");
+            }
+        }
+        program { name: "unpressed_effect2";
+            action: STATE_SET "ready" 0.0;
+            target: "tizen_vg_shape_clipper";
+            transition: GLIDE_EASE_OUT(0.45);
+            after: "unpressed_effect3";
+        }
+        program { name: "unpressed_effect3";
+            action: STATE_SET "default" 0.0;
+            target: "tizen_vg_shape";
+            target: "tizen_vg_shape_clipper";
+        }
+        program { name: "pressed";
+            signal: "mouse,down,1*";
+            source: "event";
+            script {
+                if ((get_int(multi_down) == 0) && (get_int(mouse_down) == 0) && (get_int(disabled) == 0)) {
+                stop_program(PROGRAM:"delay_unpressed_effect");
+                set_int(mouse_down, 1);
+                set_int(animate, 1);
+                emit("elm,action,press", "");
+                run_program(PROGRAM:"pressed_effect");
+                }
+            }
+        }
+        program { name: "unpressed";
+            signal: "mouse,up,1";
+            source: "event";
+            script {
+                if (get_int(mouse_down) == 1) {
+                set_int(mouse_down, 0);
+                if (get_int(disabled) == 0) {
+                    if (get_int(animate) == 0) {
+                        run_program(PROGRAM:"unpressed_effect");
+                    } else {
+                        set_state(PART:"tizen_vg_shape", "pressed", 0.0);
+                        set_state(PART:"tizen_vg_shape_clipper", "pressed", 0.0);
+                        set_int(animate, 0);
+                        run_program(PROGRAM:"delay_unpressed_effect");
+                    }
+                    emit("elm,action,unpress", "");
+                }
+                }
+            }
+        }
+        program { name: "button_click";
+            signal: "mouse,clicked,1";
+            source: "event";
+            script {
+                if ((get_int(multi_down) == 0) && (get_int(disabled) == 0)) {
+                    run_program(PROGRAM:"clicked_signal");
+                }
+            }
+        }
+        program { name: "clicked_signal";
+            in: 0.001 0.0;
+            action: SIGNAL_EMIT "elm,action,click" "";
+        }
+        program { name: "show_rectangle";
+            signal: "show,bg,rectangle";
+            source: "event";
+            action:  STATE_SET "default" 0.0;
+            target: "button_icon";
+            target: "button_image";
+        }
+        program { name: "show_favicon";
+            signal: "show,bg,favicon";
+            source: "event";
+            action:  STATE_SET "favicon" 0.0;
+            target: "button_icon";
+            target: "button_image";
+        }
+    }
+}
+
+
 }
 

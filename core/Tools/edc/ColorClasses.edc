@@ -44,9 +44,17 @@ color_classes {
         color: 255 255 255 230;
     }
     color_class {
+        name: "B042";
+        color: 61 185 204 38;
+    }
+    color_class {
         name: "secret";
         //TODO: add correct color when guidelines are fixed.
         color: 97 97 97 255;
+    }
+    color_class{
+        name: "transparent";
+        color: 0 0 0 0;
     }
 //Font colors
     color_class {
@@ -56,5 +64,9 @@ color_classes {
     color_class {
         name: "ATO016";
         color: 0 0 0 255;
+    }
+    color_class {
+        name: "ATO003";
+        color: 255 255 255 255;
     }
 }
