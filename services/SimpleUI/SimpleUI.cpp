@@ -545,6 +545,9 @@ void SimpleUI::connectSettingsSignals()
     // SETTINGS DELETE DATA
     SPSC.deleteSelectedDataClicked.connect(
         boost::bind(&SimpleUI::settingsDeleteSelectedData, this,_1));
+
+    SPSC.userAgentItemClicked.connect(
+        boost::bind(&SimpleUI::settingsOverrideUseragent, this,_1));
 }
 
 void SimpleUI::connectWebEngineSignals()
@@ -2070,5 +2073,50 @@ void SimpleUI::deleteBookmark()
         text));
     evas_object_show(toast);
 }
+
+void SimpleUI::settingsOverrideUseragent(const std::string& userAgent)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (m_webPageUI->stateEquals(WPUState::QUICK_ACCESS)) {
+        NotificationPopup *popup =
+            NotificationPopup::createNotificationPopup(m_viewManager.getContent());
+        popup->show("Open a webpage to perform this operation.");
+        popup->dismiss();
+        closeSettingsUI();
+        return;
+    }
+
+    if (userAgent.empty()) {
+        InputPopup *inputPopup = InputPopup::createPopup(
+            m_viewManager.getContent(),
+            "Override UserAgent", "",
+            "",
+            _("IDS_BR_SK_DONE"),
+            _("IDS_BR_SK_CANCEL_ABB"),
+            true);
+        inputPopup->button_clicked.connect(
+            boost::bind(&SimpleUI::onOverrideUseragentButton, this, _1));
+        inputPopup->popupShown.connect(
+            boost::bind(&SimpleUI::showPopup, this, _1));
+        inputPopup->popupDismissed.connect(
+            boost::bind(&SimpleUI::dismissPopup, this, _1));
+        inputPopup->show();
+    }
+    else {
+        onOverrideUseragentButton(userAgent);
+    }
+}
+
+void SimpleUI::onOverrideUseragentButton(const std::string& newUA)
+{
+    BROWSER_LOGD("[%s]: Overriding useragent", __func__);
+    NotificationPopup *popup =
+        NotificationPopup::createNotificationPopup(m_viewManager.getContent());
+    m_webEngine->setUserAgent(newUA);
+    popup->show("UserAgent updated..");
+    popup->dismiss();
+    closeSettingsUI();
+}
+
 }
 }

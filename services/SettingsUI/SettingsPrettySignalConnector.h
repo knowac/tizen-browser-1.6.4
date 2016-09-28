@@ -62,6 +62,7 @@ public:
     B_SIG<void ()> settingsHomePageClicked;
     B_SIG<void ()> settingsAutofillClicked;
     B_SIG<void ()> settingsAdvancedClicked;
+    B_SIG<void ()> settingsUserAgentClicked;
     B_SIG<void (bool)> settingsAutofillProfileClicked;
     B_SIG<void (const std::string&)> homePageChanged;
     B_SIG<std::string ()> requestCurrentPage;
@@ -75,6 +76,7 @@ public:
     B_SIG<void ()> showTextPopup;
     B_SIG<void (std::string)> setProfileName;
     B_SIG<void ()> autoFillCleared;
+    B_SIG<void (const std::string&)> userAgentItemClicked;
 
 private:
     SettingsPrettySignalConnector(){};

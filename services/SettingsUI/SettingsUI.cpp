@@ -162,6 +162,19 @@ Evas_Object* SettingsUI::createActionBar(Evas_Object* settings_layout)
     return actionBar;
 }
 
+Evas_Object* SettingsUI::_gengrid_item_content_radio_get(void* data, Evas_Object* obj, const char* part)
+{
+    if (!data) {
+        BROWSER_LOGE("data is null");
+        return nullptr;
+    }
+    if (strcmp(part, "elm.swallow.end") == 0) {
+        auto itd = static_cast<ItemData*>(data);
+        return itd->sui->createRadioButton(obj, itd);
+    }
+    return nullptr;
+}
+
 char* SettingsUI::_gengrid_item_text_get(void* data, Evas_Object*, const char* part)
 {
    M_ASSERT(data);
@@ -221,19 +234,6 @@ Evas_Object* SettingsUI::_gengrid_item_content_normal_get(void* data, Evas_Objec
     auto itd = static_cast<ItemData*>(data);
     if (strcmp(part, "elm.swallow.end") == 0)
         return itd->sui->createNormalCheckBox(obj, itd);
-    return nullptr;
-}
-
-Evas_Object* SettingsUI::_gengrid_item_content_radio_get(void* data, Evas_Object* obj, const char* part)
-{
-    if (!data) {
-        BROWSER_LOGE("data is null");
-        return nullptr;
-    }
-    if (strcmp(part, "elm.swallow.end") == 0) {
-        auto itd = static_cast<ItemData*>(data);
-        return itd->sui->createRadioButton(obj, itd);
-    }
     return nullptr;
 }
 

@@ -10,6 +10,7 @@ set(SettingsUI_SRCS
     SettingsDelPersData.cpp
     SettingsAFProfile.cpp
     SettingsAFCreator.cpp
+    SettingsUserAgent.cpp
     AutoFillForm/AutoFillFormItem.cpp
     )
 set(SettingsUI_HEADERS
@@ -22,6 +23,7 @@ set(SettingsUI_HEADERS
     SettingsDelPersData.h
     SettingsAFProfile.h
     SettingsAFCreator.h
+    SettingsUserAgent.h
     SettingsPrettySignalConnector.h
     AutoFillForm/AutoFillFormItem.h
     )

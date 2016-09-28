@@ -27,6 +27,7 @@
 #include "SettingsDelPersData.h"
 #include "SettingsAFProfile.h"
 #include "SettingsAFCreator.h"
+#include "SettingsUserAgent.h"
 #include "service_macros.h"
 #include <string>
 #include <map>
@@ -37,7 +38,7 @@
 namespace tizen_browser{
 namespace base_ui{
 
-typedef std::shared_ptr<SettingsUI> SetPtr;
+using SetPtr = std::shared_ptr<SettingsUI>;
 class BROWSER_EXPORT SettingsManager
     : public tizen_browser::core::AbstractService
 {
@@ -55,6 +56,7 @@ public:
     void showSettingsAutofillUI();
     void showSettingsAutofillCreatorUI(bool);
     void showSettingsPrivacyUI();
+    void showSettingsUserAgentUI();
     void showSettingsAdvancedUI();
     void showSettingsDelPrivDataUI();
 

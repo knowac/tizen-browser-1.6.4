@@ -251,6 +251,9 @@ private:
      */
     void deleteBookmark(void);
 
+    void settingsOverrideUseragent(const std::string& userAgent);
+    void onOverrideUseragentButton(const std::string& newUA);
+
 #if !PROFILE_MOBILE
     /**
      * @brief show Zoom Menu

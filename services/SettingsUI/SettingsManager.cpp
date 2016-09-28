@@ -51,6 +51,8 @@ void SettingsManager::connectOpenSignals()
         boost::bind(&SettingsManager::showSettingsAutofillUI, this));
     SPSC.settingsPrivacyClicked.connect(
         boost::bind(&SettingsManager::showSettingsPrivacyUI, this));
+    SPSC.settingsUserAgentClicked.connect(
+        boost::bind(&SettingsManager::showSettingsUserAgentUI, this));
     SPSC.settingsAdvancedClicked.connect(
         boost::bind(&SettingsManager::showSettingsAdvancedUI, this));
     SPSC.settingsDelPersDataClicked.connect(
@@ -87,6 +89,9 @@ std::shared_ptr<SettingsUI> SettingsManager::addView(const SettingsMainOptions& 
                 break;
             case DEL_PERSONAL_DATA:
                 m_settingsViews[s] = std::make_shared<SettingsDelPersData>(m_parent);
+                break;
+            case USER_AGENT:
+                m_settingsViews[s] = std::make_shared<SettingsUserAgent>(m_parent);
                 break;
             default:
                 break;
@@ -132,6 +137,12 @@ void SettingsManager::showSettingsPrivacyUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     SPSC.showSettings(SettingsMainOptions::PRIVACY);
+}
+
+void SettingsManager::showSettingsUserAgentUI()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    SPSC.showSettings(SettingsMainOptions::USER_AGENT);
 }
 
 void SettingsManager::showSettingsAdvancedUI()

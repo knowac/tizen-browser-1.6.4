@@ -42,7 +42,8 @@ enum SettingsMainOptions {
     PRIVACY,
     ZOOM,
     ADVANCED,
-    DEL_PERSONAL_DATA
+    DEL_PERSONAL_DATA,
+    USER_AGENT
 };
 
 class SettingsMain
@@ -65,6 +66,7 @@ public:
     static void _advanced_cb(void *data, Evas_Object*obj , void* event_info);
     static void _auto_fill_cb(void* data, Evas_Object* obj, void* event_info);
     static void _privacy_cb(void* data, Evas_Object* obj, void * event_info);
+    static void _user_agent_cb(void*, Evas_Object*, void*);
     static void grid_item_check_changed(void* data, Evas_Object* obj, void*);
     void setSearchEngineSubText(int button);
     void setHomePageSubText();

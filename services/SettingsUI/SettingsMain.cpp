@@ -74,12 +74,18 @@ void SettingsMain::updateButtonMap()
     advanced.sui = this;
     advanced.id = ADVANCED;
 
+    ItemData userAgent;
+    userAgent.buttonText = std::string("Developer Mode");
+    userAgent.sui = this;
+    userAgent.id = USER_AGENT;
+
     m_buttonsMap[SettingsMainOptions::HOME] = homePage;
     m_buttonsMap[SettingsMainOptions::SEARCH] = search;
     m_buttonsMap[SettingsMainOptions::AUTO_FILL_PROFILE] = autofill;
     m_buttonsMap[SettingsMainOptions::ZOOM] = zoom;
     m_buttonsMap[SettingsMainOptions::PRIVACY] = privacy;
     m_buttonsMap[SettingsMainOptions::ADVANCED] = advanced;
+    m_buttonsMap[SettingsMainOptions::USER_AGENT] = userAgent;
 
     SPSC.setSearchEngineSubText.connect(
         boost::bind(&SettingsMain::setSearchEngineSubText, this, _1));
@@ -106,6 +112,8 @@ bool SettingsMain::populateList(Evas_Object* genlist)
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::PRIVACY], _privacy_cb);
     m_genlistItems[SettingsMainOptions::ADVANCED] =
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::ADVANCED], _advanced_cb);
+    m_genlistItems[SettingsMainOptions::USER_AGENT] =
+        appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::USER_AGENT], _user_agent_cb);
     return true;
 }
 
@@ -168,6 +176,12 @@ void SettingsMain::_advanced_cb(void*, Evas_Object*, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     SPSC.settingsAdvancedClicked();
+}
+
+void SettingsMain::_user_agent_cb(void*, Evas_Object*, void*)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    SPSC.settingsUserAgentClicked();
 }
 
 void SettingsMain::_auto_fill_cb(void*, Evas_Object*, void*)
