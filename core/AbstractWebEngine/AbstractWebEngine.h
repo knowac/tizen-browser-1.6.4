@@ -271,7 +271,6 @@ public:
      */
     virtual int getZoomFactor()const = 0;
 
-
     /**
      * @brief Sets zoom factor in percentage
      *
@@ -332,12 +331,10 @@ public:
      */
     virtual void backButtonClicked() = 0;
 
-#if PROFILE_MOBILE
     /**
      * @brief clear text selection or exit full screen when more key is pressed
      */
     virtual void moreKeyPressed() = 0;
-#endif
 
     /**
      * @brief Switch current view to mobile mode
@@ -575,7 +572,6 @@ public:
     boost::signals2::signal<void (std::string)> iconDownload;
 #endif
 
-#if PROFILE_MOBILE
     /**
      * Register H/W back key callback for the current webview
      */
@@ -592,10 +588,14 @@ public:
     boost::signals2::signal<int()> getRotation;
 
     /**
+      Async signal to inform browser to finish rotation.
+     */
+    boost::signals2::signal<void ()> rotatePrepared;
+
+    /**
      * Unsecure connection to https host, do not even ask to confirm, just inform.
      */
     boost::signals2::signal<void()> unsecureConnection;
-#endif
 };
 
 } /* end of basic_webengine */

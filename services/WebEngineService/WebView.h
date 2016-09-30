@@ -31,14 +31,11 @@
 #include "AbstractWebEngine/WebConfirmation.h"
 #include "AbstractWebEngine/TabOrigin.h"
 
-#if PROFILE_MOBILE
 #include "DownloadControl/DownloadControl.h"
 #include <app_control.h>
 #include <app.h>
 #include "AbstractRotatable.h"
-#endif
 
-#if PROFILE_MOBILE
 typedef enum _context_menu_type {
     TEXT_ONLY = 0,
     INPUT_FIELD,
@@ -62,25 +59,20 @@ typedef enum _custom_context_menu_item_tag {
     CUSTOM_CONTEXT_MENU_ITEM_SEND_EMAIL,
     CUSTOM_CONTEXT_MENU_ITEM_SEND_ADD_TO_CONTACT,
 } custom_context_menu_item_tag;
-#endif
 
 namespace tizen_browser {
 namespace basic_webengine {
 namespace webengine_service {
 
 class WebView
-#if PROFILE_MOBILE
         : public tizen_browser::interfaces::AbstractRotatable
-#endif
 {
 public:
     WebView(Evas_Object *, TabId, const std::string& title, bool incognitoMode);
     virtual ~WebView();
     void init(bool desktopMode, TabOrigin origin);
 
-#if PROFILE_MOBILE
     virtual void orientationChanged() override;
-#endif
 
     void setURI(const std::string &);
     std::string getURI(void);
@@ -196,7 +188,6 @@ public:
 
     TabOrigin getOrigin() { return m_origin; }
 
-#if PROFILE_MOBILE
     /**
      * @brief Searches for word in the current page.
      *
@@ -256,7 +247,6 @@ public:
      * @brief Set autofill profile data enabled settings flag.
      */
     void ewkSettingsFormProfileDataEnabledSet(bool value);
-#endif
 
 // signals
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::tools::BrowserImage>)> favIconChanged;
@@ -282,6 +272,8 @@ public:
     boost::signals2::signal<void (const std::string&, const std::string&)> setCertificatePem;
     boost::signals2::signal<void (const std::string&, const std::string&)> setWrongCertificatePem;
 
+    boost::signals2::signal<void ()> rotatePrepared;
+
     boost::signals2::signal<void (const std::string&, const std::string&)> redirectedWebPage;
     boost::signals2::signal<void()> unsecureConnection;
     boost::signals2::signal<void(bool)> fullscreenModeSet;
@@ -306,7 +298,6 @@ private:
     static int result_cb(int ret, void *data);
 #endif
 
-#if  PROFILE_MOBILE
     context_menu_type _get_menu_type(Ewk_Context_Menu *menu);
     void _customize_context_menu(Ewk_Context_Menu *menu);
     void _show_context_menu_text_link(Ewk_Context_Menu *menu);
@@ -321,6 +312,7 @@ private:
     static void __contextmenu_selected_cb(void *data, Evas_Object *obj, void *event_info);
     static void __fullscreen_enter_cb(void *data, Evas_Object *obj, void *event_info);
     static void __fullscreen_exit_cb(void *data, Evas_Object *obj, void *event_info);
+    static void __rotate_prepared_cb(void *data, Evas_Object *obj, void *event_info);
 
     Eina_Bool handle_scheme(const char *uri);
     Eina_Bool launch_email(const char *uri);
@@ -328,7 +320,6 @@ private:
     Eina_Bool launch_dialer(const char *uri);
     Eina_Bool launch_message(const char *uri);
     Eina_Bool launch_tizenstore(const char *uri);
-#endif
 
     // Load
     static void __loadStarted(void * data, Evas_Object * obj, void * event_info);
@@ -358,11 +349,9 @@ private:
 
     static void scriptLinkSearchCallback(Evas_Object *o, const char *value, void *data);
 
-#if PROFILE_MOBILE
     // downloads
     static void __policy_response_decide_cb(void *data, Evas_Object *obj, void *event_info);
     static void __policy_navigation_decide_cb(void *data, Evas_Object *obj, void *event_info);
-#endif
 
     // Screenshot capture
     static void __screenshotCaptured(Evas_Object* image, void* user_data);
@@ -393,11 +382,9 @@ private:
     static std::string m_pwaData;
 #endif
 
-#if PROFILE_MOBILE
     int m_status_code;
     Eina_Bool m_is_error_page;
     DownloadControl *m_downloadControl;
-#endif
 };
 
 } /* namespace webengine_service */

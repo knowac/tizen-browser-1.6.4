@@ -48,7 +48,6 @@ WebEngineService::WebEngineService()
     m_stateStruct->mostRecentTab.clear();
     m_stateStruct->tabs.clear();
 
-#if PROFILE_MOBILE
     // init settings
     m_settings[WebEngineSettings::PAGE_OVERVIEW] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_PAGE_OVERVIEW));
     m_settings[WebEngineSettings::LOAD_IMAGES] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_LOAD_IMAGES));
@@ -57,7 +56,6 @@ WebEngineService::WebEngineService()
     m_settings[WebEngineSettings::REMEMBER_PASSWORDS] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_REMEMBER_PASSWORDS));
     m_settings[WebEngineSettings::AUTOFILL_PROFILE_DATA] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_AUTOFILL_PROFILE_DATA));
     m_settings[WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_SCRIPTS_CAN_OPEN_PAGES));
-#endif
 }
 
 WebEngineService::~WebEngineService()
@@ -150,11 +148,10 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
 #if PWA
     webView->iconDownload.connect(boost::bind(&WebEngineService::_iconDownload, this, _1));
 #endif
-#if PROFILE_MOBILE
     webView->getRotation.connect(boost::bind(&WebEngineService::_getRotation, this));
+    webView->rotatePrepared.connect([this](){rotatePrepared();});
     webView->unsecureConnection.connect(boost::bind(&WebEngineService::_unsecureConnection, this));
     webView->findOnPage.connect(boost::bind(&WebEngineService::_findOnPage, this, _1));
-#endif
 }
 
 void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
@@ -178,11 +175,10 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
 #if PWA
     webView->iconDownload.disconnect(boost::bind(&WebEngineService::_iconDownload, this));
 #endif
-#if PROFILE_MOBILE
     webView->getRotation.disconnect(boost::bind(&WebEngineService::_getRotation, this));
+    webView->rotatePrepared.disconnect_all_slots();
     webView->unsecureConnection.disconnect(boost::bind(&WebEngineService::_unsecureConnection, this));
     webView->findOnPage.disconnect(boost::bind(&WebEngineService::_findOnPage, this, _1));
-#endif
 }
 
 void WebEngineService::disconnectCurrentWebViewSignals()
@@ -310,9 +306,7 @@ void WebEngineService::suspend()
         return;
     }
     m_currentWebView->suspend();
-#if PROFILE_MOBILE
-        unregisterHWKeyCallback();
-#endif
+    unregisterHWKeyCallback();
 }
 
 void WebEngineService::resume()
@@ -324,9 +318,7 @@ void WebEngineService::resume()
         return;
     }
     m_currentWebView->resume();
-#if PROFILE_MOBILE
-        registerHWKeyCallback();
-#endif
+    registerHWKeyCallback();
 }
 
 bool WebEngineService::isSuspended() const
@@ -374,9 +366,7 @@ void WebEngineService::back(void)
     }
     m_stopped = false;
     m_currentWebView->back();
-#if PROFILE_MOBILE
     closeFindOnPage();
-#endif
 }
 
 void WebEngineService::forward(void)
@@ -389,9 +379,7 @@ void WebEngineService::forward(void)
     }
     m_stopped = false;
     m_currentWebView->forward();
-#if PROFILE_MOBILE
     closeFindOnPage();
-#endif
 }
 
 bool WebEngineService::isBackEnabled() const
@@ -547,9 +535,7 @@ TabId WebEngineService::addTab(
 
     m_stateStruct->tabs[newTabId] = p;
 
-#if PROFILE_MOBILE
     setWebViewSettings(p);
-#endif
 
     if (!uri.empty()) {
         p->setURI(uri);
@@ -582,9 +568,8 @@ bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabI
         BROWSER_LOGW("[%s:%d] there is no tab of id %d", __PRETTY_FUNCTION__, __LINE__, newTabId.get());
         return false;
     }
-#if PROFILE_MOBILE
     closeFindOnPage();
-#endif
+
     m_currentWebView = m_stateStruct->tabs[newTabId];
     m_currentTabId = newTabId;
     m_stateStruct->mostRecentTab.erase(
@@ -602,9 +587,7 @@ bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabI
     forwardEnableChanged(m_currentWebView->isForwardEnabled());
     backwardEnableChanged(m_currentWebView->isBackEnabled());
     currentTabChanged(m_currentTabId);
-#if PROFILE_MOBILE
     m_currentWebView->orientationChanged();
-#endif
 
     return true;
 }
@@ -731,7 +714,6 @@ std::shared_ptr<tizen_browser::tools::BrowserImage> WebEngineService::getFavicon
         return std::make_shared<tizen_browser::tools::BrowserImage>();
 }
 
-#if PROFILE_MOBILE
 void WebEngineService::setWebViewSettings(std::shared_ptr<WebView> webView) {
     webView->ewkSettingsAutoFittingSet(m_settings[WebEngineSettings::PAGE_OVERVIEW]);
     webView->ewkSettingsLoadsImagesSet(m_settings[WebEngineSettings::LOAD_IMAGES]);
@@ -757,7 +739,6 @@ void WebEngineService::_findOnPage(const std::string& str)
 {
     openFindOnPage(str);
 }
-#endif
 
 int WebEngineService::getZoomFactor() const
 {
@@ -863,7 +844,6 @@ void WebEngineService::_setWrongCertificatePem(const std::string& uri, const std
     setWrongCertificatePem(uri, pem);
 }
 
-#if PROFILE_MOBILE
 void WebEngineService::_download_request_cb(const char *download_uri, void *data)
 {
      BROWSER_LOGD("[%s:%d] download_uri= [%s]", __PRETTY_FUNCTION__, __LINE__, download_uri);
@@ -918,7 +898,6 @@ void WebEngineService::moreKeyPressed()
         m_currentWebView->exitFullScreen();
     }
 }
-#endif
 
 void WebEngineService::backButtonClicked()
 {
@@ -929,7 +908,6 @@ void WebEngineService::backButtonClicked()
         return;
     }
 
-#if PROFILE_MOBILE
     if (m_currentWebView->clearTextSelection())
         return;
 
@@ -937,7 +915,6 @@ void WebEngineService::backButtonClicked()
         m_currentWebView->exitFullScreen();
         return;
     }
-#endif
 
     if (isBackEnabled()) {
         m_currentWebView->back();

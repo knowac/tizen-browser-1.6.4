@@ -181,10 +181,8 @@ public:
      */
     void backButtonClicked();
 
-#if PROFILE_MOBILE
     void moreKeyPressed();
     void orientationChanged();
-#endif
 
     void switchToMobileMode();
     void switchToDesktopMode();
@@ -249,13 +247,12 @@ private:
 #if PWA
     void _iconDownload(std::string download_uri);
 #endif
-#if PROFILE_MOBILE
+
     int _getRotation();
     void setWebViewSettings(std::shared_ptr<WebView> webView);
     void _unsecureConnection();
     void _findOnPage(const std::string& str);
     static void _download_request_cb(const char *download_uri, void *data);
-#endif
 
     /**
      * disconnect signals from specified WebView

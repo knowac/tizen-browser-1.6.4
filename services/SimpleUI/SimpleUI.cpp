@@ -62,12 +62,7 @@ const std::string HomePageURL = "about:home";
 const std::string ResetBrowserPopupMsg = "Do you really want to reset Browser?" \
                                          " If you press Reset, delete all data" \
                                          " and return to initial setting.";
-const int SCALE_FACTOR =
-#if PROFILE_MOBILE
-        720;
-#else
-        1920;
-#endif
+const int SCALE_FACTOR = 720;
 
 SimpleUI::SimpleUI()
     : AbstractMainWindow()
@@ -86,6 +81,7 @@ SimpleUI::SimpleUI()
 #if PWA
     , m_pwa()
 #endif
+    , m_manualRotation(false)
     , m_current_angle(0)
     , m_temp_angle(0)
 {
@@ -109,10 +105,11 @@ SimpleUI::SimpleUI()
 
     elm_win_resize_object_add(main_window, m_viewManager.getConformant());
     evas_object_show(main_window);
-#if PROFILE_MOBILE
+
     if (elm_win_wm_rotation_supported_get(main_window)) {
         rotationType(rotationLock::noLock);
         evas_object_smart_callback_add(main_window, "wm,rotation,changed", __orientation_changed, this);
+        enableManualRotation(false);
     } else
         BROWSER_LOGW("[%s:%d] Device does not support rotation.", __PRETTY_FUNCTION__, __LINE__);
 
@@ -120,7 +117,6 @@ SimpleUI::SimpleUI()
     // determine if keyboard has been shown. I think it is possible to unify it with below callbacks.
     evas_object_smart_callback_add(m_viewManager.getConformant(), "virtualkeypad,state,on", onUrlIMEOpened, this);
     evas_object_smart_callback_add(m_viewManager.getConformant(), "virtualkeypad,state,off",onUrlIMEClosed, this);
-#endif
 }
 
 SimpleUI::~SimpleUI() {
@@ -141,10 +137,8 @@ void SimpleUI::resume()
     }
     m_webEngine->preinitializeWebViewCache();
     m_webEngine->resume();
-#if PROFILE_MOBILE
     if (m_findOnPageUI && m_findOnPageUI->isVisible())
         m_findOnPageUI->show_ime();
-#endif
 }
 
 void SimpleUI::destroyUI()
@@ -194,7 +188,7 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             initModelServices();
 
             //Push first view to stack.
-            m_viewManager.pushViewToStack(m_webPageUI.get());
+            pushViewToStack(m_webPageUI.get());
 
             // Register H/W back key callback
             m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
@@ -368,6 +362,7 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->unfocusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::clearFocus, m_webEngine.get()));
     m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
         m_favoriteService->getRoot(), BookmarkManagerState::Default));
+    m_webPageUI->updateManualRotation.connect([this](){enableManualRotation(isManualRotation(m_viewManager.topOfStack()));});
     m_webPageUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_webPageUI->isBookmark.connect(boost::bind(&SimpleUI::checkBookmark, this));
     m_webPageUI->deleteBookmark.connect(boost::bind(&SimpleUI::deleteBookmark, this));
@@ -571,6 +566,7 @@ void SimpleUI::connectWebEngineSignals()
     m_webEngine->createTabId.connect(boost::bind(&SimpleUI::onCreateTabId, this));
     m_webEngine->snapshotCaptured.connect(boost::bind(&SimpleUI::onSnapshotCaptured, this, _1, _2));
     m_webEngine->redirectedWebPage.connect(boost::bind(&SimpleUI::redirectedWebPage, this, _1, _2));
+    m_webEngine->rotatePrepared.connect(boost::bind(&SimpleUI::rotatePrepared, this));
     m_webEngine->switchToQuickAccess.connect(boost::bind(&SimpleUI::switchViewToQuickAccess, this));
     m_webEngine->setCertificatePem.connect(boost::bind(&services::CertificateContents::saveCertificateInfo, m_certificateContents, _1, _2));
     m_webEngine->setWrongCertificatePem.connect(boost::bind(&services::CertificateContents::saveWrongCertificateInfo, m_certificateContents, _1, _2));
@@ -692,7 +688,24 @@ void SimpleUI::initModelServices()
     m_certificateContents->init();
 }
 
-#if PROFILE_MOBILE
+void SimpleUI::pushViewToStack(interfaces::AbstractUIComponent* view)
+{
+    m_viewManager.pushViewToStack(view);
+    enableManualRotation(isManualRotation(view));
+}
+
+void SimpleUI::popTheStack()
+{
+    m_viewManager.popTheStack();
+    enableManualRotation(isManualRotation(m_viewManager.topOfStack()));
+}
+
+void SimpleUI::popStackTo(interfaces::AbstractUIComponent* view)
+{
+    m_viewManager.popStackTo(view);
+    enableManualRotation(isManualRotation(view));
+}
+
 void SimpleUI::registerHWKeyCallback()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -704,8 +717,6 @@ void SimpleUI::unregisterHWKeyCallback()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_platformInputManager->unregisterHWKeyCallback(m_webEngine->getLayout());
 }
-#endif
-
 
 void SimpleUI::switchViewToWebPage()
 {
@@ -736,14 +747,14 @@ void SimpleUI::switchViewToQuickAccess()
 
     m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
     m_webEngine->disconnectCurrentWebViewSignals();
-    m_viewManager.popStackTo(m_webPageUI.get());
+    popStackTo(m_webPageUI.get());
 }
 
 void SimpleUI::switchViewToIncognitoPage()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_webPageUI->switchViewToIncognitoPage();
-    m_viewManager.popStackTo(m_webPageUI.get());
+    popStackTo(m_webPageUI.get());
 }
 
 void SimpleUI::openNewTab(const std::string &uri, const std::string& title,
@@ -809,7 +820,7 @@ void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool 
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_webPageUI) {
-        m_viewManager.popStackTo(m_webPageUI.get());
+        popStackTo(m_webPageUI.get());
         if (tabsCount() == 0 || m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
             openNewTab(url, title, boost::none, desktopMode, false, basic_webengine::TabOrigin::QUICKACCESS);
         else {
@@ -867,7 +878,7 @@ void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::Bookma
             m_webPageUI->getURIEntry().clearFocus();
             closeBookmarkManagerUI();
         }
-        m_viewManager.popStackTo(m_webPageUI.get());
+        popStackTo(m_webPageUI.get());
     }
 }
 
@@ -889,7 +900,7 @@ void SimpleUI::onBookmarkEdit(std::shared_ptr<tizen_browser::services::BookmarkI
         m_bookmarkFlowUI->setState(true);
         m_bookmarkFlowUI->setTitle(bookmarkItem->getTitle());
         m_bookmarkFlowUI->setFolder(m_favoriteService->getBookmarkItem(bookmarkItem->getParent()));
-        m_viewManager.pushViewToStack(m_bookmarkFlowUI.get());
+        pushViewToStack(m_bookmarkFlowUI.get());
     }
 }
 
@@ -968,7 +979,6 @@ void SimpleUI::addQuickAccessItem(const std::string& name)
     showQuickAccess();
 }
 
-#if PROFILE_MOBILE
 void SimpleUI::onDeleteFolderClicked(const std::string& folder_name)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -1028,7 +1038,6 @@ void SimpleUI::onUrlIMEClosed(void* data, Evas_Object*, void*)
     self->m_webPageUI->showBottomBar(true);
     self->setwvIMEStatus(false);
 }
-#endif
 
 void SimpleUI::onSnapshotCaptured(std::shared_ptr<tools::BrowserImage> snapshot, tools::SnapshotType snapshot_type)
 {
@@ -1109,15 +1118,9 @@ void SimpleUI::onXF86BackPressed()
 void SimpleUI::onBackPressed()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-#if PROFILE_MOBILE
     if (m_findOnPageUI->isVisible())
         closeFindOnPageUI();
     else
-#else
-    if (m_zoomUI->isVisible()) {
-        m_zoomUI->escapeZoom();
-    } else
-#endif
     if (m_wvIMEStatus) {    // if IME opened
         return;
     } else if (m_popupVector.size() > 0) {
@@ -1141,7 +1144,7 @@ void SimpleUI::onBackPressed()
     } else if (m_viewManager.topOfStack() == m_settingsUI.get()) {
         closeSettingsUI();
     } else {
-        m_viewManager.popTheStack();
+        popTheStack();
     }
 }
 
@@ -1169,13 +1172,6 @@ void SimpleUI::dismissPopup(interfaces::AbstractPopup* popup)
     }
 }
 
-#if !PROFILE_MOBILE
-void SimpleUI::onEscapePressed()
-{
-    BROWSER_LOGD("[%s]", __func__);
-    m_zoomUI->escapeZoom();
-}
-#else
 void SimpleUI::onMenuButtonPressed()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -1184,20 +1180,45 @@ void SimpleUI::onMenuButtonPressed()
         view->showContextMenu();
 }
 
+bool SimpleUI::isManualRotation(interfaces::AbstractUIComponent* view)
+{
+    WebPageUI *webPageUI = dynamic_cast<WebPageUI *>(view);
+    return (webPageUI && webPageUI->stateEquals(WPUState::MAIN_WEB_PAGE));
+}
+
+void SimpleUI::enableManualRotation(bool enable)
+{
+    m_manualRotation = enable;
+    BROWSER_LOGD("[%s:%d]: %d", __PRETTY_FUNCTION__, __LINE__, m_manualRotation);
+    elm_win_wm_rotation_manual_rotation_done_set(main_window,
+        m_manualRotation ? EINA_TRUE : EINA_FALSE);
+}
+
+void SimpleUI::rotatePrepared()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    if (m_manualRotation && elm_win_wm_rotation_manual_rotation_done_get(main_window)) {
+        elm_win_wm_rotation_manual_rotation_done(main_window);
+        m_webPageUI->orientationChanged();
+    }
+}
+
 void SimpleUI::onRotation()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     m_current_angle = m_temp_angle;
-    elm_win_rotation_with_resize_set(main_window, m_current_angle);
-    m_bookmarkFlowUI->orientationChanged();
-    m_settingsUI->orientationChanged();
-    m_bookmarkManagerUI->orientationChanged();
-    m_webPageUI->orientationChanged();
-    m_tabUI->orientationChanged();
     m_webEngine->orientationChanged();
-    if (!m_popupVector.empty())
-        m_popupVector.back()->orientationChanged();
+    if (!m_manualRotation) {
+        m_bookmarkFlowUI->orientationChanged();
+        m_settingsUI->orientationChanged();
+        m_bookmarkManagerUI->orientationChanged();
+        m_webPageUI->orientationChanged();
+        m_tabUI->orientationChanged();
+
+        if (!m_popupVector.empty())
+            m_popupVector.back()->orientationChanged();
+    }
 }
 
 void SimpleUI::__orientation_changed(void* data, Evas_Object*, void*)
@@ -1245,8 +1266,6 @@ void SimpleUI::rotationType(rotationLock lock)
     elm_win_wm_rotation_available_rotations_set( main_window, const_cast<const int*>(rots), size);
 }
 
-#endif
-
 Evas_Object* SimpleUI::getMainWindow()
 {
     return main_window;
@@ -1284,10 +1303,8 @@ void SimpleUI::loadStarted()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_webPageUI->loadStarted();
-#if PROFILE_MOBILE
     if (m_findOnPageUI->isVisible())
         closeFindOnPageUI();
-#endif
 }
 
 void SimpleUI::progressChanged(double progress)
@@ -1354,52 +1371,11 @@ void SimpleUI::onURLEntryEditedByUser(const std::shared_ptr<std::string> editedU
     m_webPageUI->getUrlHistoryList()->onURLEntryEditedByUser(editedUrl, result);
 }
 
-#if !PROFILE_MOBILE
-void SimpleUI::onRedKeyPressed()
-{
-    m_webPageUI->onRedKeyPressed();
-}
-
-void SimpleUI::onYellowKeyPressed()
-{
-    m_webPageUI->onYellowKeyPressed();
-}
-
-void SimpleUI::showZoomUI()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if(! m_webPageUI->stateEquals(WPUState::QUICK_ACCESS)) {
-        m_viewManager.popStackTo(m_webPageUI.get());
-        m_webPageUI->showTabUI.connect(boost::bind(&SimpleUI::closeZoomUI, this));
-        m_zoomUI->show(m_window.get());
-    }
-}
-
-void SimpleUI::closeZoomUI()
-{
-    M_ASSERT(m_zoomUI);
-    m_zoomUI->hideUI();
-}
-
-void SimpleUI::setZoomFactor(int level)
-{
-    BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
-    m_webEngine->setZoomFactor(level);
-}
-
-int SimpleUI::getZoomFactor()
-{
-    BROWSER_LOGD("[%s:%d] %d", __PRETTY_FUNCTION__, __LINE__, m_webEngine->getZoomFactor());
-    return m_webEngine->getZoomFactor();
-}
-#endif
-
 void SimpleUI::scrollView(const int& dx, const int& dy)
 {
     m_webEngine->scrollView(dx, dy);
 }
 
-#if PROFILE_MOBILE
 void SimpleUI::showFindOnPageUI(const std::string& str)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -1422,12 +1398,11 @@ void SimpleUI::closeFindOnPageUI()
     if (m_findOnPageUI)
         m_findOnPageUI->hideUI();
 }
-#endif
 
 void SimpleUI::showTabUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_viewManager.pushViewToStack(m_tabUI.get());
+    pushViewToStack(m_tabUI.get());
 
     if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS) &&
         m_webEngine->tabsCount() > 0 &&
@@ -1444,7 +1419,7 @@ void SimpleUI::closeTabUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_viewManager.topOfStack() == m_tabUI.get())
-        m_viewManager.popTheStack();
+        popTheStack();
 }
 
 void SimpleUI::refetchTabUIData() {
@@ -1466,7 +1441,7 @@ void SimpleUI::tabClicked(const tizen_browser::basic_webengine::TabId& tabId)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     switchToTab(tabId);
-    m_viewManager.popStackTo(m_webPageUI.get());
+    popStackTo(m_webPageUI.get());
 }
 
 void SimpleUI::closeTabsClicked(const tizen_browser::basic_webengine::TabId& tabId)
@@ -1480,7 +1455,6 @@ int SimpleUI::tabsCount()
     return m_webEngine->tabsCount();
 }
 
-#if PROFILE_MOBILE
 void SimpleUI::handleConfirmationRequest(basic_webengine::WebConfirmationPtr webConfirmation)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -1549,7 +1523,6 @@ void SimpleUI::showCertificatePopup(const std::string& host, const std::string& 
     popup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
     popup->show();
 }
-#endif
 
 void SimpleUI::certPopupButtonClicked(PopupButtons button, std::shared_ptr<PopupData> popupData)
 {
@@ -1573,9 +1546,7 @@ void SimpleUI::certPopupButtonClicked(PopupButtons button, std::shared_ptr<Popup
             break;
         case VIEW_CERTIFICATE:
         {
-#if PROFILE_MOBILE
             showCertificatePopup(certPopupData->cert->getURI(), certPopupData->cert->getPem(), services::CertificateContents::UNSECURE_HOST_UNKNOWN);
-#endif
             break;
         }
         default:
@@ -1605,7 +1576,7 @@ void SimpleUI::closeHistoryUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_viewManager.topOfStack() == m_historyUI.get())
-        m_viewManager.popTheStack();
+        popTheStack();
 }
 
 void SimpleUI::showSettings(unsigned s)
@@ -1613,13 +1584,13 @@ void SimpleUI::showSettings(unsigned s)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_settingsManager->init(m_viewManager.getContent());
     m_settingsUI = m_settingsManager->getView(static_cast<SettingsMainOptions>(s));
-    m_viewManager.pushViewToStack(m_settingsUI.get());
+    pushViewToStack(m_settingsUI.get());
 }
 
 void SimpleUI::closeSettingsUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_viewManager.popTheStack();
+    popTheStack();
 }
 
 void SimpleUI::onDefSearchEngineClicked()
@@ -1723,7 +1694,7 @@ void SimpleUI::switchToMobileMode()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!m_webPageUI->stateEquals(WPUState::QUICK_ACCESS)) {
         m_webEngine->switchToMobileMode();
-        m_viewManager.popStackTo(m_webPageUI.get());
+        popStackTo(m_webPageUI.get());
         m_webEngine->reload();
     } else {
         m_quickAccess->setDesktopMode(false);
@@ -1745,7 +1716,7 @@ void SimpleUI::editQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_quickAccess->editQuickAccess();
-    m_viewManager.pushViewToStack(m_webPageUI->getQuickAccessEditUI().get());
+    pushViewToStack(m_webPageUI->getQuickAccessEditUI().get());
 }
 
 void SimpleUI::addQuickAccess()
@@ -1789,14 +1760,14 @@ void SimpleUI::showBookmarkFlowUI()
         m_bookmarkFlowUI->setFolder(m_favoriteService->getRoot());
     }
 
-    m_viewManager.pushViewToStack(m_bookmarkFlowUI.get());
+    pushViewToStack(m_bookmarkFlowUI.get());
 }
 
 void SimpleUI::closeBookmarkFlowUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_viewManager.topOfStack() == m_bookmarkFlowUI.get())
-        m_viewManager.popTheStack();
+        popTheStack();
 }
 
 void SimpleUI::showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
@@ -1804,7 +1775,7 @@ void SimpleUI::showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> par
 {
     BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
     m_bookmarkManagerUI->setState(state);
-    m_viewManager.pushViewToStack(m_bookmarkManagerUI.get());
+    pushViewToStack(m_bookmarkManagerUI.get());
     m_bookmarkManagerUI->addBookmarkItems(parent,
         m_favoriteService->getAllBookmarkItems(parent->getId()));
 }
@@ -1834,7 +1805,7 @@ void SimpleUI::showHomePage()
         stateString.erase(it, Translations::CurrentPage.length());
     }
     auto url = m_webPageUI->getURIEntry().rewriteURI(stateString);
-    m_viewManager.popStackTo(m_webPageUI.get());
+    popStackTo(m_webPageUI.get());
     openNewTab(url);
 }
 
@@ -1849,7 +1820,7 @@ void SimpleUI::closeBookmarkManagerUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_viewManager.topOfStack() == m_bookmarkManagerUI.get())
-    m_viewManager.popTheStack();
+    popTheStack();
 }
 
 void SimpleUI::settingsDeleteSelectedData(const std::map<SettingsDelPersDataOptions, bool>& options)
@@ -1864,15 +1835,9 @@ void SimpleUI::settingsDeleteSelectedData(const std::map<SettingsDelPersDataOpti
         }
     }
     if (isSelected) {
-#if PROFILE_MOBILE
            TextPopup* popup = TextPopup::createPopup(m_viewManager.getContent());
            popup->addButton(OK);
            popup->addButton(CANCEL);
-#else
-           SimplePopup* popup = SimplePopup::createPopup(m_viewManager.getContent());
-           popup->addButton(OK);
-           popup->addButton(CANCEL);
-#endif
            popup->buttonClicked.connect(boost::bind(&SimpleUI::onDeleteSelectedDataButton, this, _1, options));
            popup->setTitle("Delete");
            popup->setMessage("The selected web browsing data will be deleted.");
@@ -1916,11 +1881,7 @@ void SimpleUI::onDeleteSelectedDataButton(const PopupButtons& button, const std:
     }
 }
 
-#if PROFILE_MOBILE
 void SimpleUI::tabLimitPopupButtonClicked(PopupButtons button)
-#else
-void SimpleUI::tabLimitPopupButtonClicked(PopupButtons button, std::shared_ptr< PopupData > /*popupData */)
-#endif
 {
     if (button == CLOSE_TAB) {
         BROWSER_LOGD("[%s]: CLOSE TAB", __func__);
@@ -1939,15 +1900,9 @@ bool SimpleUI::checkIfCreate()
     int tabs = m_webEngine->tabsCount();
 
     if (tabs >= m_tabLimit) {
-#if PROFILE_MOBILE
         TextPopup* popup = TextPopup::createPopup(m_viewManager.getContent());
         popup->addButton(OK);
         popup->buttonClicked.connect(boost::bind(&SimpleUI::tabLimitPopupButtonClicked, this, _1));
-#else
-        SimplePopup *popup = SimplePopup::createPopup(m_viewManager.getContent());
-        popup->addButton(OK);
-        popup->buttonClicked.connect(boost::bind(&SimpleUI::tabLimitPopupButtonClicked, this, _1, _2));
-#endif
         popup->setTitle(_("Maximum tab count reached"));
         popup->setMessage("Close other tabs to open another new tab");
         popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
@@ -2008,13 +1963,13 @@ void SimpleUI::searchWebPage(std::string &text, int flags)
 void SimpleUI::showPasswordUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_viewManager.pushViewToStack(&(m_tabUI->getPasswordUI()));
+    pushViewToStack(&(m_tabUI->getPasswordUI()));
 }
 
 void SimpleUI::closeTopView()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_viewManager.popTheStack();
+    popTheStack();
 }
 
 void SimpleUI::onFirstSecretMode()

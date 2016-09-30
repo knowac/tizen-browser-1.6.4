@@ -133,6 +133,7 @@ public:
     boost::signals2::signal<void ()> backPage;
     boost::signals2::signal<void ()> forwardPage;
     boost::signals2::signal<void ()> showTabUI;
+    boost::signals2::signal<void ()> updateManualRotation;
     boost::signals2::signal<void ()> showBookmarksUI;
     boost::signals2::signal<void ()> showHomePage;
     boost::signals2::signal<void ()> qaOrientationChanged;

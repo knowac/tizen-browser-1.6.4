@@ -103,6 +103,9 @@ private:
     void initModelServices();
     void initUIServices();
     void connectModelSignals();
+    void pushViewToStack(interfaces::AbstractUIComponent* view);
+    void popTheStack();
+    void popStackTo(interfaces::AbstractUIComponent* view);
     void faviconChanged(tools::BrowserImagePtr favicon);
     void restoreLastSession();
     Evas_Object* createWebLayout(Evas_Object* parent);
@@ -129,17 +132,10 @@ private:
     void windowCreated();
     void minimizeBrowser();
 
-#if PROFILE_MOBILE
     void openNewTab(const std::string &uri, const std::string& title =
             std::string(), const boost::optional<int> adaptorId = boost::none,
             bool desktopMode = false, bool incognitoMode = false,
             basic_webengine::TabOrigin origin = basic_webengine::TabOrigin::UNKNOWN);
-#else
-    void openNewTab(const std::string &uri, const std::string& title =
-            std::string(), const boost::optional<int> adaptorId = boost::none,
-            bool desktopMode = true, bool incognitoMode = false,
-            basic_webengine::TabOrigin origin = basic_webengine::TabOrigin::UNKNOWN);
-#endif
 
     void switchToTab(const tizen_browser::basic_webengine::TabId& tabId);
     void newTabClicked();
@@ -160,14 +156,12 @@ private:
     void onBookmarkDeleted(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
     void onNewFolderClicked(int parent);
     void onNewFolderPopupClick(const std::string& folder_name, int parent);
-#if PROFILE_MOBILE
     void onDeleteFolderClicked(const std::string& folder_name);
     void onRemoveFoldersClicked(std::vector<std::shared_ptr<services::BookmarkItem>> items);
     void onEditFolderPopupClicked(const std::string& newName, std::shared_ptr<services::BookmarkItem> item);
     void onDeleteFolderPopupClicked(PopupButtons button);
     static void onUrlIMEOpened(void* data, Evas_Object*, void*);
     static void onUrlIMEClosed(void* data, Evas_Object*, void*);
-#endif
 
     void onHistoryRemoved(const std::string& uri);
     void onOpenURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode);
@@ -197,13 +191,8 @@ private:
     void certPopupButtonClicked(PopupButtons button, std::shared_ptr<PopupData> popupData);
 
     void onActionTriggered(const Action& action);
-#if PROFILE_MOBILE
     void onMenuButtonPressed();
     void handleConfirmationRequest(basic_webengine::WebConfirmationPtr webConfirmation);
-#else
-    void onRedKeyPressed();
-    void onYellowKeyPressed();
-#endif
     void setwvIMEStatus(bool status);
 
     sharedAction m_showBookmarkManagerUI;
@@ -254,15 +243,6 @@ private:
     void settingsOverrideUseragent(const std::string& userAgent);
     void onOverrideUseragentButton(const std::string& newUA);
 
-#if !PROFILE_MOBILE
-    /**
-     * @brief show Zoom Menu
-     */
-    void showZoomUI();
-    void closeZoomUI();
-    void setZoomFactor(int level);
-    int getZoomFactor();
-#endif
     void scrollView(const int& dx, const int& dy);
 
     void showTabUI();
@@ -295,6 +275,9 @@ private:
     void registerHWKeyCallback();
     void unregisterHWKeyCallback();
 
+    bool isManualRotation(interfaces::AbstractUIComponent* view);
+    void enableManualRotation(bool enable);
+    void rotatePrepared();
     void onRotation();
     bool isLandscape();
     int getRotation();
@@ -334,12 +317,7 @@ private:
     void onDeleteSelectedDataButton(const PopupButtons& button, const std::map<SettingsDelPersDataOptions, bool>& options);
     void onDeleteMostVisitedButton(std::shared_ptr<PopupData> popupData);
     void onResetBrowserButton(PopupButtons button, std::shared_ptr<PopupData> popupData);
-#if PROFILE_MOBILE
     void tabLimitPopupButtonClicked(PopupButtons button);
-#else
-    void tabLimitPopupButtonClicked(PopupButtons button, std::shared_ptr< PopupData > /*popupData*/);
-    void onEscapePressed();
-#endif
     int tabsCount();
 
     void onReturnPressed(MenuButton *m);
@@ -362,11 +340,7 @@ private:
     services::TabServicePtr m_tabService;
 
     std::shared_ptr<BookmarkFlowUI> m_bookmarkFlowUI;
-#if PROFILE_MOBILE
     std::shared_ptr<FindOnPageUI> m_findOnPageUI;
-#else
-    std::shared_ptr<tizen_browser::base_ui::ZoomUI> m_zoomUI;
-#endif
     std::shared_ptr<services::CertificateContents> m_certificateContents;
     std::shared_ptr<BookmarkManagerUI> m_bookmarkManagerUI;
     std::shared_ptr<QuickAccess> m_quickAccess;
@@ -391,6 +365,7 @@ private:
 #endif
     SharedNaviframeWrapper m_QAEditNaviframe;
     Evas_Object *m_conformant;
+    bool m_manualRotation;
     int m_current_angle;
     int m_temp_angle;
     bool m_isSessionRestored;
