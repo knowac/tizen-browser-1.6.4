@@ -40,8 +40,13 @@ class InputPopup : public interfaces::AbstractPopup
 
 public:
     static InputPopup* createPopup(Evas_Object *parent);
-    static InputPopup* createPopup(Evas_Object *parent,const std::string& title,const std::string& message,const std::string& input,
-                                        const std::string& rightButtonText, const std::string& leftButtonText, bool accept_right_left);
+    static InputPopup* createPopup(
+        Evas_Object *parent,
+        const std::string& title,
+        const std::string& message,
+        const std::string& input,
+        const std::string& rightButtonText,
+        const std::string& leftButtonText);
 
     void show();
     void dismiss();
@@ -57,7 +62,6 @@ public:
     void setTip(const std::string& tip);
     void setOkButtonText(const std::string &okButtonText);
     void setCancelButtonText(const std::string &cancelButtonText);
-    void setAcceptRightLeft(bool right_left);
     void addBadWord(const std::string &word);
 
     boost::signals2::signal<void (const std::string&)> button_clicked;
@@ -71,18 +75,16 @@ private:
     static void _right_button_clicked(void *data, Evas_Object *btn, void*);
     static void _left_button_clicked(void *data, Evas_Object *btn, void*);
     static void _entry_changed(void * data, Evas_Object *, void*);
-    static void _entry_unfocused(void * data, Evas_Object *, void*);
-    static void _entry_focused(void * data, Evas_Object *, void*);
     static void _input_cancel_clicked(void * data, Evas_Object *, void *);
 
     Evas_Object *m_parent;
-    Evas_Object *m_layout;
-    Evas_Object *m_buttons_box;
+    Evas_Object *m_popup;
+    Evas_Object *m_icon;
     Evas_Object *m_button_left;
     Evas_Object *m_button_right;
-    Evas_Object *m_input_area;
-    Evas_Object *m_input_cancel;
     Evas_Object *m_entry;
+    Evas_Object *m_box;
+    Evas_Object *m_label;
     std::string m_input;
     std::string m_title;
     std::string m_message;
@@ -90,7 +92,6 @@ private:
     std::string m_ok_button_text;
     std::string m_cancel_button_text;
     std::vector<std::string> m_bad_words;
-    bool m_accept_right_left;
 };
 
 }

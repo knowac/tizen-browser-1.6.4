@@ -901,13 +901,20 @@ void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::Bookma
     }
 }
 
-void SimpleUI::onBookmarkEdit(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem)
+void SimpleUI::onBookmarkEdit(std::shared_ptr<services::BookmarkItem> bookmarkItem)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (bookmarkItem->is_folder()) {
-        InputPopup *inputPopup = InputPopup::createPopup(m_viewManager.getContent(), "Edit Folder name",
-            "Edit folder name?", bookmarkItem->getTitle(), _("IDS_BR_SK_DONE"), _("IDS_BR_SK_CANCEL_ABB"), true);
-        services::SharedBookmarkItemList badWords = m_favoriteService->getFolders(bookmarkItem->getParent());
+        InputPopup *inputPopup =
+            InputPopup::createPopup(
+                m_viewManager.getContent(),
+                "Edit Folder name",
+                "Edit folder name?",
+                bookmarkItem->getTitle(),
+                _("IDS_BR_SK_DONE"),
+                _("IDS_BR_SK_CANCEL_ABB"));
+        services::SharedBookmarkItemList badWords =
+            m_favoriteService->getFolders(bookmarkItem->getParent());
         for (auto it = badWords.begin(); it != badWords.end(); ++it)
             inputPopup->addBadWord((*it)->getTitle());
         inputPopup->button_clicked.connect(boost::bind(&SimpleUI::onEditFolderPopupClicked, this, _1, bookmarkItem));
@@ -938,8 +945,14 @@ void SimpleUI::onBookmarkDeleted(std::shared_ptr<tizen_browser::services::Bookma
 void SimpleUI::onNewFolderClicked(int parent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    InputPopup *inputPopup = InputPopup::createPopup(m_viewManager.getContent(), "New Folder", "Add New Folder?",
-                                                          "New Folder #", _("IDS_BR_OPT_ADD"), _("IDS_BR_SK_CANCEL_ABB"), true);
+    InputPopup *inputPopup =
+        InputPopup::createPopup(
+            m_viewManager.getContent(),
+            "New Folder",
+            "Add New Folder?",
+            "New Folder #",
+            _("IDS_BR_OPT_ADD"),
+            _("IDS_BR_SK_CANCEL_ABB"));
     services::SharedBookmarkItemList badWords = m_favoriteService->getFolders(parent);
     for (auto it = badWords.begin(); it != badWords.end(); ++it)
         inputPopup->addBadWord((*it)->getTitle());
@@ -965,8 +978,15 @@ void SimpleUI::onNewQuickAccessClicked()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     //TODO: Implement it right with a correct functionality.
-    InputPopup *inputPopup = InputPopup::createPopup(m_viewManager.getContent(), "Add to Quick access", "",
-                                                          "Enter web address", _("IDS_BR_OPT_ADD"), _("IDS_BR_SK_CANCEL_ABB"), true);
+    auto inputPopup = InputPopup::createPopup(
+        m_viewManager.getContent(),
+        "Add to Quick access",
+        "",
+        "",
+        _("IDS_BR_OPT_ADD"),
+        _("IDS_BR_SK_CANCEL_ABB"));
+    // TODO Add missing translations
+    inputPopup->setTip(_("Enter web address"));
     inputPopup->button_clicked.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1));        //TODO: connect new function
     inputPopup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));        //TODO: connect new function
     inputPopup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));        //TODO: connect new function
@@ -1683,9 +1703,8 @@ std::string SimpleUI::requestSettingsCurrentPage()
 void SimpleUI::selectSettingsOtherPageChange()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    InputPopup* popup = InputPopup::createPopup(m_viewManager.getContent());
+    auto popup = InputPopup::createPopup(m_viewManager.getContent());
     popup->setTitle(_("IDS_BR_MBODY_SET_HOMEPAGE"));
-    popup->setAcceptRightLeft(true);
     popup->setCancelButtonText(_("IDS_BR_BUTTON_CANCEL"));
     popup->setOkButtonText(_("IDS_BR_BUTTON_SET"));
     popup->setTip(_("IDS_BR_BODY_WEB_ADDRESS"));
@@ -1861,15 +1880,15 @@ void SimpleUI::settingsDeleteSelectedData(const std::map<SettingsDelPersDataOpti
         }
     }
     if (isSelected) {
-           TextPopup* popup = TextPopup::createPopup(m_viewManager.getContent());
-           popup->addButton(OK);
-           popup->addButton(CANCEL);
-           popup->buttonClicked.connect(boost::bind(&SimpleUI::onDeleteSelectedDataButton, this, _1, options));
-           popup->setTitle("Delete");
-           popup->setMessage("The selected web browsing data will be deleted.");
-           popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
-           popup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
-           popup->show();
+        TextPopup* popup = TextPopup::createPopup(m_viewManager.getContent());
+        popup->addButton(OK);
+        popup->addButton(CANCEL);
+        popup->buttonClicked.connect(boost::bind(&SimpleUI::onDeleteSelectedDataButton, this, _1, options));
+        popup->setTitle("Delete");
+        popup->setMessage("The selected web browsing data will be deleted.");
+        popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
+        popup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
+        popup->show();
     }
 }
 
@@ -2075,13 +2094,12 @@ void SimpleUI::settingsOverrideUseragent(const std::string& userAgent)
     }
 
     if (userAgent.empty()) {
-        InputPopup *inputPopup = InputPopup::createPopup(
+        auto inputPopup = InputPopup::createPopup(
             m_viewManager.getContent(),
             "Override UserAgent", "",
             "",
             _("IDS_BR_SK_DONE"),
-            _("IDS_BR_SK_CANCEL_ABB"),
-            true);
+            _("IDS_BR_SK_CANCEL_ABB"));
         inputPopup->button_clicked.connect(
             boost::bind(&SimpleUI::onOverrideUseragentButton, this, _1));
         inputPopup->popupShown.connect(
