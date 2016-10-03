@@ -82,18 +82,18 @@ private:
     struct FolderData {
         std::string name;
         unsigned int folder_id;
-        std::shared_ptr<BookmarkFlowUI> bookmarkFlowUI;
+        BookmarkFlowUI* bookmarkFlowUI;
     };
 
     struct EntryData {
         std::string category;
         std::string entry;
-        std::shared_ptr<BookmarkFlowUI> bookmarkFlowUI;
+        BookmarkFlowUI* bookmarkFlowUI;
     };
 
     struct ObjectData {
         Evas_Object* object;
-        std::shared_ptr<BookmarkFlowUI> bookmarkFlowUI;
+        BookmarkFlowUI* bookmarkFlowUI;
     };
 
     Evas_Object* createBookmarkFlowLayout();

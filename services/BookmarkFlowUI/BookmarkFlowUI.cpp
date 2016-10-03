@@ -244,7 +244,7 @@ void BookmarkFlowUI::fillGenlist()
     EntryData *titleEntryData = new EntryData();
     titleEntryData->category = _("IDS_BR_BODY_TITLE");
     titleEntryData->entry = m_title;
-    titleEntryData->bookmarkFlowUI.reset(this);
+    titleEntryData->bookmarkFlowUI = this;
 
     m_title_entry = elm_genlist_item_append(m_genlist, m_entry_item_class, titleEntryData, nullptr,
         ELM_GENLIST_ITEM_NONE, nullptr, titleEntryData);
@@ -254,7 +254,7 @@ void BookmarkFlowUI::fillGenlist()
         EntryData *urlEntryData = new EntryData();
         urlEntryData->category = _("IDS_BR_BODY_ADDBOOKMARKURL");
         urlEntryData->entry = m_url;
-        urlEntryData->bookmarkFlowUI.reset(this);
+        urlEntryData->bookmarkFlowUI = this;
         m_url_entry = elm_genlist_item_append(m_genlist, m_entry_item_class, urlEntryData, nullptr,
             ELM_GENLIST_ITEM_NONE, nullptr, urlEntryData);
     }
@@ -266,7 +266,7 @@ void BookmarkFlowUI::fillGenlist()
     FolderData *folderData = new FolderData();
     folderData->name = m_bookmarkItem->getTitle();
     folderData->folder_id = m_bookmarkItem->getId();
-    folderData->bookmarkFlowUI.reset(this);
+    folderData->bookmarkFlowUI = this;
 
     //Add folder picker
     elm_genlist_item_append(m_genlist, m_folder_item_class, folderData, nullptr, ELM_GENLIST_ITEM_NONE,
