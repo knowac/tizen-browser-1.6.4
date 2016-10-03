@@ -40,7 +40,6 @@ WebPageUI::WebPageUI()
     : m_parent(nullptr)
     , m_mainLayout(nullptr)
     , m_errorLayout(nullptr)
-    , m_privateLayout(nullptr)
     , m_bookmarkManagerButton(nullptr)
     , m_statesMgr(std::make_shared<WebPageUIStatesManager>(WPUState::MAIN_WEB_PAGE))
     , m_URIEntry(new URIEntry(m_statesMgr))
@@ -99,6 +98,7 @@ void WebPageUI::showUI()
                 elm_object_signal_emit(m_mainLayout, "set_normal_mode", "ui");
                 break;
             case basic_webengine::State::SECRET:
+                setButtonsDisabled();
                 elm_object_signal_emit(m_mainLayout, "set_secret_mode", "ui");
                 break;
             default:
@@ -120,8 +120,7 @@ void WebPageUI::showUI()
     evas_object_show(elm_object_part_content_get(m_mainLayout, "uri_bar_buttons_right"));
 
     if (m_statesMgr->equals(WPUState::QUICK_ACCESS)) {
-        elm_object_signal_emit(m_mainLayout, "shiftback_uri", "ui");
-        showQuickAccess();
+        setQuickAccessView();
     }
 
     m_WebPageUIvisible = true;
@@ -200,17 +199,6 @@ void WebPageUI::loadFinished()
     m_URIEntry->updateSecureIcon();
 }
 
-void WebPageUI::toIncognito(bool incognito)
-{
-    BROWSER_LOGD("[%s:%d,%d] ", __PRETTY_FUNCTION__, __LINE__, incognito);
-    if (incognito) {
-        elm_object_signal_emit(m_mainLayout, "incognito,true", "ui");
-    }
-    else {
-        elm_object_signal_emit(m_mainLayout, "incognito,false", "ui");
-    }
-}
-
 void WebPageUI::setMainContent(Evas_Object* content)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -237,20 +225,6 @@ void WebPageUI::switchViewToErrorPage()
     setErrorButtons();
 }
 
-void WebPageUI::switchViewToIncognitoPage()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_statesMgr->set(WPUState::MAIN_INCOGNITO_PAGE);
-    toIncognito(true);
-    if (!m_privateLayout)
-        createPrivateLayout();
-    setMainContent(m_privateLayout);
-    orientationChanged();
-    elm_object_signal_emit(m_mainLayout, "shiftright_uri", "ui");
-    setPrivateButtons();
-    m_URIEntry->changeUri("");
-}
-
 void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri, bool loading)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -264,18 +238,23 @@ void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri,
     updateURIBar(uri, loading);
 }
 
+void WebPageUI::setQuickAccessView()
+{
+    elm_object_signal_emit(m_mainLayout, "shiftback_uri", "ui");
+    hideProgressBar();
+    m_URIEntry->changeUri("");
+    m_URIEntry->showSecureIcon(false, false);
+    setButtonsDisabled();
+    showQuickAccess();
+}
+
 void WebPageUI::switchViewToQuickAccess(Evas_Object* content)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     m_statesMgr->set(WPUState::QUICK_ACCESS);
-    toIncognito(false);
     setMainContent(content);
-    elm_object_signal_emit(m_mainLayout, "shiftback_uri", "ui");
-    hideProgressBar();
-    m_URIEntry->changeUri("");
-    m_URIEntry->showSecureIcon(false, false);
-    showQuickAccess();
+    setQuickAccessView();
 }
 
 void WebPageUI::faviconClicked(void* data, Evas_Object*, const char*, const char*)
@@ -366,12 +345,10 @@ void WebPageUI::orientationChanged()
 
     if (landscape) {
         if (*landscape) {
-            elm_object_signal_emit(m_privateLayout, "show_incognito_landscape", "ui");
             elm_object_signal_emit(m_bottomButtonBar->getContent(), "landscape,mode", "");
             if (m_uriBarHidden)
                 elm_object_signal_emit(m_mainLayout, "hide_uri_bar_landscape", "ui");
         } else {
-            elm_object_signal_emit(m_privateLayout, "show_incognito_vertical", "ui");
             elm_object_signal_emit(m_bottomButtonBar->getContent(), "portrait,mode", "");
             if (m_uriBarHidden)
                 elm_object_signal_emit(m_mainLayout, "hide_uri_bar_vertical", "ui");
@@ -620,22 +597,6 @@ void WebPageUI::createErrorLayout()
     elm_layout_file_set(m_errorLayout, edjePath("WebPageUI/ErrorMessage.edj").c_str(), "error_message");
 }
 
-void WebPageUI::createPrivateLayout()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_privateLayout =  elm_layout_add(m_mainLayout);
-    evas_object_size_hint_weight_set(m_privateLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_privateLayout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_layout_file_set(m_privateLayout, edjePath("WebPageUI/PrivateMode.edj").c_str(), "inco_message");
-
-    m_bookmarkManagerButton = elm_button_add(m_privateLayout);
-    elm_object_style_set(m_bookmarkManagerButton, "invisible_button");
-    evas_object_smart_callback_add(m_bookmarkManagerButton, "clicked", _bookmark_manager_clicked, this);
-    evas_object_show(m_bookmarkManagerButton);
-
-    elm_object_part_content_set(m_privateLayout, "bookmarkmanager_click", m_bookmarkManagerButton);
-}
-
 void WebPageUI::_bookmark_manager_clicked(void * data, Evas_Object *, void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -738,10 +699,11 @@ void WebPageUI::setErrorButtons()
     m_forward->setEnabled(false);
 }
 
-void WebPageUI::setPrivateButtons()
+void WebPageUI::setButtonsDisabled()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_forward->setEnabled(false);
+    m_back->setEnabled(false);
 }
 
 void WebPageUI::updateURIBar(const std::string& uri, bool loading)

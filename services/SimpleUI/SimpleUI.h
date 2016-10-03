@@ -125,18 +125,15 @@ private:
 
     void showQuickAccess();
     void switchViewToQuickAccess();
-    void switchViewToIncognitoPage();
     void switchViewToWebPage();
     void updateView();
     void changeEngineState();
     void windowCreated();
     void minimizeBrowser();
-
     void openNewTab(const std::string &uri, const std::string& title =
             std::string(), const boost::optional<int> adaptorId = boost::none,
-            bool desktopMode = false, bool incognitoMode = false,
+            bool desktopMode = false,
             basic_webengine::TabOrigin origin = basic_webengine::TabOrigin::UNKNOWN);
-
     void switchToTab(const tizen_browser::basic_webengine::TabId& tabId);
     void newTabClicked();
     void tabClicked(const tizen_browser::basic_webengine::TabId& tabId);

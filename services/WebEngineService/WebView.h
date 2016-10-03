@@ -251,7 +251,6 @@ public:
 // signals
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::tools::BrowserImage>)> favIconChanged;
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::tools::BrowserImage>, tizen_browser::tools::SnapshotType snapshot_type)> snapshotCaptured;
-    boost::signals2::signal<void (const std::string&)> titleChanged;
     boost::signals2::signal<void (const std::string)> uriChanged;
     boost::signals2::signal<void (const std::string&)> findOnPage;
 
@@ -328,9 +327,7 @@ private:
     static void __loadProgress(void * data, Evas_Object * obj, void * event_info);
     static void __loadError(void* data, Evas_Object* obj, void *ewkError);
 
-    static void __titleChanged(void * data, Evas_Object * obj, void * event_info);
     static void __urlChanged(void * data, Evas_Object * obj, void * event_info);
-
     static void __backForwardListChanged(void * data, Evas_Object * obj, void * event_info);
 
     // Favicon - from database

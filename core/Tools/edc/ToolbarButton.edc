@@ -1,22 +1,9 @@
+#include "ColorClasses.edc"
 
 #define BUTTON_NAVIFRAME_BACK_CORNER_RADIUS "10"
 #define BUTTON_NAVIFRAME_BACK_BUTTON_SIZE_INC 80 80
 #define BUTTON_NAVIFRAME_BACK_BUTTON_EFFECT_MAX_SIZE_INC 80 80
 #define GLIDE_EASE_OUT(duration) CUBIC_BEZIER (duration) 0.25 0.46 0.45 1.0
-
-collections { base_scale: 2.6;
-
-    color_classes {
-        color_class {
-            name: "button_normal";
-            color: 105 105 105 255;
-        }
-        color_class {
-            name: "button_secret";
-            color: 250 250 250 255;
-        }
-    }
-}
 
 #define TOOLBAR_BUTTON(NAME, ICON, WIDTH, HEIGHT, TOP_PADDING)  \
     group { name: __CONCAT("elm/button/base/", NAME);  \
@@ -35,6 +22,7 @@ collections { base_scale: 2.6;
             public multi_down = 0;  \
             public animate = 0;  \
             public disabled = 0;  \
+            public secret = 0;  \
         }  \
         parts {  \
             part { name: "button_bg";  \
@@ -119,15 +107,23 @@ collections { base_scale: 2.6;
                     min: ICON_SIZE ICON_SIZE;  \
                     max: ICON_SIZE ICON_SIZE;  \
                     fixed: 1 1;  \
-                    color_class: "button_normal";  \
+                    color_class: "AO006";  \
                     image.normal: __CONCAT("image_file_", NAME);  \
                     align: 0.5 0.0;  \
                     rel1 { relative: 0.0 1.0; to: "icon_spacer"; }  \
                     rel2 { relative: 1.0 1.0; to: "button_bg"; }  \
                 }  \
+                description { state: "disabled" 0.0;  \
+                    inherit: "default" 0.0;  \
+                    color_class: "AO006D";  \
+                }  \
                 description { state: "secret" 0.0;  \
                     inherit: "default" 0.0;  \
-                    color_class: "button_secret";  \
+                    color_class: "AO004E02";  \
+                }  \
+                description { state: "secret_disabled" 0.0;  \
+                    inherit: "default" 0.0;  \
+                    color_class: "AO004E02D";  \
                 }  \
             }  \
             part { name: "button_text";  \
@@ -136,7 +132,7 @@ collections { base_scale: 2.6;
                 mouse_events: 0;  \
                 description { state: "default" 0.0;  \
                     align: 0.5 0.0;  \
-                    color_class: "button_normal";  \
+                    color_class: "AO006";  \
                     rel1 { relative: 0.0 1.0;  \
                         to_x: "button_bg";  \
                         to_y: "button_icon";  \
@@ -148,9 +144,17 @@ collections { base_scale: 2.6;
                         align: 0.5 0.0;  \
                     }  \
                 }  \
+                description { state: "disabled" 0.0;  \
+                    inherit: "default" 0.0;  \
+                    color_class: "AO006D";  \
+                }  \
                 description { state: "secret" 0.0;  \
                     inherit: "default" 0.0;  \
-                    color_class: "button_secret";  \
+                    color_class: "AO004E02";  \
+                }  \
+                description { state: "secret_disabled" 0.0;  \
+                    inherit: "default" 0.0;  \
+                    color_class: "AO004E02D";  \
                 }  \
             }  \
             part { name: "event";  \
@@ -256,13 +260,27 @@ collections { base_scale: 2.6;
                 source: "elm";  \
                 script {  \
                 set_int(disabled, 0);  \
+                    if (get_int(secret) == 0) {  \
+                        set_state(PART:"button_icon", "default", 0.0);  \
+                        set_state(PART:"button_text", "default", 0.0);  \
+                    } else {  \
+                        set_state(PART:"button_icon", "secret", 0.0);  \
+                        set_state(PART:"button_text", "secret", 0.0);  \
+                    }  \
                 }  \
             }  \
             program { name: "disable";  \
                 signal: "elm,state,disabled";  \
                 source: "elm";  \
                 script {  \
-                set_int(disabled, 1);  \
+                    set_int(disabled, 1);  \
+                    if (get_int(secret) == 0) {  \
+                        set_state(PART:"button_icon", "disabled", 0.0);  \
+                        set_state(PART:"button_text", "disabled", 0.0);  \
+                    } else {  \
+                        set_state(PART:"button_icon", "secret_disabled", 0.0);  \
+                        set_state(PART:"button_text", "secret_disabled", 0.0);  \
+                    }  \
                 }  \
             }  \
             program {  \
@@ -313,9 +331,16 @@ collections { base_scale: 2.6;
                 name: "set_normal_mode";  \
                 signal: "set_normal_mode";  \
                 source: "ui";  \
-                action: STATE_SET "default" 0.0;  \
-                target: "button_icon";  \
-                target: "button_text";  \
+                script {  \
+                    set_int(secret, 0);  \
+                    if (get_int(disabled) == 0) {  \
+                        set_state(PART:"button_icon", "default", 0.0);  \
+                        set_state(PART:"button_text", "default", 0.0);  \
+                    } else {  \
+                        set_state(PART:"button_icon", "disabled", 0.0);  \
+                        set_state(PART:"button_text", "disabled", 0.0);  \
+                    }  \
+                }  \
             }  \
             program {  \
                 name: "set_secret_mode";  \
@@ -324,6 +349,16 @@ collections { base_scale: 2.6;
                 action: STATE_SET "secret" 0.0;  \
                 target: "button_icon";  \
                 target: "button_text";  \
+                script {  \
+                    set_int(secret, 1);  \
+                    if (get_int(disabled) == 0) {  \
+                        set_state(PART:"button_icon", "secret", 0.0);  \
+                        set_state(PART:"button_text", "secret", 0.0);  \
+                    } else{  \
+                        set_state(PART:"button_icon", "secret_disabled", 0.0);  \
+                        set_state(PART:"button_text", "secret_disabled", 0.0);  \
+                    }  \
+                }  \
             }  \
         }  \
     }

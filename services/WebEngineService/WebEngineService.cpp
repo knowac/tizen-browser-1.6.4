@@ -129,7 +129,6 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
 {
     M_ASSERT(webView);
     webView->favIconChanged.connect(boost::bind(&WebEngineService::_favIconChanged, this, _1));
-    webView->titleChanged.connect(boost::bind(&WebEngineService::_titleChanged, this, _1));
     webView->uriChanged.connect(boost::bind(&WebEngineService::_uriChanged, this, _1));
     webView->loadFinished.connect(boost::bind(&WebEngineService::_loadFinished, this));
     webView->loadStarted.connect(boost::bind(&WebEngineService::_loadStarted, this));
@@ -159,7 +158,6 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(webView);
     webView->favIconChanged.disconnect(boost::bind(&WebEngineService::_favIconChanged, this));
-    webView->titleChanged.disconnect(boost::bind(&WebEngineService::_titleChanged, this, _1));
     webView->uriChanged.disconnect(boost::bind(&WebEngineService::_uriChanged, this, _1));
     webView->loadFinished.disconnect(boost::bind(&WebEngineService::_loadFinished, this));
     webView->loadStarted.disconnect(boost::bind(&WebEngineService::_loadStarted, this));
@@ -421,11 +419,6 @@ void WebEngineService::_favIconChanged(std::shared_ptr<tizen_browser::tools::Bro
     favIconChanged(bi);
 }
 
-void WebEngineService::_titleChanged(const std::string& title)
-{
-    titleChanged(title);
-}
-
 void WebEngineService::_uriChanged(const std::string & uri)
 {
     uriChanged(uri);
@@ -557,36 +550,35 @@ Evas_Object* WebEngineService::getTabView(TabId id){
 bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabId)
 {
     BROWSER_LOGD("[%s:%d] newTabId=%s", __PRETTY_FUNCTION__, __LINE__, newTabId.toString().c_str());
-
-    // if there was any running WebView
-    if (m_currentWebView) {
-        disconnectSignals(m_currentWebView);
-        suspend();
-    }
-
     if (m_stateStruct->tabs.find(newTabId) == m_stateStruct->tabs.end()) {
         BROWSER_LOGW("[%s:%d] there is no tab of id %d", __PRETTY_FUNCTION__, __LINE__, newTabId.get());
         return false;
     }
-    closeFindOnPage();
 
-    m_currentWebView = m_stateStruct->tabs[newTabId];
-    m_currentTabId = newTabId;
-    m_stateStruct->mostRecentTab.erase(
-        std::remove(m_stateStruct->mostRecentTab.begin(),
-            m_stateStruct->mostRecentTab.end(),
-            newTabId),
-        m_stateStruct->mostRecentTab.end());
-    m_stateStruct->mostRecentTab.push_back(newTabId);
+    if (newTabId != m_currentTabId) {
+        // if there was any running WebView
+        if (m_currentWebView) {
+            disconnectSignals(m_currentWebView);
+            suspend();
+        }
 
+        closeFindOnPage();
+        m_currentWebView = m_stateStruct->tabs[newTabId];
+        m_currentTabId = newTabId;
+        m_stateStruct->mostRecentTab.erase(
+            std::remove(m_stateStruct->mostRecentTab.begin(),
+                m_stateStruct->mostRecentTab.end(),
+                newTabId),
+            m_stateStruct->mostRecentTab.end());
+        m_stateStruct->mostRecentTab.push_back(newTabId);
+
+    }
     connectSignals(m_currentWebView);
     resume();
 
-    titleChanged(m_currentWebView->getTitle());
     uriChanged(m_currentWebView->getURI());
     forwardEnableChanged(m_currentWebView->isForwardEnabled());
     backwardEnableChanged(m_currentWebView->isBackEnabled());
-    currentTabChanged(m_currentTabId);
     m_currentWebView->orientationChanged();
 
     return true;

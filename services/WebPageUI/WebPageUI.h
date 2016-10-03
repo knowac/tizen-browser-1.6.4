@@ -104,10 +104,8 @@ public:
      */
     bool stateEquals(std::initializer_list<WPUState> states) const;
     bool isWebPageUIvisible() { return m_WebPageUIvisible; }
-    void toIncognito(bool);
     void switchViewToErrorPage();
     void switchViewToWebPage(Evas_Object* content, const std::string uri, bool loading);
-    void switchViewToIncognitoPage();
     void switchViewToQuickAccess(Evas_Object* content);
     URIEntry& getURIEntry() const { return *m_URIEntry.get(); }
     std::shared_ptr<EditQuickAccessUI> getQuickAccessEditUI() { return m_editQuickAccessUI; }
@@ -187,7 +185,6 @@ private:
 
     void createLayout();
     void createErrorLayout();
-    void createPrivateLayout();
     void createActions();
     void connectActions();
     void showProgressBar();
@@ -195,10 +192,11 @@ private:
     void hideFindOnPage();
     void hideWebView();
     void setErrorButtons();
-    void setPrivateButtons();
+    void setButtonsDisabled();
     void setMainContent(Evas_Object* content);
     void updateURIBar(const std::string& uri, bool loading);
     std::string edjePath(const std::string& file);
+    void setQuickAccessView();
 #if GESTURE
     void gestureUp();
     void gestureDown();
@@ -212,7 +210,6 @@ private:
     Evas_Object* m_parent;
     Evas_Object* m_mainLayout;
     Evas_Object* m_errorLayout;
-    Evas_Object* m_privateLayout;
     Evas_Object* m_bookmarkManagerButton;
 
     std::unique_ptr<ButtonBar> m_bottomButtonBar;

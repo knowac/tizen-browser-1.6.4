@@ -244,7 +244,6 @@ void SimpleUI::restoreLastSession()
             i.getTitle(),
             boost::optional<int>(i.getId().get()),
             false,
-            false,
             i.getOrigin());
         m_isSessionRestored = true;
     }
@@ -730,8 +729,7 @@ void SimpleUI::switchViewToWebPage()
 void SimpleUI::switchToTab(const basic_webengine::TabId& tabId)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (m_webEngine->currentTabId() != tabId)
-        m_webEngine->switchToTab(tabId);
+    m_webEngine->switchToTab(tabId);
     switchViewToWebPage();
 }
 
@@ -750,16 +748,9 @@ void SimpleUI::switchViewToQuickAccess()
     popStackTo(m_webPageUI.get());
 }
 
-void SimpleUI::switchViewToIncognitoPage()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_webPageUI->switchViewToIncognitoPage();
-    popStackTo(m_webPageUI.get());
-}
-
 void SimpleUI::openNewTab(const std::string &uri, const std::string& title,
         const boost::optional<int> adaptorId, bool desktopMode,
-        bool incognitoMode, basic_webengine::TabOrigin origin)
+        basic_webengine::TabOrigin origin)
 {
     BROWSER_LOGD("[%s:%d] uri =%s", __PRETTY_FUNCTION__, __LINE__, uri.c_str());
     basic_webengine::TabId tab = m_webEngine->addTab(uri,
@@ -769,8 +760,6 @@ void SimpleUI::openNewTab(const std::string &uri, const std::string& title,
         return;
     }
     switchToTab(tab);
-    if (incognitoMode)
-        switchViewToIncognitoPage();
 }
 
 void SimpleUI::closeTab()
@@ -822,7 +811,7 @@ void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool 
     if (m_webPageUI) {
         popStackTo(m_webPageUI.get());
         if (tabsCount() == 0 || m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
-            openNewTab(url, title, boost::none, desktopMode, false, basic_webengine::TabOrigin::QUICKACCESS);
+            openNewTab(url, title, boost::none, desktopMode, basic_webengine::TabOrigin::QUICKACCESS);
         else {
             M_ASSERT(m_webEngine->getWidget());
             m_webPageUI->switchViewToWebPage(m_webEngine->getWidget(), url, false);
@@ -1347,7 +1336,7 @@ void SimpleUI::filterURL(const std::string& url)
     //no filtering
 
         if (m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
-            openNewTab(url, "", boost::none, false, false, basic_webengine::TabOrigin::QUICKACCESS);
+            openNewTab(url, "", boost::none, false, basic_webengine::TabOrigin::QUICKACCESS);
         else
             m_webEngine->setURI(url);
 

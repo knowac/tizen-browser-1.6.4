@@ -420,12 +420,6 @@ public:
     boost::signals2::signal<void (std::shared_ptr<tizen_browser::tools::BrowserImage>)> favIconChanged;
 
     /**
-     * Title of current page changed
-     * \param new title
-     */
-    boost::signals2::signal<void (const std::string&)> titleChanged;
-
-    /**
      * URI of current page changed
      * \param new URI
      */
@@ -473,12 +467,6 @@ public:
      * Page load error.
      */
     boost::signals2::signal<void ()> loadError;
-
-    /**
-     * Current tab changed
-     * \param TabId of new tab
-     */
-    boost::signals2::signal<void (TabId)> currentTabChanged;
 
     /**
     * New tab was created. It could be explicit call (by user) or tab could be opened from JavaScript.
