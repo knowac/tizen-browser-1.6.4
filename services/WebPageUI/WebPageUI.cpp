@@ -408,8 +408,13 @@ void WebPageUI::showContextMenu()
             } else
                 BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
 
-            //TODO: "dont add this item if it is already in a quick access
-            elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_ADD_TO_QUICK_ACCESS"), nullptr, _cm_add_to_qa_clicked, this);
+            boost::optional<bool> quickAccess = isQuickAccess();
+            if (quickAccess) {
+                if (!*quickAccess)
+                    elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_ADD_TO_QUICK_ACCESS"), nullptr, _cm_add_to_qa_clicked, this);
+            } else {
+                BROWSER_LOGE("[%s:%d] Signal not found", __PRETTY_FUNCTION__, __LINE__);
+            }
 
             if (!getDesktopMode())
                 elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_BODY_DESKTOP_VIEW"), nullptr, _cm_desktop_view_page_clicked, this);

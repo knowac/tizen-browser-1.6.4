@@ -220,6 +220,12 @@ private:
     bool checkBookmark();
 
     /**
+     * @brief Check if the current page exists as a quick access.
+     *
+     */
+    bool checkQuickAccess();
+
+    /**
      * @brief Adds current page to bookmarks.
      *
      */

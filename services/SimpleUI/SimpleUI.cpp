@@ -382,6 +382,7 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->updateManualRotation.connect([this](){enableManualRotation(isManualRotation(m_viewManager.topOfStack()));});
     m_webPageUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_webPageUI->isBookmark.connect(boost::bind(&SimpleUI::checkBookmark, this));
+    m_webPageUI->isQuickAccess.connect(boost::bind(&SimpleUI::checkQuickAccess, this));
     m_webPageUI->deleteBookmark.connect(boost::bind(&SimpleUI::deleteBookmark, this));
     m_webPageUI->showBookmarkFlowUI.connect(boost::bind(&SimpleUI::showBookmarkFlowUI, this));
     m_webPageUI->showFindOnPageUI.connect(boost::bind(&SimpleUI::showFindOnPageUI, this, std::string()));
@@ -814,6 +815,13 @@ bool SimpleUI::checkBookmark()
         BROWSER_LOGD("[%s] There is no bookmark for this site [%s], set indicator off", __func__, m_webEngine->getURI().c_str());
         return false;
     }
+}
+
+bool SimpleUI::checkQuickAccess()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    //TODO: switch this to quickaccess database when it will be implemented
+    return checkBookmark();
 }
 
 void SimpleUI::onOpenURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode)

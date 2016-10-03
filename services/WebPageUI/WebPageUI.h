@@ -148,6 +148,7 @@ public:
 
     //AbstractContextMenu signals
     boost::signals2::signal<bool ()> isBookmark;
+    boost::signals2::signal<bool ()> isQuickAccess;
     boost::signals2::signal<void ()> deleteBookmark;
     boost::signals2::signal<void ()> showBookmarkFlowUI;
     boost::signals2::signal<void ()> showFindOnPageUI;
