@@ -631,10 +631,12 @@ Evas_Object * WebView::getLayout()
     return m_ewkView;
 }
 
-Evas_Object* WebView::getWidget()
+#if !DUMMY_BUTTON
+Evas_Object * WebView::getWidget()
 {
     return ewk_view_widget_get(m_ewkView);
 }
+#endif
 
 void WebView::setURI(const std::string & uri)
 {

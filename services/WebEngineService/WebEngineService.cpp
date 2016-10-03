@@ -82,7 +82,8 @@ Evas_Object * WebEngineService::getLayout()
     return m_currentWebView->getLayout();
 }
 
-Evas_Object* WebEngineService::getWidget()
+#if !DUMMY_BUTTON
+Evas_Object * WebEngineService::getWidget()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_currentWebView);
@@ -92,7 +93,7 @@ Evas_Object* WebEngineService::getWidget()
     }
     return m_currentWebView->getWidget();
 }
-
+#endif
 void WebEngineService::init(Evas_Object* guiParent)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);

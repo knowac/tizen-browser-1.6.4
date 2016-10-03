@@ -103,8 +103,9 @@ public:
     std::map<std::string, std::vector<std::string> > parse_uri(const char *uriToParse);
 
     Evas_Object * getLayout();
+#if !DUMMY_BUTTON
     Evas_Object * getWidget();
-
+#endif
     void confirmationResult(WebConfirmationPtr);
 
     std::shared_ptr<tizen_browser::tools::BrowserImage> captureSnapshot(int width, int height, bool async,

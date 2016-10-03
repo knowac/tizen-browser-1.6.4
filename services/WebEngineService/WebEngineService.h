@@ -52,8 +52,10 @@ public:
     virtual std::string getName();
 
     Evas_Object * getLayout();
-    Evas_Object* getWidget();
-    void init(Evas_Object* guiParent);
+#if !DUMMY_BUTTON
+    Evas_Object * getWidget();
+#endif
+    void init(Evas_Object *guiParent);
     void preinitializeWebViewCache();
 
     void setURI(const std::string &);

@@ -136,6 +136,9 @@ void SimpleUI::resume()
         m_isSessionRestored = true;
     }
     m_webEngine->preinitializeWebViewCache();
+#if DUMMY_BUTTON
+    m_webPageUI->createDummyButton();
+#endif
     m_webEngine->resume();
     if (m_findOnPageUI && m_findOnPageUI->isVisible())
         m_findOnPageUI->show_ime();
@@ -813,8 +816,7 @@ void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool 
         if (tabsCount() == 0 || m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
             openNewTab(url, title, boost::none, desktopMode, basic_webengine::TabOrigin::QUICKACCESS);
         else {
-            M_ASSERT(m_webEngine->getWidget());
-            m_webPageUI->switchViewToWebPage(m_webEngine->getWidget(), url, false);
+            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), url, false);
             m_webEngine->setURI(url);
             m_webPageUI->getURIEntry().clearFocus();
         }
