@@ -208,6 +208,7 @@ void WebView::registerCallbacks()
     evas_object_smart_callback_add(m_ewkView, "load,progress", __loadProgress, this);
     evas_object_smart_callback_add(m_ewkView, "load,error", __loadError, this);
 
+    evas_object_smart_callback_add(m_ewkView, "title,changed", __titleChanged, this);
     evas_object_smart_callback_add(m_ewkView, "url,changed", __urlChanged, this);
     evas_object_smart_callback_add(m_ewkView, "back,forward,list,changed", __backForwardListChanged, this);
 
@@ -245,6 +246,7 @@ void WebView::unregisterCallbacks()
     evas_object_smart_callback_del_full(m_ewkView, "load,progress", __loadProgress, this);
     evas_object_smart_callback_del_full(m_ewkView, "load,error", __loadError, this);
 
+    evas_object_smart_callback_del_full(m_ewkView, "title,changed", __titleChanged, this);
     evas_object_smart_callback_del_full(m_ewkView, "url,changed", __urlChanged, this);
     evas_object_smart_callback_del_full(m_ewkView, "back,forward,list,changed", __backForwardListChanged, this);
 
@@ -1048,6 +1050,14 @@ void WebView::__loadError(void* data, Evas_Object * obj, void* ewkError)
         self->loadError();
         self->m_loadError=true;
     }
+}
+
+void WebView::__titleChanged(void * data, Evas_Object * obj, void * /* event_info */)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto self = reinterpret_cast<WebView *>(data);
+    self->m_title = fromChar(ewk_view_title_get(obj));
 }
 
 void WebView::__urlChanged(void * data, Evas_Object * /* obj */, void * /* event_info */)

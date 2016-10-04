@@ -328,6 +328,7 @@ private:
     static void __loadProgress(void * data, Evas_Object * obj, void * event_info);
     static void __loadError(void* data, Evas_Object* obj, void *ewkError);
 
+    static void __titleChanged(void * data, Evas_Object * obj, void * event_info);
     static void __urlChanged(void * data, Evas_Object * obj, void * event_info);
     static void __backForwardListChanged(void * data, Evas_Object * obj, void * event_info);
 
