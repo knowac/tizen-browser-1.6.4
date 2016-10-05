@@ -107,7 +107,6 @@ public:
      */
     bool stateEquals(std::initializer_list<WPUState> states) const;
     bool isWebPageUIvisible() { return m_WebPageUIvisible; }
-    void switchViewToErrorPage();
     void switchViewToWebPage(Evas_Object* content, const std::string uri, bool loading);
     void switchViewToQuickAccess(Evas_Object* content);
     URIEntry& getURIEntry() const { return *m_URIEntry.get(); }
@@ -194,7 +193,6 @@ private:
     static void launch_share(const char *uri);
 
     void createLayout();
-    void createErrorLayout();
     void createActions();
     void connectActions();
     void showProgressBar();

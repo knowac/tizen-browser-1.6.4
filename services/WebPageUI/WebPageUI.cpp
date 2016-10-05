@@ -222,18 +222,6 @@ void WebPageUI::setMainContent(Evas_Object* content)
     evas_object_show(content);
 }
 
-void WebPageUI::switchViewToErrorPage()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_statesMgr->set(WPUState::MAIN_ERROR_PAGE);
-    if (!m_errorLayout)
-        createErrorLayout();
-    setMainContent(m_errorLayout);
-    evas_object_show(m_bottomButtonBar->getContent());
-    elm_object_signal_emit(m_mainLayout, "shiftright_uri", "ui");
-    setErrorButtons();
-}
-
 void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri, bool loading)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -659,14 +647,6 @@ void WebPageUI::_dummy_button_unfocused(void *data, Evas_Object *, void *)
 }
 
 #endif
-void WebPageUI::createErrorLayout()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_errorLayout =  elm_layout_add(m_mainLayout);
-    evas_object_size_hint_weight_set(m_errorLayout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_errorLayout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-    elm_layout_file_set(m_errorLayout, edjePath("WebPageUI/ErrorMessage.edj").c_str(), "error_message");
-}
 
 void WebPageUI::_bookmark_manager_clicked(void * data, Evas_Object *, void *)
 {

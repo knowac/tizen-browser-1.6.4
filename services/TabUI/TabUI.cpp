@@ -384,7 +384,6 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
         }
 
         self->setStateButtons();
-        self->createEmptyLayout();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
@@ -420,8 +419,6 @@ void TabUI::addTabItems(std::vector<basic_webengine::TabContentPtr>& items, bool
         m_state = State::SECRET;
     else
         m_state = State::NORMAL;
-
-    createEmptyLayout();
 
     elm_gengrid_clear(m_gengrid);
     for (auto it = items.begin(); it < items.end(); ++it)

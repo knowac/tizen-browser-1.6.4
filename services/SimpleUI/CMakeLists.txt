@@ -60,6 +60,7 @@ add_dependencies(${PROJECT_NAME} SettingsUI)
 add_dependencies(${PROJECT_NAME} PlatformInputManager)
 add_dependencies(${PROJECT_NAME} CertificateService)
 add_dependencies(${PROJECT_NAME} FindOnPageUI)
+
 target_link_libraries(${PROJECT_NAME} WebPageUI)
 target_link_libraries(${PROJECT_NAME} StorageService)
 target_link_libraries(${PROJECT_NAME} HistoryService)

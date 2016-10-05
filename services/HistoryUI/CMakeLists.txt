@@ -28,12 +28,7 @@ install(TARGETS ${PROJECT_NAME}
 
 include(EDCCompile)
 set(edcFiles
-    colorClasses.edc
     History_mob.edc
-    HistoryDaysList_mob.edc
-    WebsiteHistoryItem_mob.edc
-    WebsiteHistoryItemTitle_mob.edc
-    WebsiteHistoryItemVisitItems_mob.edc
 )
 
 foreach(edec ${edcFiles})

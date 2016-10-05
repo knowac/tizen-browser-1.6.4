@@ -1,7 +1,6 @@
 #include "../../../core/Tools/edc/InvisibleButton.edc"
 #include "../../../core/Tools/edc/Spacer.edc"
 #include "../../../core/Tools/edc/ColorClasses.edc"
-#include "BrowserPageControl_mob.edc"
 
 #define URI_INPUTBOX_LENGTH 1720
 #define URL_HISTORY_ITEM_H 82

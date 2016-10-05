@@ -57,11 +57,9 @@ endif (${PROFILE} MATCHES "mobile")
 #please do not add edc/ directory
 set(edcFiles
     WebPageUI.edc
-    ErrorMessage.edc
     BottomButtonBar.edc
     RightButtonBar.edc
     URIEntry.edc
-    PrivateMode.edc
     UrlHistoryList.edc
     CustomButton.edc
     )
