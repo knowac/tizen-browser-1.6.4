@@ -1285,24 +1285,26 @@ int SimpleUI::getRotation()
 void SimpleUI::rotationType(rotationLock lock)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    int *rots;
-    size_t size = 1;
-    switch (lock)
-    {
-        case rotationLock::portrait:
-            rots = new int[1] {0};
-            break;
-        case rotationLock::landscape:
-            rots = new int[1] {90};
-            break;
-        case rotationLock::noLock:
-        default:
-            rots = new int[4] {0, 90, 180, 270};
-            size = 4;
-            break;
-    }
 
-    elm_win_wm_rotation_available_rotations_set( main_window, const_cast<const int*>(rots), size);
+    switch (lock) {
+        case rotationLock::portrait: {
+            const int rots[] = {0};
+            elm_win_wm_rotation_available_rotations_set(main_window, rots, sizeof(rots)/sizeof(int));
+            break;
+        }
+        case rotationLock::landscape: {
+            const int rots[] = {90};
+            elm_win_wm_rotation_available_rotations_set(main_window, rots, sizeof(rots)/sizeof(int));
+            break;
+        }
+        case rotationLock::noLock: {
+            const int rots[] = {0, 90, 180, 270};
+            elm_win_wm_rotation_available_rotations_set(main_window, rots, sizeof(rots)/sizeof(int));
+            break;
+        }
+        default:
+            BROWSER_LOGW("[%s:%d] Unknown rotationLock case!", __PRETTY_FUNCTION__, __LINE__);
+    }
 }
 
 Evas_Object* SimpleUI::getMainWindow()
