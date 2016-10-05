@@ -117,7 +117,6 @@ public:
     std::vector<std::shared_ptr<BookmarkItem>> getAllBookmarkItems(int parent = ROOT_FOLDER_ID);
 
     std::shared_ptr<services::BookmarkItem> getRoot();
-    int getQuickAccessRoot() {return m_quickAccess_root;}
 
     std::shared_ptr<services::BookmarkItem> getBookmarkItem(int id);
 
@@ -162,7 +161,6 @@ private:
     int getBookmarkId(const std::string & url);
 
     std::shared_ptr<services::BookmarkItem> m_root;
-    int m_quickAccess_root;
 };
 
 }

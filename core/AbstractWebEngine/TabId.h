@@ -20,7 +20,7 @@
 #include <string>
 #include <memory>
 
-#include "BrowserImageTypedef.h"
+#include "BrowserImage.h"
 #include "TabIdTypedef.h"
 #include "TabOrigin.h"
 

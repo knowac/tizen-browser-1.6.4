@@ -112,7 +112,6 @@ public:
     virtual std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem>> getAllBookmarkItems(
         int parent = tizen_browser::services::ROOT_FOLDER_ID) = 0;
     virtual std::shared_ptr<tizen_browser::services::BookmarkItem> getRoot() = 0;
-    virtual int getQuickAccessRoot() = 0;
     virtual std::shared_ptr<tizen_browser::services::BookmarkItem> getBookmarkItem(int id) = 0;
     virtual void editBookmark(int id, const std::string & url, const std::string & title, int parent = -1,
         int order = -1) = 0;

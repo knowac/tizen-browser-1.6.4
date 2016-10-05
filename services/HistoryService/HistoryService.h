@@ -21,7 +21,6 @@
 #include <memory>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/signals2/signal.hpp>
-#include "BrowserImageTypedef.h"
 
 #include "ServiceFactory.h"
 #include "service_macros.h"

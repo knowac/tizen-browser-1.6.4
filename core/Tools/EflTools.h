@@ -24,7 +24,6 @@
 #define __EFL_TOOLS_H__ 1
 
 #include <Evas.h>
-#include "BrowserImageTypedef.h"
 #include "BrowserImage.h"
 #include "Blob.h"
 

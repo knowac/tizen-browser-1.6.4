@@ -29,7 +29,7 @@
 #include "service_macros.h"
 #include "services/HistoryService/HistoryItem.h"
 #include "services/HistoryService/HistoryItemTypedef.h"
-#include "BookmarkItem.h"
+#include "QuickAccessItem.h"
 #include "Tools/EflTools.h"
 
 namespace tizen_browser{
@@ -42,7 +42,7 @@ enum class QuickAccessState {
 };
 
 class BROWSER_EXPORT QuickAccess
-        : public tizen_browser::core::AbstractService
+        : public core::AbstractService
         , public interfaces::AbstractRotatable
 {
 public:
@@ -55,7 +55,7 @@ public:
     void setQuickAccessState(QuickAccessState state) {m_state = state;}
     QuickAccessState getQuickAccessState() {return m_state;}
     void setMostVisitedItems(std::shared_ptr<services::HistoryItemVector> vec);
-    void setQuickAccessItems(std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > vec);
+    void setQuickAccessItems(services::SharedQuickAccessItemVector vec);
     void hideUI();
     void showUI();
     virtual std::string getName();
@@ -72,34 +72,32 @@ public:
     void deleteSelectedMostVisitedItems();
     void editingFinished();
 
-    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, bool)>
-        openURL;
+    boost::signals2::signal<void (services::SharedQuickAccessItem, bool)> openURLquickaccess;
+    boost::signals2::signal<void (std::shared_ptr<services::HistoryItem>, bool)> openURLhistory;
     boost::signals2::signal<void ()> getMostVisitedItems;
     boost::signals2::signal<void ()> getQuickAccessItems;
     boost::signals2::signal<void ()> addQuickAccessClicked;
     boost::signals2::signal<void ()> switchViewToWebPage;
-    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::BookmarkItem>)>
-        deleteQuickAccessItem;
-    boost::signals2::signal<void (std::shared_ptr<tizen_browser::services::HistoryItem>, int)>
-        removeMostVisitedItem;
+    boost::signals2::signal<void (services::SharedQuickAccessItem)> deleteQuickAccessItem;
+    boost::signals2::signal<void (std::shared_ptr<services::HistoryItem>, int)> removeMostVisitedItem;
     boost::signals2::signal<void (int)> sendSelectedMVItemsCount;
 
 private:
     struct HistoryItemData
     {
-        std::shared_ptr<tizen_browser::services::HistoryItem> item;
+        std::shared_ptr<services::HistoryItem> item;
         QuickAccess* quickAccess;
     };
 
-    struct BookmarkItemData
+    struct QuickAccessItemData
     {
-        std::shared_ptr<tizen_browser::services::BookmarkItem> item;
+        services::SharedQuickAccessItem item;
         QuickAccess* quickAccess;
     };
 
     void createItemClasses();
     void addMostVisitedItem(std::shared_ptr<services::HistoryItem>);
-    void addQuickAccessItem(std::shared_ptr<tizen_browser::services::BookmarkItem>);
+    void addQuickAccessItem(services::SharedQuickAccessItem);
     void clearMostVisitedGengrid();
     void clearQuickAccessGengrid();
     Evas_Object* createQuickAccessGengrid(Evas_Object *parent);
@@ -117,9 +115,8 @@ private:
     void createMostVisitedView(Evas_Object *parent);
     void createQuickAccessView(Evas_Object *parent);
 
-    static char* _grid_bookmark_text_get(void *data, Evas_Object *obj, const char *part);
-    static Evas_Object * _grid_bookmark_content_get(void *data, Evas_Object *obj, const char *part);
-    static void _grid_bookmark_del(void *data, Evas_Object *obj);
+    static Evas_Object * _grid_quickaccess_content_get(void *data, Evas_Object *obj, const char *part);
+    static void _grid_quickaccess_del(void *data, Evas_Object *obj);
     static void __quckAccess_del_clicked(void *data, Evas_Object *, void *);
     static char* _grid_mostVisited_text_get(void *data, Evas_Object *obj, const char *part);
     static Evas_Object * _grid_mostVisited_content_get(void *data, Evas_Object *obj, const char *part);
@@ -159,14 +156,14 @@ private:
     Evas_Object* m_index;
     Evas_Object* m_verticalScroller;
     Elm_Gengrid_Item_Class * m_quickAccess_tile_class;
-    std::list<std::shared_ptr<tizen_browser::services::HistoryItem>> m_mv_delete_list;
+    std::list<std::shared_ptr<services::HistoryItem>> m_mv_delete_list;
     bool m_landscapeView;
     static const int MOST_VISITED_PAGE = 1;
     static const int QUICKACCESS_PAGE = 0;
-    static const int BOOKMARK_ITEM_WIDTH = 150;
-    static const int BOOKAMRK_ITEM_HEIGHT = 204;
-    static const int BOOKMARK_ITEM_WIDTH_LANDSCAPE = 150;
-    static const int BOOKAMRK_ITEM_HEIGHT_LANDSCAPE = 204;
+    static const int QUICKACCESS_ITEM_WIDTH = 150;
+    static const int QUICKACCESS_ITEM_HEIGHT = 204;
+    static const int QUICKACCESS_ITEM_WIDTH_LANDSCAPE = 150;
+    static const int QUICKACCESS_ITEM_HEIGHT_LANDSCAPE = 204;
     static const int MOSTVISITED_ITEM_WIDTH = 200;
     static const int MOSTVISITED_ITEM_HEIGHT = 208;
     static const int MOSTVISITED_ITEM_WIDTH_LANDSCAPE = 200;

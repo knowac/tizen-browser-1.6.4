@@ -502,7 +502,11 @@ void WebPageUI::_cm_add_to_qa_clicked(void* data, Evas_Object*, void* )
     if (data != nullptr) {
         WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
-        webPageUI->addToQuickAccess();
+        auto signal = webPageUI->getTitle();
+        if (signal)
+            webPageUI->addToQuickAccess(webPageUI->getURI(), *signal);
+        else
+            BROWSER_LOGW("Signal does not exist!");
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }

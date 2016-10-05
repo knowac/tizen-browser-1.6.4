@@ -36,6 +36,7 @@ set(browserCore_SRCS
     Tools/Blob.cpp
     Tools/BookmarkItem.cpp
     Tools/BookmarkFolder.cpp
+    Tools/QuickAccessItem.cpp
     Tools/CapiWebErrorCodes.cpp
     Tools/FeedItem.cpp
     Tools/FeedChannel.cpp

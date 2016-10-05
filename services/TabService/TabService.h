@@ -27,7 +27,7 @@
 #include <boost/optional.hpp>
 #include <web/web_tab.h>
 #include "TabIdTypedef.h"
-#include "BrowserImageTypedef.h"
+#include "BrowserImage.h"
 #include "AbstractWebEngine/TabOrigin.h"
 
 namespace tizen_browser {

@@ -93,9 +93,9 @@ void QuickAccess::createItemClasses()
         m_quickAccess_item_class = elm_gengrid_item_class_new();
         m_quickAccess_item_class->item_style = "quickAccess";
         m_quickAccess_item_class->func.text_get = nullptr;
-        m_quickAccess_item_class->func.content_get =  _grid_bookmark_content_get;
+        m_quickAccess_item_class->func.content_get =  _grid_quickaccess_content_get;
         m_quickAccess_item_class->func.state_get = nullptr;
-        m_quickAccess_item_class->func.del = _grid_bookmark_del;
+        m_quickAccess_item_class->func.del = _grid_quickaccess_del;
     }
     if (!m_mostVisited_item_class) {
         m_mostVisited_item_class = elm_gengrid_item_class_new();
@@ -228,9 +228,15 @@ Evas_Object* QuickAccess::createQuickAccessGengrid(Evas_Object *parent)
 
     elm_gengrid_align_set(quickAccessGengrid, 0.5, 0.1);
     if (isOrientationLandscape()) {
-        elm_gengrid_item_size_set(quickAccessGengrid, Z3_SCALE_SIZE(BOOKMARK_ITEM_WIDTH_LANDSCAPE), Z3_SCALE_SIZE(BOOKAMRK_ITEM_HEIGHT_LANDSCAPE));
+        elm_gengrid_item_size_set(
+            quickAccessGengrid,
+            Z3_SCALE_SIZE(QUICKACCESS_ITEM_WIDTH_LANDSCAPE),
+            Z3_SCALE_SIZE(QUICKACCESS_ITEM_HEIGHT_LANDSCAPE));
     } else {
-        elm_gengrid_item_size_set(quickAccessGengrid, Z3_SCALE_SIZE(BOOKMARK_ITEM_WIDTH), Z3_SCALE_SIZE(BOOKAMRK_ITEM_HEIGHT));
+        elm_gengrid_item_size_set(
+            quickAccessGengrid,
+            Z3_SCALE_SIZE(QUICKACCESS_ITEM_WIDTH),
+            Z3_SCALE_SIZE(QUICKACCESS_ITEM_HEIGHT));
     }
     elm_scroller_bounce_set(quickAccessGengrid, EINA_FALSE, EINA_FALSE);
 
@@ -245,9 +251,15 @@ Evas_Object *QuickAccess::createMostVisitedGengrid(Evas_Object *parent)
     evas_object_size_hint_align_set(mostVisitedGengrid, EVAS_HINT_FILL, EVAS_HINT_EXPAND);
     elm_gengrid_align_set(mostVisitedGengrid, 0.5, 0.1);
     if (isOrientationLandscape()) {
-        elm_gengrid_item_size_set(mostVisitedGengrid, Z3_SCALE_SIZE(MOSTVISITED_ITEM_WIDTH_LANDSCAPE), Z3_SCALE_SIZE(MOSTVISITED_ITEM_HEIGHT_LANDSCAPE));
+        elm_gengrid_item_size_set(
+            mostVisitedGengrid,
+            Z3_SCALE_SIZE(MOSTVISITED_ITEM_WIDTH_LANDSCAPE),
+            Z3_SCALE_SIZE(MOSTVISITED_ITEM_HEIGHT_LANDSCAPE));
     } else {
-        elm_gengrid_item_size_set(mostVisitedGengrid, Z3_SCALE_SIZE(MOSTVISITED_ITEM_WIDTH), Z3_SCALE_SIZE(MOSTVISITED_ITEM_HEIGHT));
+        elm_gengrid_item_size_set(
+            mostVisitedGengrid,
+            Z3_SCALE_SIZE(MOSTVISITED_ITEM_WIDTH),
+            Z3_SCALE_SIZE(MOSTVISITED_ITEM_HEIGHT));
     }
     elm_scroller_bounce_set(mostVisitedGengrid, EINA_FALSE, EINA_FALSE);
 
@@ -317,13 +329,11 @@ void QuickAccess::setMostVisitedItems(std::shared_ptr<services::HistoryItemVecto
     items->clear();
 }
 
-void QuickAccess::addQuickAccessItem(std::shared_ptr<tizen_browser::services::BookmarkItem> bi)
+void QuickAccess::addQuickAccessItem(services::SharedQuickAccessItem qa)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (bi->is_folder())
-        return;
-    BookmarkItemData *itemData = new BookmarkItemData();        // deleted in _grid_bookmark_del
-    itemData->item = bi;
+    QuickAccessItemData *itemData = new QuickAccessItemData();        // deleted in _grid_quickaccess_del
+    itemData->item = qa;
     itemData->quickAccess = this;
     elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccess_item_class, itemData, _thumbQuickAccessClicked, itemData);
 }
@@ -334,7 +344,7 @@ void QuickAccess::clearMostVisitedGengrid()
     elm_gengrid_clear(m_mostVisitedGengrid);
 }
 
-void QuickAccess::setQuickAccessItems(std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem> > items)
+void QuickAccess::setQuickAccessItems(services::SharedQuickAccessItemVector items)
 {
     clearQuickAccessGengrid();
 
@@ -410,11 +420,11 @@ void QuickAccess::_layout_resize_cb(void* data, Evas* /*e*/, Evas_Object* /*obj*
     }
 }
 
-Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object* obj, const char *part)
+Evas_Object * QuickAccess::_grid_quickaccess_content_get(void *data, Evas_Object* obj, const char *part)
 {
     BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__, part);
     if (data) {
-        BookmarkItemData *itemData = reinterpret_cast<BookmarkItemData*>(data);
+        QuickAccessItemData *itemData = reinterpret_cast<QuickAccessItemData*>(data);
 
         if (!strcmp(part, "elm.swallow.icon")) {
             Evas_Object *button = elm_button_add(obj);
@@ -451,9 +461,9 @@ Evas_Object * QuickAccess::_grid_bookmark_content_get(void *data, Evas_Object* o
     return nullptr;
 }
 
-void QuickAccess::_grid_bookmark_del(void* data, Evas_Object*)
+void QuickAccess::_grid_quickaccess_del(void* data, Evas_Object*)
 {
-    auto itemData = static_cast<BookmarkItemData*>(data);
+    auto itemData = static_cast<QuickAccessItemData*>(data);
     if (itemData)
         delete itemData;
 }
@@ -461,7 +471,7 @@ void QuickAccess::_grid_bookmark_del(void* data, Evas_Object*)
 void QuickAccess::__quckAccess_del_clicked(void *data, Evas_Object */*obj*/, void *)
 {
     BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__);
-    auto itemData = static_cast<BookmarkItemData*>(data);
+    auto itemData = static_cast<QuickAccessItemData*>(data);
     itemData->quickAccess->deleteQuickAccessItem(itemData->item);
 
     elm_object_item_del(elm_gengrid_selected_item_get(itemData->quickAccess->m_quickAccessGengrid));
@@ -479,7 +489,7 @@ char *QuickAccess::_grid_mostVisited_text_get(void *data, Evas_Object *, const c
 
 Evas_Object *QuickAccess::_grid_mostVisited_content_get(void *data, Evas_Object *obj, const char *part)
 {
-    if (data) {
+    if (data && obj && part) {
         HistoryItemData *itemData = reinterpret_cast<HistoryItemData*>(data);
 
         if (!strcmp(part, "elm.swallow.icon")) {
@@ -514,21 +524,31 @@ void QuickAccess::_grid_mostVisited_del(void *data, Evas_Object *)
 
 void QuickAccess::_thumbQuickAccessClicked(void * data, Evas_Object * , void *)
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
-    if (itemData->quickAccess->m_state == QuickAccessState::Default) {
-        itemData->quickAccess->openURL(itemData->item, itemData->quickAccess->isDesktopMode());
-        itemData->quickAccess->m_after_history_thumb = false;
+    if (data) {
+        BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+        QuickAccessItemData * itemData = reinterpret_cast<QuickAccessItemData *>(data);
+        if (itemData->quickAccess->m_state == QuickAccessState::Default) {
+            itemData->quickAccess->openURLquickaccess(itemData->item, itemData->quickAccess->isDesktopMode());
+            itemData->quickAccess->m_after_history_thumb = false;
+        }
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
+
 }
 
 void QuickAccess::_thumbMostVisitedClicked(void* data, Evas_Object*, void*)
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
-    if (itemData->quickAccess->m_state == QuickAccessState::Default) {
-        itemData->quickAccess->openURL(itemData->item, false);
+    if (data) {
+        BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+        HistoryItemData * itemData = reinterpret_cast<HistoryItemData *>(data);
+        if (itemData->quickAccess->m_state == QuickAccessState::Default) {
+            itemData->quickAccess->openURLhistory(itemData->item, false);
+        }
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
     }
+
 }
 
 void QuickAccess::_check_state_changed(void *data, Evas_Object *obj, void *)

@@ -150,23 +150,27 @@ private:
     void setMostVisitedFrequencyValue(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem,
         int visitFrequency);
 
-    void onBookmarkClicked(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
+    void onBookmarkClicked(services::SharedBookmarkItem bookmarkItem);
     void onNewQuickAccessClicked();
-    void addQuickAccessItem(const std::string &name);
-    void onBookmarkEdit(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
-    void onBookmarkOrderEdited(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
-    void onBookmarkDeleted(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem);
+    void addQuickAccessItem(const std::string &urlArg, const std::string &titleArg);
+    void onQuickAccessDeleted(services::SharedQuickAccessItem quickaccessItem);
+    void editQuickAccess();
+    void deleteMostVisited();
+    void onBookmarkEdit(services::SharedBookmarkItem bookmarkItem);
+    void onBookmarkOrderEdited(services::SharedBookmarkItem bookmarkItem);
+    void onBookmarkDeleted(services::SharedBookmarkItem bookmarkItem);
     void onNewFolderClicked(int parent);
     void onNewFolderPopupClick(const std::string& folder_name, int parent);
     void onDeleteFolderClicked(const std::string& folder_name);
-    void onRemoveFoldersClicked(std::vector<std::shared_ptr<services::BookmarkItem>> items);
-    void onEditFolderPopupClicked(const std::string& newName, std::shared_ptr<services::BookmarkItem> item);
+    void onRemoveFoldersClicked(services::SharedBookmarkItemList items);
+    void onEditFolderPopupClicked(const std::string& newName, services::SharedBookmarkItem item);
     void onDeleteFolderPopupClicked(PopupButtons button);
     static void onUrlIMEOpened(void* data, Evas_Object*, void*);
     static void onUrlIMEClosed(void* data, Evas_Object*, void*);
 
     void onHistoryRemoved(const std::string& uri);
-    void openURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode);
+    void openURLhistory(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode);
+    void openURLquickaccess(services::SharedQuickAccessItem quickaccessItem, bool desktopMode);
     /**
      * @brief Handles 'openUrlInNewTab' signals. Uses QuickAccess to indicate
      * desktop/mobile mode.
@@ -257,9 +261,6 @@ private:
     void refetchTabUIData();
     void switchToMobileMode();
     void switchToDesktopMode();
-    void editQuickAccess();
-    void deleteMostVisited();
-    void addQuickAccess();
     Evas_Object* showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode = false);
     void showSettings(unsigned);
     void onDefSearchEngineClicked();

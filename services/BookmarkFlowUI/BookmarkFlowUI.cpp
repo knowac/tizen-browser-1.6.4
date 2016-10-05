@@ -450,7 +450,12 @@ void BookmarkFlowUI::_done_clicked(void * data, Evas_Object *, void *)
             update.url = elm_entry_markup_to_utf8(elm_entry_entry_get(entry));
             bookmarkFlowUI->editBookmark(update);
         }
+
+        if (bookmarkFlowUI->m_add_to_qa)
+            bookmarkFlowUI->addToQuickAccess(bookmarkFlowUI->m_url, bookmarkFlowUI->m_title);
+
         bookmarkFlowUI->closeBookmarkFlowClicked();
+        bookmarkFlowUI->m_add_to_qa = false;
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }
@@ -461,6 +466,7 @@ void BookmarkFlowUI::_cancel_clicked(void * data, Evas_Object *, void *)
     if (data) {
         BookmarkFlowUI* bookmarkFlowUI = static_cast<BookmarkFlowUI*>(data);
         bookmarkFlowUI->closeBookmarkFlowClicked();
+        bookmarkFlowUI->m_add_to_qa = false;
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
 }

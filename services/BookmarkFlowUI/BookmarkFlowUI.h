@@ -77,6 +77,7 @@ public:
     boost::signals2::signal<void (BookmarkUpdate)> saveBookmark;
     boost::signals2::signal<void (BookmarkUpdate)> editBookmark;
     boost::signals2::signal<void (services::SharedBookmarkItem)> showSelectFolderUI;
+    boost::signals2::signal<void (std::string, std::string)> addToQuickAccess;
 
 private:
     struct FolderData {

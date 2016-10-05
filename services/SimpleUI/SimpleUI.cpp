@@ -411,7 +411,8 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->switchToDesktopMode.connect(boost::bind(&SimpleUI::switchToDesktopMode, this));
     m_webPageUI->quickAccessEdit.connect(boost::bind(&SimpleUI::editQuickAccess, this));
     m_webPageUI->deleteMostVisited.connect(boost::bind(&SimpleUI::deleteMostVisited, this));
-    m_webPageUI->addToQuickAccess.connect(boost::bind(&SimpleUI::addQuickAccess, this));
+    m_webPageUI->addToQuickAccess.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1, _2));
+    m_webPageUI->getTitle.connect(boost::bind(&basic_webengine::AbstractWebEngine::getTitle, m_webEngine.get()));
     m_webPageUI->getEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::getState, m_webEngine.get()));
     // WPA
     m_webPageUI->requestCurrentPageForWebPageUI.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
@@ -424,12 +425,13 @@ void SimpleUI::connectWebPageSignals()
 void SimpleUI::connectQuickAccessSignals()
 {
     M_ASSERT(m_quickAccess.get());
-    m_quickAccess->openURL.connect(boost::bind(&SimpleUI::openURL, this, _1, _2));
+    m_quickAccess->openURLquickaccess.connect(boost::bind(&SimpleUI::openURLquickaccess, this, _1, _2));
+    m_quickAccess->openURLhistory.connect(boost::bind(&SimpleUI::openURLhistory, this, _1, _2));
     m_quickAccess->getMostVisitedItems.connect(boost::bind(&SimpleUI::onMostVisitedClicked, this));
     m_quickAccess->getQuickAccessItems.connect(boost::bind(&SimpleUI::onQuickAccessClicked, this));
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
     m_quickAccess->addQuickAccessClicked.connect(boost::bind(&SimpleUI::onNewQuickAccessClicked, this));
-    m_quickAccess->deleteQuickAccessItem.connect(boost::bind(&SimpleUI::onBookmarkDeleted, this, _1));
+    m_quickAccess->deleteQuickAccessItem.connect(boost::bind(&SimpleUI::onQuickAccessDeleted, this, _1));
     m_quickAccess->removeMostVisitedItem.connect(
         boost::bind(&SimpleUI::setMostVisitedFrequencyValue, this, _1, _2));
     m_quickAccess->sendSelectedMVItemsCount.connect(
@@ -490,6 +492,7 @@ void SimpleUI::connectBookmarkFlowSignals()
     m_bookmarkFlowUI->editBookmark.connect(boost::bind(&SimpleUI::editBookmark, this, _1));
     m_bookmarkFlowUI->showSelectFolderUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
         _1, BookmarkManagerState::SelectFolder));
+    m_bookmarkFlowUI->addToQuickAccess.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1, _2));
 }
 
 void SimpleUI::connectBookmarkManagerSignals()
@@ -832,13 +835,17 @@ bool SimpleUI::checkBookmark()
 bool SimpleUI::checkQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    //TODO: switch this to quickaccess database when it will be implemented
-    return checkBookmark();
+    return m_storageService->getQuickAccessStorage().quickAccessItemExist(m_webEngine->getURI());
 }
 
-void SimpleUI::openURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode)
+void SimpleUI::openURLhistory(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode)
 {
     openURL(historyItem->getUrl(), historyItem->getTitle(), desktopMode);
+}
+
+void SimpleUI::openURLquickaccess(services::SharedQuickAccessItem quickaccessItem, bool desktopMode)
+{
+    openURL(quickaccessItem->getUrl(), quickaccessItem->getTitle(), desktopMode);
 }
 
 void SimpleUI::openURL(const std::string& url)
@@ -886,12 +893,10 @@ void SimpleUI::onMostVisitedClicked()
 void SimpleUI::onQuickAccessClicked()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    //TODO: Elements added here shouldn't be bookmark items, but quick access items.
-    m_quickAccess->setQuickAccessItems(
-        m_favoriteService->getAllBookmarkItems(m_favoriteService->getQuickAccessRoot()));
+    m_quickAccess->setQuickAccessItems(m_storageService->getQuickAccessStorage().getQuickAccessList());
 }
 
-void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem)
+void SimpleUI::onBookmarkClicked(services::SharedBookmarkItem bookmarkItem)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
@@ -902,7 +907,7 @@ void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::Bookma
     }
 }
 
-void SimpleUI::onBookmarkEdit(std::shared_ptr<services::BookmarkItem> bookmarkItem)
+void SimpleUI::onBookmarkEdit(services::SharedBookmarkItem bookmarkItem)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (bookmarkItem->is_folder()) {
@@ -931,13 +936,13 @@ void SimpleUI::onBookmarkEdit(std::shared_ptr<services::BookmarkItem> bookmarkIt
     }
 }
 
-void SimpleUI::onBookmarkOrderEdited(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem)
+void SimpleUI::onBookmarkOrderEdited(services::SharedBookmarkItem bookmarkItem)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_favoriteService->editBookmark(bookmarkItem->getId(), "", "", -1, bookmarkItem->getOrder());
 }
 
-void SimpleUI::onBookmarkDeleted(std::shared_ptr<tizen_browser::services::BookmarkItem> bookmarkItem)
+void SimpleUI::onBookmarkDeleted(services::SharedBookmarkItem bookmarkItem)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_favoriteService->deleteBookmark(bookmarkItem->getId());
@@ -978,7 +983,6 @@ void SimpleUI::onNewFolderPopupClick(const std::string& folder_name, int parent)
 void SimpleUI::onNewQuickAccessClicked()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    //TODO: Implement it right with a correct functionality.
     auto inputPopup = InputPopup::createPopup(
         m_viewManager.getContent(),
         "Add to Quick access",
@@ -988,35 +992,62 @@ void SimpleUI::onNewQuickAccessClicked()
         _("IDS_BR_SK_CANCEL_ABB"));
     // TODO Add missing translations
     inputPopup->setTip(_("Enter web address"));
-    inputPopup->button_clicked.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1));        //TODO: connect new function
-    inputPopup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));        //TODO: connect new function
-    inputPopup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));        //TODO: connect new function
+    inputPopup->button_clicked.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1, ""));
+    inputPopup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
+    inputPopup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
     inputPopup->show();
 }
 
-void SimpleUI::addQuickAccessItem(const std::string& name)
+void SimpleUI::addQuickAccessItem(const string &urlArg, const string &titleArg)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    std::string url = name;
-    std::string title;
+    bool showQA = false;
+    std::string url = urlArg;
+    std::string title = titleArg;
 
-    //TODO: extract all prefixes to external file
-    if (!strncmp(name.c_str(), "http://", strlen("http://")))
-        title = name.substr(strlen("http://"), std::string::npos);
-    else if (!strncmp(name.c_str(), "https://", strlen("https://")))
-        title = name.substr(strlen("https://"), std::string::npos);
-    else if (!strncmp(name.c_str(), "ftp://", strlen("ftp://")))
-        title = name.substr(strlen("ftp://"), std::string::npos);
-    else {
-        url = std::string("http://") + name;
-        title = name;
+    if (url.compare(0, tools::PROTOCOL_HTTP.length(), tools::PROTOCOL_HTTP))
+        url = std::string(tools::PROTOCOL_HTTP) + url;
+
+    if (titleArg.empty()) {
+        title = urlArg;
+        showQA = true;
     }
 
-    m_favoriteService->addBookmark(url, title, std::string(),
-        std::shared_ptr<tizen_browser::tools::BrowserImage>(),
-        std::shared_ptr<tizen_browser::tools::BrowserImage>(), m_favoriteService->getQuickAccessRoot());
-    showQuickAccess();
+    if (!title.compare(0, tools::PROTOCOL_HTTP.length(), tools::PROTOCOL_HTTP))
+        title = title.substr(tools::PROTOCOL_HTTP.length(), std::string::npos);
+    else if (!title.compare(0, tools::PROTOCOL_HTTPS.length(), tools::PROTOCOL_HTTPS))
+        title = title.substr(tools::PROTOCOL_HTTPS.length(), std::string::npos);
+    else if (!title.compare(0, tools::PROTOCOL_FTP.length(), tools::PROTOCOL_FTP))
+        title = title.substr(tools::PROTOCOL_FTP.length(), std::string::npos);
+
+    //TODO: add support for reorder, color and images
+    m_storageService->getQuickAccessStorage().addQuickAccessItem(url, title, 0, 0, false);
+
+    if (showQA)
+        showQuickAccess();
+
+    //TODO: display toast message
+}
+
+void SimpleUI::onQuickAccessDeleted(services::SharedQuickAccessItem quickaccessItem)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_storageService->getQuickAccessStorage().deleteQuickAccessItem(quickaccessItem->getId());
+}
+
+void SimpleUI::editQuickAccess()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_quickAccess->editQuickAccess();
+    pushViewToStack(m_webPageUI->getQuickAccessEditUI());
+}
+
+void SimpleUI::deleteMostVisited()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_quickAccess->deleteMostVisited();
+    pushViewToStack(m_webPageUI->getQuickAccessEditUI());
 }
 
 void SimpleUI::onDeleteFolderClicked(const std::string& folder_name)
@@ -1034,7 +1065,7 @@ void SimpleUI::onDeleteFolderClicked(const std::string& folder_name)
     popup->show();
 }
 
-void SimpleUI::onRemoveFoldersClicked(std::vector<std::shared_ptr<tizen_browser::services::BookmarkItem>> items)
+void SimpleUI::onRemoveFoldersClicked(services::SharedBookmarkItemList items)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     for (auto it = items.begin(); it != items.end(); ++it) {
@@ -1713,42 +1744,6 @@ void SimpleUI::switchToDesktopMode()
     } else {
         m_quickAccess->setDesktopMode(true);
     }
-}
-
-void SimpleUI::editQuickAccess()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_quickAccess->editQuickAccess();
-    pushViewToStack(m_webPageUI->getQuickAccessEditUI());
-}
-
-void SimpleUI::deleteMostVisited()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_quickAccess->deleteMostVisited();
-    pushViewToStack(m_webPageUI->getQuickAccessEditUI());
-}
-
-void SimpleUI::addQuickAccess()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    BookmarkUpdate item;
-    item.folder_id = m_favoriteService->getQuickAccessRoot();
-    item.old_url = "";
-    item.title = m_webEngine->getTitle();
-    item.url = m_webEngine->getURI();
-
-    //TODO: extract all prefixes to external file
-    if (!strncmp(item.title.c_str(), "http://", strlen("http://")))
-        item.title = item.title.substr(strlen("http://"), std::string::npos);
-    else if (!strncmp(item.title.c_str(), "https://", strlen("https://")))
-        item.title = item.title.substr(strlen("https://"), std::string::npos);
-    else if (!strncmp(item.title.c_str(), "ftp://", strlen("ftp://")))
-        item.title = item.title.substr(strlen("ftp://"), std::string::npos);
-
-    addBookmark(item);
-
-    //TODO: display toast message
 }
 
 void SimpleUI::showBookmarkFlowUI()
