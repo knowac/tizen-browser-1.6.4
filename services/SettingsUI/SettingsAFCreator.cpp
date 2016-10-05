@@ -52,6 +52,35 @@ SettingsAFCreator::SettingsAFCreator(Evas_Object* parent, bool profile_exists)
 SettingsAFCreator::~SettingsAFCreator()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    SPSC.autoFillCleared.disconnect_all_slots();
+
+    for (auto& it : genlistCallbackVector) {
+        unregisterCallbacksForEditfield(it->editfield);
+        evas_object_del(it->editfield);
+        unregisterCallbacksForEntry(it->entry);
+        evas_object_del(it->entry);
+    }
+
+    if (m_box)
+        evas_object_del(m_box);
+    if (m_scroller)
+        evas_object_del(m_scroller);
+}
+
+void SettingsAFCreator::unregisterCallbacksForEntry(Evas_Object* entry)
+{
+    evas_object_smart_callback_del(entry, "preedit,changed", __entry_changed_cb);
+    evas_object_smart_callback_del(entry, "changed", __entry_changed_cb);
+    evas_object_smart_callback_del(entry, "changed", __editfield_changed_cb);
+    evas_object_smart_callback_del(entry, "activated", __entry_next_key_cb);
+    evas_object_smart_callback_del(entry, "clicked", __entry_clicked_cb);
+    evas_object_smart_callback_del(entry, "activated", __done_button_cb);
+}
+
+void SettingsAFCreator::unregisterCallbacksForEditfield(Evas_Object* editfield)
+{
+    auto button(elm_object_part_content_get(editfield, "entry_clear_button"));
+    evas_object_smart_callback_del(button, "clicked", __entry_clear_button_clicked_cb);
 }
 
 bool SettingsAFCreator::loadProfile(void)
@@ -305,6 +334,17 @@ void SettingsAFCreator::addItems()
     evas_object_smart_callback_add(m_emailItemCallbackData.entry, "activated", __done_button_cb, this);
     elm_entry_input_panel_layout_set(m_emailItemCallbackData.entry, ELM_INPUT_PANEL_LAYOUT_EMAIL);
     elm_entry_prediction_allow_set(m_emailItemCallbackData.entry, EINA_FALSE);
+
+    genlistCallbackVector.push_back(&m_fullNameItemCallbackData);
+    genlistCallbackVector.push_back(&m_companyNameItemCallbackData);
+    genlistCallbackVector.push_back(&m_addressLine1ItemCallbackData);
+    genlistCallbackVector.push_back(&m_addressLine2ItemCallbackData);
+    genlistCallbackVector.push_back(&m_cityTownItemCallbackData);
+    genlistCallbackVector.push_back(&m_countryItemCallbackData);
+    genlistCallbackVector.push_back(&m_postCodeItemCallbackData);
+    genlistCallbackVector.push_back(&m_countryRegionItemCallbackData);
+    genlistCallbackVector.push_back(&m_phoneItemCallbackData);
+    genlistCallbackVector.push_back(&m_emailItemCallbackData);
 }
 
 Evas_Object* SettingsAFCreator::createScroller(Evas_Object* parent)

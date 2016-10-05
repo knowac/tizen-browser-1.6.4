@@ -78,30 +78,30 @@ ViewManager::~ViewManager()
     evas_object_del(m_mainLayout);
 }
 
-void ViewManager::popStackTo(interfaces::AbstractUIComponent* view)
+void ViewManager::popStackTo(const sAUI& view)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(view);
-    interfaces::AbstractUIComponent* previousView = m_viewStack.top();
+    sAUI previousView = m_viewStack.top();
 
     while (!m_viewStack.empty() && m_viewStack.top() != view)
         m_viewStack.pop();
     updateLayout(previousView);
-    BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack());
+    BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack().get());
 }
 
 void ViewManager::popTheStack()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!m_viewStack.empty()) {
-        interfaces::AbstractUIComponent* previousView = m_viewStack.top();
+        sAUI previousView = m_viewStack.top();
         m_viewStack.pop();
         updateLayout(previousView);
     }
-    BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack());
+    BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack().get());
 }
 
-void ViewManager::pushViewToStack(interfaces::AbstractUIComponent* view)
+void ViewManager::pushViewToStack(const sAUI& view)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
@@ -109,17 +109,17 @@ void ViewManager::pushViewToStack(interfaces::AbstractUIComponent* view)
     if (topOfStack() == view) {
        BROWSER_LOGD(
            "[%s:%d] View %p is already on stack !!!",
-           __PRETTY_FUNCTION__, __LINE__, view);
+           __PRETTY_FUNCTION__, __LINE__, view.get());
        return;
     }
-    interfaces::AbstractUIComponent* previousView = topOfStack();
+    sAUI previousView = topOfStack();
     m_viewStack.push(view);
     updateLayout(previousView);
-    BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack());
+    BROWSER_LOGD("[%s:%d] new top: %p", __PRETTY_FUNCTION__, __LINE__, topOfStack().get());
 }
 
 
-void ViewManager::updateLayout(interfaces::AbstractUIComponent* previousView)
+void ViewManager::updateLayout(const sAUI& previousView)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     Evas_Object* swallowed = elm_layout_content_get(m_mainLayout, "content");
@@ -160,12 +160,12 @@ Evas_Object* ViewManager::getConformant() {
     return m_conformant;
 }
 
-interfaces::AbstractUIComponent* ViewManager::topOfStack()
+sAUI& ViewManager::topOfStack()
 {
+    static sAUI ret = sAUI(nullptr);
     if (!m_viewStack.empty())
         return m_viewStack.top();
-    else
-        return nullptr;
+    return ret;
 }
 
 

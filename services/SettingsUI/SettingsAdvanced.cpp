@@ -35,6 +35,7 @@ SettingsAdvanced::SettingsAdvanced(Evas_Object* parent)
 SettingsAdvanced::~SettingsAdvanced()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    SPSC.settingsSaveContentRadioPopupPtr.disconnect_all_slots();
 }
 
 void SettingsAdvanced::updateButtonMap()

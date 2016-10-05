@@ -128,12 +128,11 @@ Evas_Object* SettingsDelPersData::createNormalCheckBox(Evas_Object* obj, ItemDat
         static_cast<SettingsDelPersDataOptions>(itd->id) == CACHE ||
         static_cast<SettingsDelPersDataOptions>(itd->id) == COOKIES_AND_SITE) {
         elm_check_state_set(check, EINA_TRUE);
-        setOption(static_cast<SettingsDelPersDataOptions>(itd->id), true);
+        setOption(itd->id, true);
     } else {
         elm_check_state_set(check, EINA_FALSE);
-        setOption(static_cast<SettingsDelPersDataOptions>(itd->id), false);
+        setOption(itd->id, false);
     }
-    setCheckboxes(static_cast<SettingsDelPersDataOptions>(itd->id), check);
     return check;
 }
 
@@ -155,7 +154,7 @@ void SettingsDelPersData::grid_item_check_changed(void* data, Evas_Object* obj, 
     } else {
         elm_check_state_set(obj, value);
         self->setOption(
-            static_cast<SettingsDelPersDataOptions>(itd->id),
+            itd->id,
             static_cast<bool>(value));
     }
     bool val = self->getOption(SELECT_ALL);

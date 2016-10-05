@@ -103,9 +103,9 @@ private:
     void initModelServices();
     void initUIServices();
     void connectModelSignals();
-    void pushViewToStack(interfaces::AbstractUIComponent* view);
+    void pushViewToStack(const sAUI& view);
     void popTheStack();
-    void popStackTo(interfaces::AbstractUIComponent* view);
+    void popStackTo(const sAUI& view);
     void faviconChanged(tools::BrowserImagePtr favicon);
     void restoreLastSession();
     Evas_Object* createWebLayout(Evas_Object* parent);
@@ -281,7 +281,7 @@ private:
     void registerHWKeyCallback();
     void unregisterHWKeyCallback();
 
-    bool isManualRotation(interfaces::AbstractUIComponent* view);
+    bool isManualRotation(const sAUI& view);
     void enableManualRotation(bool enable);
     void rotatePrepared();
     void onRotation();
@@ -317,10 +317,10 @@ private:
     void closeTab();
     void closeTab(const tizen_browser::basic_webengine::TabId& id);
 
-    void settingsDeleteSelectedData(const std::map<SettingsDelPersDataOptions, bool>& option);
+    void settingsDeleteSelectedData(const std::map<int, bool>& option);
     void settingsResetMostVisited();
     void settingsResetBrowser();
-    void onDeleteSelectedDataButton(const PopupButtons& button, const std::map<SettingsDelPersDataOptions, bool>& options);
+    void onDeleteSelectedDataButton(const PopupButtons& button, const std::map<int, bool>& options);
     void onDeleteMostVisitedButton(std::shared_ptr<PopupData> popupData);
     void onResetBrowserButton(PopupButtons button, std::shared_ptr<PopupData> popupData);
     void tabLimitPopupButtonClicked(PopupButtons button);

@@ -37,7 +37,7 @@ void SettingsManager::init(Evas_Object* parent)
     m_parent = parent;
 }
 
-std::shared_ptr<SettingsUI> SettingsManager::getView(const SettingsMainOptions& s)
+std::shared_ptr<SettingsUI>& SettingsManager::getView(const SettingsMainOptions& s)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     return addView(s);
@@ -61,9 +61,10 @@ void SettingsManager::connectOpenSignals()
         boost::bind(&SettingsManager::showSettingsAutofillCreatorUI, this, _1));
 }
 
-std::shared_ptr<SettingsUI> SettingsManager::addView(const SettingsMainOptions& s)
+std::shared_ptr<SettingsUI>& SettingsManager::addView(const SettingsMainOptions& s)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     if (m_settingsViews.find(s) == m_settingsViews.end()) {
         switch (s) {
             case BASE:
@@ -99,7 +100,7 @@ std::shared_ptr<SettingsUI> SettingsManager::addView(const SettingsMainOptions& 
     } else {
         m_settingsViews[s]->updateButtonMap();
         if (m_settingsViews[s]->getGenlist())
-           elm_genlist_realized_items_update(m_settingsViews[s]->getGenlist());
+            elm_genlist_realized_items_update(m_settingsViews[s]->getGenlist());
     }
     return m_settingsViews[s];
 }

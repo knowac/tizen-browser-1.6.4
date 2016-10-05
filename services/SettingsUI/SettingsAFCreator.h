@@ -53,6 +53,9 @@ private:
     static void __entry_clicked_cb(void* data, Evas_Object* obj, void* event_info);
     static void __entry_clear_button_clicked_cb(void* data, Evas_Object* obj, void* event_info);
     static void __editfield_changed_cb(void* data, Evas_Object* obj, void* event_info);
+    void unregisterCallbacksForEntry(Evas_Object* entry);
+    void unregisterCallbacksForEditfield(Evas_Object* editfield);
+
     enum menu_type
     {
         profile_composer_title_full_name = 0,
@@ -97,6 +100,9 @@ protected:
     genlistCallbackData m_countryRegionItemCallbackData;
     genlistCallbackData m_phoneItemCallbackData;
     genlistCallbackData m_emailItemCallbackData;
+
+    std::vector<genlistCallbackData*> genlistCallbackVector;
+
     std::shared_ptr<AutoFillFormItem> m_item;
     Ewk_Context* m_ewkContext;
     bool m_profile_exists;

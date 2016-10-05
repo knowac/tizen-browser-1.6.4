@@ -46,9 +46,9 @@ public:
     SettingsManager();
     ~SettingsManager();
     void init(Evas_Object* parent);
-    SetPtr getView(const SettingsMainOptions& s);
+    SetPtr& getView(const SettingsMainOptions& s);
     void connectOpenSignals();
-    std::shared_ptr<SettingsUI> addView(const SettingsMainOptions& s);
+    std::shared_ptr<SettingsUI>& addView(const SettingsMainOptions& s);
     std::string getName();
     SetPtr operator[](const SettingsMainOptions& s){ return m_settingsViews[s];};
     void showSettingsBaseUI();

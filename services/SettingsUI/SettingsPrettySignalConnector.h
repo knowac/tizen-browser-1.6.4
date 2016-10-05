@@ -52,7 +52,7 @@ public:
 
     B_SIG<void ()> settingsPrivacyClicked;
     B_SIG<void ()> settingsDelPersDataClicked;
-    B_SIG<void (const std::map<SettingsDelPersDataOptions, bool>&)> deleteSelectedDataClicked;
+    B_SIG<void (const std::map<int, bool>&)> deleteSelectedDataClicked;
     B_SIG<void ()> closeSettingsUIClicked;
     B_SIG<bool (const basic_webengine::WebEngineSettings&)>getWebEngineSettingsParam;
     B_SIG<std::string (const basic_webengine::WebEngineSettings&)> getWebEngineSettingsParamString;

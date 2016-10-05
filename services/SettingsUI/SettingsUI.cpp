@@ -48,9 +48,9 @@ SettingsUI::SettingsUI()
 }
 
 Elm_Gengrid_Item_Class* SettingsUI::createItemClass(
-        const char* style,
-        Elm_Gen_Item_Text_Get_Cb text_cb,
-        Elm_Gen_Item_Content_Get_Cb con_cb)
+    const char* style,
+    Elm_Gen_Item_Text_Get_Cb text_cb,
+    Elm_Gen_Item_Content_Get_Cb con_cb)
 {
     auto ic = elm_genlist_item_class_new();
     ic->item_style = style;
@@ -75,6 +75,24 @@ SettingsUI::~SettingsUI()
         elm_genlist_item_class_free(m_setting_check_on_of_item_class);
     if (m_setting_check_radio_item_class)
         elm_genlist_item_class_free(m_setting_check_radio_item_class);
+
+    for (auto check : m_checkboxes)
+        evas_object_del(check.second);
+    for (auto radio : m_radios)
+        evas_object_del(radio);
+
+    if (m_genlist) {
+        evas_object_smart_callback_del(m_genlist, "language,changed", _language_changed);
+        evas_object_del(m_genlist);
+    }
+    if (m_settings_layout)
+        evas_object_del(m_settings_layout);
+    if (m_items_layout)
+        evas_object_del(m_items_layout);
+    if (m_layout)
+        evas_object_del(m_layout);
+    if (m_radio)
+        evas_object_del(m_radio);
 }
 
 void SettingsUI::init(Evas_Object* parent)
@@ -170,7 +188,9 @@ Evas_Object* SettingsUI::_gengrid_item_content_radio_get(void* data, Evas_Object
     }
     if (strcmp(part, "elm.swallow.end") == 0) {
         auto itd = static_cast<ItemData*>(data);
-        return itd->sui->createRadioButton(obj, itd);
+        auto radio = itd->sui->createRadioButton(obj, itd);
+        itd->sui->m_radios.push_back(radio);
+        return radio;
     }
     return nullptr;
 }
@@ -224,16 +244,22 @@ Evas_Object* SettingsUI::_gengrid_item_content_onoff_get(void* data, Evas_Object
         return nullptr;
     }
     auto itd = static_cast<ItemData*>(data);
-    if (strcmp(part, "elm.swallow.end") == 0)
-        return itd->sui->createOnOffCheckBox(obj, itd);
+    if (strcmp(part, "elm.swallow.end") == 0) {
+        auto check = itd->sui->createOnOffCheckBox(obj, itd);
+        itd->sui->setCheckboxes(itd->id, check);
+        return check;
+    }
     return nullptr;
 }
 
 Evas_Object* SettingsUI::_gengrid_item_content_normal_get(void* data, Evas_Object* obj, const char* part)
 {
     auto itd = static_cast<ItemData*>(data);
-    if (strcmp(part, "elm.swallow.end") == 0)
-        return itd->sui->createNormalCheckBox(obj, itd);
+    if (strcmp(part, "elm.swallow.end") == 0) {
+        auto check = itd->sui->createNormalCheckBox(obj, itd);
+        itd->sui->setCheckboxes(itd->id, check);
+        return check;
+    }
     return nullptr;
 }
 
@@ -285,10 +311,10 @@ Evas_Object* SettingsUI::createSettingsMobilePage(Evas_Object* settings_layout)
 }
 
 Elm_Object_Item* SettingsUI::appendGenlist(
-        Evas_Object* genlist,
-        Elm_Gengrid_Item_Class* it_class,
-        const void *data,
-        Evas_Smart_Cb func)
+    Evas_Object* genlist,
+    Elm_Gengrid_Item_Class* it_class,
+    const void *data,
+    Evas_Smart_Cb func)
 {
     return elm_genlist_item_append(genlist, it_class, data, nullptr, ELM_GENLIST_ITEM_NONE, func, this);
 }

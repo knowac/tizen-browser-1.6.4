@@ -77,11 +77,11 @@ public:
     Evas_Object* createSettingsMobilePage(Evas_Object* settings_layout);
     Evas_Object* createMainView(Evas_Object* settings_layout);
     Evas_Object* getGenlist() { return m_genlist; }
-    std::map<SettingsDelPersDataOptions, bool> getOptions() const { return m_option; }
-    bool getOption(const SettingsDelPersDataOptions& opt) const { return m_option.at(opt); }
-    std::map<SettingsDelPersDataOptions, Evas_Object*> getCheckboxes() { return m_checkboxes; }
-    void setOption(const SettingsDelPersDataOptions& option, bool value) { m_option[option] = value; }
-    void setCheckboxes(const SettingsDelPersDataOptions& option, Evas_Object* check) { m_checkboxes[option] = check; }
+    std::map<int, bool> getOptions() const { return m_option; }
+    bool getOption(const int& opt) const { return m_option.at(opt); }
+    std::map<int, Evas_Object*> getCheckboxes() { return m_checkboxes; }
+    void setOption(const int& option, bool value) { m_option[option] = value; }
+    void setCheckboxes(const int& option, Evas_Object* check) { m_checkboxes[option] = check; }
     Evas_Object* getRadioGroup() { return m_radio; }
 
 private:
@@ -101,17 +101,18 @@ private:
 
 protected:
     SharedNaviframeWrapper m_naviframe;
-    Evas_Object* m_genlist;
     std::string m_edjFilePath;
+    Evas_Object* m_genlist;
     Evas_Object* m_settings_layout;
     Evas_Object* m_items_layout;
     Evas_Object* m_parent;
     Evas_Object* m_layout;
-    std::map<unsigned, ItemData> m_buttonsMap;
-    std::map<SettingsDelPersDataOptions, bool> m_option;
-    std::map<SettingsDelPersDataOptions,Evas_Object*> m_checkboxes;
-    std::map<int, Elm_Object_Item*> m_genlistItems;
     Evas_Object* m_radio;
+    std::map<unsigned, ItemData> m_buttonsMap;
+    std::map<int, bool> m_option;
+    std::map<int, Evas_Object*> m_checkboxes;
+    std::vector<Evas_Object*> m_radios;
+    std::map<int, Elm_Object_Item*> m_genlistItems;
     Elm_Gengrid_Item_Class* m_setting_item_class;
     Elm_Gengrid_Item_Class* m_setting_double_item_class;
     Elm_Gengrid_Item_Class* m_setting_check_on_of_item_class;
