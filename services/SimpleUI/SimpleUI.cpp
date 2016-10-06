@@ -1450,11 +1450,6 @@ void SimpleUI::showTabUI()
         m_webEngine->tabsCount() > 0 &&
         m_webEngine->isLoading())
         onGenerateThumb(m_webEngine->currentTabId());
-
-    auto tabsContents = m_webEngine->getTabContents();
-    m_tabService->fillThumbs(tabsContents);
-    m_tabService->fillFavicons(tabsContents);
-    m_tabUI->addTabItems(tabsContents, m_webEngine->isSecretMode());
 }
 
 void SimpleUI::closeTabUI()

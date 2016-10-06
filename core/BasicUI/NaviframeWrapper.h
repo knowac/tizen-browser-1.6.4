@@ -46,23 +46,28 @@ public:
 
     Evas_Object *getLayout();
     void setTitle(std::string title);
+    void unsetContent();
     void setContent(Evas_Object *content);
 
     void addPrevButton(Evas_Smart_Cb callback, void* data);
+    void deletePrevButton();
     void setPrevButtonVisible(bool visible);
 
     void addLeftButton(Evas_Smart_Cb callback, void* data);
+    void deleteLeftButton();
     void setLeftButtonText(std::string text);
     void setLeftButtonVisible(bool visible);
     void setLeftButtonEnabled(bool enabled);
 
     void addRightButton(Evas_Smart_Cb callback, void* data);
+    void deleteRightButton();
     void setRightButtonText(std::string text);
     void setRightButtonVisible(bool visible);
     void setRightButtonEnabled(bool enabled);
 
     void createBottomBar(Evas_Object* layout = nullptr,
         std::string swallow_name = "elm.swallow.content");
+    void deleteBottomBar();
     void addButtonToBottomBar(std::string text, Evas_Smart_Cb callback, void* data);
     void setEnableButtonInBottomBar(int number, bool enabled);
     void setBottomButtonText(int number, const std::string& text);
@@ -71,8 +76,15 @@ public:
 protected:
     Evas_Object *m_parent;
     Evas_Object *m_layout;
+    Evas_Object *m_prev_button;
+    Evas_Object *m_left_button;
+    Evas_Object *m_right_button;
     Evas_Object *m_bottom_box;
     std::vector<Evas_Object*> m_bottom_buttons;
+
+    Evas_Smart_Cb m_prev_button_callback;
+    Evas_Smart_Cb m_left_button_callback;
+    Evas_Smart_Cb m_right_button_callback;
 };
 
 using SharedNaviframeWrapper = std::shared_ptr<NaviframeWrapper>;
