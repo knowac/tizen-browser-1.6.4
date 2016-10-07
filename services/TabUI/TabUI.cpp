@@ -301,20 +301,20 @@ void TabUI::_cm_close_clicked(void* data, Evas_Object*, void*)
 Evas_Event_Flags TabUI::_gesture_occured(void * data, void * event_info)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto flag = EVAS_EVENT_FLAG_NONE;
     if (data && event_info) {
         auto tabUI = static_cast<TabUI*>(data);
         auto info = static_cast<Elm_Gesture_Line_Info*>(event_info);
-        if (info->momentum.mx != 0) {
-            //ignore too small gestures
-            if (abs(info->momentum.mx) < tabUI->GESTURE_MOMENTUM_MIN)
-                return flag;
+        auto diff = abs(info->momentum.x2 - info->momentum.x1);
+        auto momentum = abs(info->momentum.mx);
+        if (diff > SWIPE_MOVE_TRESHOLD && momentum > SWIPE_MOMENTUM_TRESHOLD &&
+            ((info->angle > SWIPE_LEFT_ANGLE1 && info->angle < SWIPE_LEFT_ANGLE2) ||
+            (info->angle > SWIPE_RIGHT_ANGLE1 && info->angle < SWIPE_RIGHT_ANGLE2))) {
             tabUI->_close_tab_clicked(data, nullptr, nullptr);
         }
     } else {
         BROWSER_LOGW("[%s] data or event_info = nullptr", __PRETTY_FUNCTION__);
     }
-    return flag;
+    return EVAS_EVENT_FLAG_NONE;
 }
 
 void TabUI::_right_button_clicked(void * data, Evas_Object*, void*)
@@ -499,6 +499,7 @@ Evas_Object * TabUI::_gengrid_content_get(void *data, Evas_Object *obj, const ch
 
             auto gesture = elm_gesture_layer_add(obj);
             elm_gesture_layer_attach(gesture, button);
+            elm_gesture_layer_continues_enable_set(gesture, EINA_FALSE);
             elm_gesture_layer_cb_add(gesture, ELM_GESTURE_N_LINES, ELM_GESTURE_STATE_MOVE,
                 _gesture_occured, data);
             return button;

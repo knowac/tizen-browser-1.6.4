@@ -132,7 +132,13 @@ private:
     const unsigned int GENGRID_ITEM_HEIGHT = 312;
     const unsigned int GENGRID_ITEM_WIDTH_LANDSCAPE = 636;
     const unsigned int GENGRID_ITEM_HEIGHT_LANDSCAPE = 274;
-    const unsigned int GESTURE_MOMENTUM_MIN = 2000;
+    const unsigned int GESTURE_MOMENTUM_MIN = 4000;
+    static const int SWIPE_MOMENTUM_TRESHOLD = 400;
+    static const int SWIPE_MOVE_TRESHOLD = 140;
+    static constexpr double SWIPE_LEFT_ANGLE1 = 260.0;
+    static constexpr double SWIPE_LEFT_ANGLE2 = 280.0;
+    static constexpr double SWIPE_RIGHT_ANGLE1 = 80.0;
+    static constexpr double SWIPE_RIGHT_ANGLE2 = 100.0;
 };
 }
 }
