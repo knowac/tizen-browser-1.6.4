@@ -44,6 +44,7 @@ WebEngineService::WebEngineService()
     , m_tabIdCreated(-1)
     , m_signalsConnected(false)
     , m_downloadControl(nullptr)
+    , m_defaultContext(ewk_context_default_get())
 {
     m_stateStruct->mostRecentTab.clear();
     m_stateStruct->tabs.clear();
@@ -56,6 +57,8 @@ WebEngineService::WebEngineService()
     m_settings[WebEngineSettings::REMEMBER_PASSWORDS] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_REMEMBER_PASSWORDS));
     m_settings[WebEngineSettings::AUTOFILL_PROFILE_DATA] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_AUTOFILL_PROFILE_DATA));
     m_settings[WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES] = boost::any_cast<bool>(tizen_browser::config::Config::getInstance().get(CONFIG_KEY::WEB_ENGINE_SCRIPTS_CAN_OPEN_PAGES));
+
+    preinitializeWebViewCache();
 }
 
 WebEngineService::~WebEngineService()
@@ -105,6 +108,7 @@ void WebEngineService::init(Evas_Object* guiParent)
 
 void WebEngineService::initializeDownloadControl(Ewk_Context* context)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     ewk_context_did_start_download_callback_set(context , _download_request_cb, this);
     m_downloadControl = std::make_shared<DownloadControl>();
 }
@@ -114,13 +118,14 @@ void WebEngineService::preinitializeWebViewCache()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (!m_webViewCacheInitialized) {
         m_webViewCacheInitialized = true;
-        Ewk_Context* context = ewk_context_default_get();
 
-        initializeDownloadControl(context);
+        initializeDownloadControl(m_defaultContext);
 
-        Evas_Object* ewk_view = ewk_view_add_with_context(evas_object_evas_get(
-                reinterpret_cast<Evas_Object *>(m_guiParent)), context);
-        ewk_context_cache_model_set(context, EWK_CACHE_MODEL_PRIMARY_WEBBROWSER);
+        Evas_Object* ewk_view =
+            ewk_view_add_with_context(
+                evas_object_evas_get(reinterpret_cast<Evas_Object *>(m_guiParent)),
+                m_defaultContext);
+        ewk_context_cache_model_set(m_defaultContext, EWK_CACHE_MODEL_PRIMARY_WEBBROWSER);
         ewk_view_orientation_send(ewk_view, 0);
         evas_object_del(ewk_view);
     }
@@ -778,18 +783,17 @@ void WebEngineService::clearPasswordData()
 
 void WebEngineService::clearFormData()
 {
-    auto context = ewk_context_default_get();
     Eina_List *list = nullptr;
     void *item_data = nullptr;
-    Eina_List *entire_item_list = ewk_context_form_autofill_profile_get_all(context);
+    Eina_List *entire_item_list = ewk_context_form_autofill_profile_get_all(m_defaultContext);
 
     EINA_LIST_FOREACH(entire_item_list, list, item_data) {
         if (item_data) {
             Ewk_Autofill_Profile *profile = static_cast<Ewk_Autofill_Profile*>(item_data);
-            ewk_context_form_autofill_profile_remove(context, ewk_autofill_profile_id_get(profile));
+            ewk_context_form_autofill_profile_remove(m_defaultContext, ewk_autofill_profile_id_get(profile));
         }
     }
-    ewk_context_form_candidate_data_delete_all(ewk_context_default_get());
+    ewk_context_form_candidate_data_delete_all(m_defaultContext);
     for(const auto& it: m_stateStruct->tabs)
         it.second->clearFormData();
 }

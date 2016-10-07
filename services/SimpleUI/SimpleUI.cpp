@@ -95,6 +95,8 @@ SimpleUI::SimpleUI()
     double config_scale_value = (double)(width)/SCALE_FACTOR;
     config::Config::getInstance().set(
             "scale", static_cast<double>(elm_config_scale_get()/config_scale_value));
+    m_tabLimit = boost::any_cast<int>(config::Config::getInstance().get("TAB_LIMIT"));
+    m_favoritesLimit = boost::any_cast<int>(config::Config::getInstance().get("FAVORITES_LIMIT"));
 
     elm_win_conformant_set(main_window, EINA_TRUE);
     if (main_window == nullptr)
@@ -131,17 +133,19 @@ void SimpleUI::suspend()
 
 void SimpleUI::resume()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    m_functionViewPrepare();
     if (!m_isSessionRestored) {
         switchViewToQuickAccess();
         m_isSessionRestored = true;
     }
-    m_webEngine->preinitializeWebViewCache();
 #if DUMMY_BUTTON
     m_webPageUI->createDummyButton();
 #endif
     m_webEngine->resume();
     if (m_findOnPageUI && m_findOnPageUI->isVisible())
         m_findOnPageUI->show_ime();
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 }
 
 void SimpleUI::destroyUI()
@@ -171,30 +175,33 @@ std::shared_ptr<services::HistoryItemVector> SimpleUI::getHistory()
     return m_historyService->getHistoryToday();
 }
 
+void SimpleUI::prepareServices()
+{
+    loadUIServices();
+    loadModelServices();
+
+    auto futureModelSig =
+        std::async(std::launch::async, [this](){connectModelSignals();});
+    auto futureUISig
+        = std::async(std::launch::async, [this](){connectUISignals();});
+    futureModelSig.get();
+    futureUISig.get();
+
+    // initModelServices() needs to be called after initUIServices()
+    initUIServices();
+    initModelServices();
+}
+
 int SimpleUI::exec(const std::string& _url, const std::string& _caller)
 {
     BROWSER_LOGD("[%s] _url=%s, _caller=%s, initialised=%d", __func__, _url.c_str(), _caller.c_str(), m_initialised);
     std::string url = _url;
     m_caller = _caller;
-
-    if (!m_initialised) {
-        if (m_window.get()) {
-            m_tabLimit = boost::any_cast<int>(config::Config::getInstance().get("TAB_LIMIT"));
-            m_favoritesLimit = boost::any_cast<int>(config::Config::getInstance().get("FAVORITES_LIMIT"));
-
-            loadUIServices();
-            loadModelServices();
-
-            auto futureModelSig =
-                std::async(std::launch::async, [this](){connectModelSignals();});
-            auto futureUISig
-                = std::async(std::launch::async, [this](){connectUISignals();});
-            futureModelSig.get();
-            futureUISig.get();
-
-            // initModelServices() needs to be called after initUIServices()
-            initUIServices();
-            initModelServices();
+    m_alreadyOpenedExecURL = false;
+    m_functionViewPrepare = [url, this] {
+        if (!m_initialised) {
+            if (m_window.get()) {
+                prepareServices();
 
             //Push first view to stack.
             pushViewToStack(m_webPageUI);
@@ -203,33 +210,34 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
         }
 #if PWA
-        // Progressive web app
-        if (!strncmp(url.c_str(), "browser_shortcut:", strlen("browser_shortcut:"))) {
-            BROWSER_LOGD("Progressive web app");
-            m_pwa.preparePWAParameters(url);
-            url = m_pwa.getPWAinfo().uri;
-            m_webPageUI->setDisplayMode(
-                static_cast<WebPageUI::WebDisplayMode>(
-                    m_pwa.getPWAinfo().displayMode));
+            // Progressive web app
+            if (!strncmp(url.c_str(), "browser_shortcut:", strlen("browser_shortcut:"))) {
+                BROWSER_LOGD("Progressive web app");
+                m_pwa.preparePWAParameters(url);
+                url = m_pwa.getPWAinfo().uri;
+                m_webPageUI->setDisplayMode(
+                    static_cast<WebPageUI::WebDisplayMode>(
+                        m_pwa.getPWAinfo().displayMode));
 
-            if (m_pwa.getPWAinfo().orientation ==  WebPageUI::portrait_primary)
-                rotationType(rotationLock::portrait);
-            else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
-                rotationType(rotationLock::landscape);
-        }
+                if (m_pwa.getPWAinfo().orientation ==  WebPageUI::portrait_primary)
+                    rotationType(rotationLock::portrait);
+                else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
+                    rotationType(rotationLock::landscape);
+            }
 #endif
-        if (url.empty()) {
-            BROWSER_LOGD("[%s]: restore last session", __func__);
-            restoreLastSession();
+            if (url.empty()) {
+                BROWSER_LOGD("[%s]: restore last session", __func__);
+                restoreLastSession();
+            }
+            m_initialised = true;
         }
-        m_initialised = true;
-    }
 
-    if (!url.empty()) {
-        BROWSER_LOGD("[%s]: open new tab", __func__);
-        openNewTab(url);
-    }
-
+        if (!url.empty() && !m_alreadyOpenedExecURL) {
+            BROWSER_LOGD("[%s]: open new tab", __func__);
+            openNewTab(url);
+            m_alreadyOpenedExecURL = true;
+        }
+    };
     BROWSER_LOGD("[%s]:%d url=%s", __func__, __LINE__, url.c_str());
     return 0;
 }

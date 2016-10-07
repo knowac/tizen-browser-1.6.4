@@ -294,6 +294,7 @@ private:
 
     std::map<WebEngineSettings, bool>  m_settings;
     std::shared_ptr<DownloadControl> m_downloadControl;
+    Ewk_Context* m_defaultContext;
 };
 
 } /* end of webengine_service */
