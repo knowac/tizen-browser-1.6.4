@@ -108,5 +108,6 @@
         <privilege>http://tizen.org/privilege/shortcut</privilege>
         <privilege>http://tizen.org/privilege/externalstorage</privilege>
         <privilege>http://tizen.org/privilege/externalstorage.appdata</privilege>
+        <privilege>http://tizen.org/privilege/display</privilege>
      </privileges>
 </manifest>
