@@ -385,6 +385,7 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->deleteBookmark.connect(boost::bind(&SimpleUI::deleteBookmark, this));
     m_webPageUI->showBookmarkFlowUI.connect(boost::bind(&SimpleUI::showBookmarkFlowUI, this));
     m_webPageUI->showFindOnPageUI.connect(boost::bind(&SimpleUI::showFindOnPageUI, this, std::string()));
+    m_webPageUI->isFindOnPageVisible.connect(boost::bind(&FindOnPageUI::isVisible, m_findOnPageUI.get()));
     m_webPageUI->showSettingsUI.connect(boost::bind(&SettingsManager::showSettingsBaseUI, m_settingsManager.get()));
     m_webPageUI->addNewTab.connect(boost::bind(&SimpleUI::newTabClicked, this));
     m_webPageUI->getURIEntry().mobileEntryFocused.connect(boost::bind(&WebPageUI::mobileEntryFocused, m_webPageUI));

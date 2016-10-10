@@ -158,6 +158,7 @@ public:
     boost::signals2::signal<void ()> deleteMostVisited;
     boost::signals2::signal<void ()> addToQuickAccess;
     boost::signals2::signal<bool ()> isMostVisited;
+    boost::signals2::signal<bool ()> isFindOnPageVisible;
 
     boost::signals2::signal<std::string ()> requestCurrentPageForWebPageUI;
     boost::signals2::signal<basic_webengine::State ()> getEngineState;
