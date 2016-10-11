@@ -323,7 +323,6 @@ private:
 
     // Load
     static void __loadStarted(void * data, Evas_Object * obj, void * event_info);
-    static void __loadStop(void * data, Evas_Object * obj, void * event_info);
     static void __loadFinished(void * data, Evas_Object * obj, void * event_info);
     static void __loadProgress(void * data, Evas_Object * obj, void * event_info);
     static void __loadError(void* data, Evas_Object* obj, void *ewkError);

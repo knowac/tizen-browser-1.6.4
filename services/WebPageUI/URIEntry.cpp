@@ -125,7 +125,7 @@ Evas_Object* URIEntry::getEntryWidget()
 
 void URIEntry::changeUri(const std::string& newUri)
 {
-    BROWSER_LOGD("%s: newUri=%s", __func__, newUri.c_str());
+    BROWSER_LOGD("[%s:%d] newUri=%s", __PRETTY_FUNCTION__, __LINE__, newUri.c_str());
     m_URI = newUri;
     if (elm_object_focus_get(m_entry) == EINA_FALSE) {
         if (!m_URI.empty()) {

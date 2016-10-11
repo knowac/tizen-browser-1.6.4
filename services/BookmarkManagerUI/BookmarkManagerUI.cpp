@@ -79,7 +79,6 @@ void BookmarkManagerUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
-    onBackPressed();
     m_naviframe->hide();
 }
 

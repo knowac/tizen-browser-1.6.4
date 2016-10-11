@@ -261,9 +261,6 @@ private:
      */
     void disconnectSignals(WebViewPtr);
 
-    void disconnectCurrentWebViewSignals();
-    void connectCurrentWebViewSignals();
-
     /**
      * connect signals of specified WebView
      * \param WebView
@@ -277,6 +274,7 @@ private:
     struct StateStruct {
         std::map<TabId, WebViewPtr > tabs;
         std::vector<TabId> mostRecentTab;
+        TabId currentTabId = TabId::NONE;
     };
 
     State m_state;
@@ -285,8 +283,6 @@ private:
     bool m_stopped;
     bool m_webViewCacheInitialized;
 
-    // current TabId
-    TabId m_currentTabId;
     // current WebView
     WebViewPtr m_currentWebView;
     StateStruct m_normalStateStruct;
@@ -294,6 +290,7 @@ private:
     StateStruct* m_stateStruct;
     int m_tabIdCreated;
     int m_tabIdSecret;
+    bool m_signalsConnected;
 
     std::map<WebEngineSettings, bool>  m_settings;
     std::shared_ptr<DownloadControl> m_downloadControl;

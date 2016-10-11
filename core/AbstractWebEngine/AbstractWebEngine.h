@@ -305,16 +305,6 @@ public:
     virtual void clearFormData() = 0;
 
     /**
-     * @brief Disconnect signals from current webview.
-     */
-    virtual void disconnectCurrentWebViewSignals() = 0;
-
-    /**
-     * @brief Connect signals to current web view.
-     */
-    virtual void connectCurrentWebViewSignals() = 0;
-
-    /**
      * @brief Search string on searchOnWebsite
      *
      * @param string to search on searchOnWebsite

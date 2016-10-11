@@ -203,7 +203,6 @@ void __vibration_cancel_cb(void * /*data*/)
 void WebView::registerCallbacks()
 {
     evas_object_smart_callback_add(m_ewkView, "load,started", __loadStarted, this);
-    evas_object_smart_callback_add(m_ewkView, "load,stop", __loadStop, this);
     evas_object_smart_callback_add(m_ewkView, "load,finished", __loadFinished, this);
     evas_object_smart_callback_add(m_ewkView, "load,progress", __loadProgress, this);
     evas_object_smart_callback_add(m_ewkView, "load,error", __loadError, this);
@@ -241,7 +240,6 @@ void WebView::registerCallbacks()
 void WebView::unregisterCallbacks()
 {
     evas_object_smart_callback_del_full(m_ewkView, "load,started", __loadStarted, this);
-    evas_object_smart_callback_del_full(m_ewkView, "load,stop", __loadStop, this);
     evas_object_smart_callback_del_full(m_ewkView, "load,finished", __loadFinished, this);
     evas_object_smart_callback_del_full(m_ewkView, "load,progress", __loadProgress, this);
     evas_object_smart_callback_del_full(m_ewkView, "load,error", __loadError, this);
@@ -785,6 +783,7 @@ void WebView::resume()
 
 void WebView::stopLoading(void)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_isLoading = false;
     ewk_view_stop(m_ewkView);
     loadStop();
@@ -792,6 +791,7 @@ void WebView::stopLoading(void)
 
 void WebView::reload(void)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_isLoading = true;
     if(m_loadError)
     {
@@ -985,16 +985,6 @@ void WebView::__loadStarted(void * data, Evas_Object * /* obj */, void * /* even
 
     self->m_isLoading = true;
     self->loadStarted();
-}
-
-void WebView::__loadStop(void * data, Evas_Object * /* obj */, void * /* event_info */)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
-    WebView * self = reinterpret_cast<WebView *>(data);
-    self->m_isLoading = false;
-
-    self->loadStop();
 }
 
 void WebView::__loadFinished(void * data, Evas_Object * /* obj */, void * /* event_info */)

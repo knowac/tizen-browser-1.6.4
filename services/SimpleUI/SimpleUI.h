@@ -163,15 +163,15 @@ private:
     static void onUrlIMEClosed(void* data, Evas_Object*, void*);
 
     void onHistoryRemoved(const std::string& uri);
-    void onOpenURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode);
+    void openURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode);
     /**
      * @brief Handles 'openUrlInNewTab' signals. Uses QuickAccess to indicate
      * desktop/mobile mode.
      * TODO: desktop mode should be checked in WebView or QuickAcces (depends
      * on which view is active)
      */
-    void onOpenURL(const std::string& url);
-    void onOpenURL(const std::string& url, const std::string& title, bool desktopMode);
+    void openURL(const std::string& url);
+    void openURL(const std::string& url, const std::string& title, bool desktopMode);
     void onClearHistoryAllClicked();
     void onDeleteHistoryItems(int id);
 
@@ -251,7 +251,6 @@ private:
     void scrollView(const int& dx, const int& dy);
 
     void showTabUI();
-    void closeTabUI();
     void refetchTabUIData();
     void switchToMobileMode();
     void switchToDesktopMode();
@@ -259,9 +258,7 @@ private:
     void deleteMostVisited();
     void addQuickAccess();
     Evas_Object* showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper naviframe, bool removeMode = false);
-    void closeHistoryUI();
     void showSettings(unsigned);
-    void closeSettingsUI();
     void onDefSearchEngineClicked();
     void onSaveContentToClicked();
     std::string requestSettingsCurrentPage();
@@ -269,7 +266,6 @@ private:
 
     void onEditOtherPagePopupClicked(const std::string& newName);
     void showBookmarkFlowUI();
-    void closeBookmarkFlowUI();
     void showFindOnPageUI(const std::string& str);
     void showCertificatePopup();
     void showCertificatePopup(const std::string& host, const std::string& pem, services::CertificateContents::HOST_TYPE type);
@@ -305,7 +301,6 @@ private:
 
     static void __orientation_changed(void* data, Evas_Object*, void*);
     Evas_Object* getMainWindow();
-    void closeBookmarkManagerUI();
     void showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
                                BookmarkManagerState state);
     void showHomePage();
@@ -332,7 +327,6 @@ private:
 
     void searchWebPage(std::string &text, int flags);
     void showPasswordUI();
-    void closeTopView();
     void onFirstSecretMode();
 
     std::string edjePath(const std::string &);

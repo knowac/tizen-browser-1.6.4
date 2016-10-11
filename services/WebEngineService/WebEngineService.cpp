@@ -39,10 +39,10 @@ WebEngineService::WebEngineService()
     , m_guiParent(nullptr)
     , m_stopped(false)
     , m_webViewCacheInitialized(false)
-    , m_currentTabId(TabId::NONE)
     , m_currentWebView(nullptr)
     , m_stateStruct(&m_normalStateStruct)
     , m_tabIdCreated(-1)
+    , m_signalsConnected(false)
     , m_downloadControl(nullptr)
 {
     m_stateStruct->mostRecentTab.clear();
@@ -128,7 +128,14 @@ void WebEngineService::preinitializeWebViewCache()
 
 void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__)
     M_ASSERT(webView);
+
+    if (m_signalsConnected) {
+        BROWSER_LOGW("[%s:%d] Signals already connected!", __PRETTY_FUNCTION__, __LINE__);
+        return;
+    }
+
     webView->favIconChanged.connect(boost::bind(&WebEngineService::_favIconChanged, this, _1));
     webView->uriChanged.connect(boost::bind(&WebEngineService::_uriChanged, this, _1));
     webView->loadFinished.connect(boost::bind(&WebEngineService::_loadFinished, this));
@@ -152,6 +159,7 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
     webView->rotatePrepared.connect([this](){rotatePrepared();});
     webView->unsecureConnection.connect(boost::bind(&WebEngineService::_unsecureConnection, this));
     webView->findOnPage.connect(boost::bind(&WebEngineService::_findOnPage, this, _1));
+    m_signalsConnected = true;
 }
 
 void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
@@ -178,20 +186,7 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
     webView->rotatePrepared.disconnect_all_slots();
     webView->unsecureConnection.disconnect(boost::bind(&WebEngineService::_unsecureConnection, this));
     webView->findOnPage.disconnect(boost::bind(&WebEngineService::_findOnPage, this, _1));
-}
-
-void WebEngineService::disconnectCurrentWebViewSignals()
-{
-    if (m_currentWebView.get())
-        disconnectSignals(m_currentWebView);
-}
-
-void WebEngineService::connectCurrentWebViewSignals()
-{
-    if (m_currentWebView)
-        connectSignals(m_currentWebView);
-    else
-        BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__,"m_currentWebView is null");
+    m_signalsConnected = false;
 }
 
 int WebEngineService::createTabId()
@@ -304,6 +299,7 @@ void WebEngineService::suspend()
         BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__,"m_currentWebView is null");
         return;
     }
+    disconnectSignals(m_currentWebView);
     m_currentWebView->suspend();
     unregisterHWKeyCallback();
 }
@@ -316,7 +312,10 @@ void WebEngineService::resume()
         BROWSER_LOGD("[%s:%d:%s] ", __PRETTY_FUNCTION__, __LINE__,"m_currentWebView is null");
         return;
     }
-    m_currentWebView->resume();
+    if (!m_signalsConnected)
+        connectSignals(m_currentWebView);
+    if (m_currentWebView->isSuspended())
+        m_currentWebView->resume();
     registerHWKeyCallback();
 }
 
@@ -473,7 +472,7 @@ int WebEngineService::tabsCount() const
 
 TabId WebEngineService::currentTabId() const
 {
-    return m_currentTabId;
+    return m_stateStruct->currentTabId;
 }
 
 std::vector<TabContentPtr> WebEngineService::getTabContents() const {
@@ -556,25 +555,21 @@ bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabI
         return false;
     }
 
-    if (newTabId != m_currentTabId) {
+    if (newTabId != m_stateStruct->currentTabId) {
         // if there was any running WebView
-        if (m_currentWebView) {
-            disconnectSignals(m_currentWebView);
+        if (m_currentWebView)
             suspend();
-        }
 
         closeFindOnPage();
         m_currentWebView = m_stateStruct->tabs[newTabId];
-        m_currentTabId = newTabId;
+        m_stateStruct->currentTabId = newTabId;
         m_stateStruct->mostRecentTab.erase(
             std::remove(m_stateStruct->mostRecentTab.begin(),
                 m_stateStruct->mostRecentTab.end(),
                 newTabId),
             m_stateStruct->mostRecentTab.end());
         m_stateStruct->mostRecentTab.push_back(newTabId);
-
     }
-    connectSignals(m_currentWebView);
     resume();
 
     uriChanged(m_currentWebView->getURI());
@@ -587,9 +582,9 @@ bool WebEngineService::switchToTab(tizen_browser::basic_webengine::TabId newTabI
 
 bool WebEngineService::closeTab()
 {
-    BROWSER_LOGD("[%s:%d] closing tab=%s", __PRETTY_FUNCTION__, __LINE__, m_currentTabId.toString().c_str());
-    bool res = closeTab(m_currentTabId);
-    return res;
+    BROWSER_LOGD("[%s:%d] closing tab=%s", __PRETTY_FUNCTION__, __LINE__,
+        m_stateStruct->currentTabId.toString().c_str());
+    return closeTab(m_stateStruct->currentTabId);
 }
 
 bool WebEngineService::closeTab(TabId id) {
@@ -607,14 +602,14 @@ bool WebEngineService::closeTab(TabId id) {
             closingTabId),
         m_stateStruct->mostRecentTab.end());
 
-    if (closingTabId == m_currentTabId) {
+    if (closingTabId == m_stateStruct->currentTabId) {
         if (m_currentWebView)
             m_currentWebView.reset();
     }
     if (m_stateStruct->tabs.size() == 0) {
-        m_currentTabId = TabId::NONE;
+        m_stateStruct->currentTabId = TabId::NONE;
     }
-    else if (closingTabId == m_currentTabId && m_stateStruct->mostRecentTab.size()){
+    else if (closingTabId == m_stateStruct->currentTabId && m_stateStruct->mostRecentTab.size()){
         res = switchToTab(m_stateStruct->mostRecentTab.back());
     }
 
@@ -884,7 +879,7 @@ void WebEngineService::moreKeyPressed()
         return;
     }
 
-    if (m_currentTabId == TabId::NONE || m_currentWebView->clearTextSelection())
+    if (m_stateStruct->currentTabId == TabId::NONE || m_currentWebView->clearTextSelection())
         return;
 
     if (m_currentWebView->isFullScreen()) {
@@ -1029,6 +1024,8 @@ void WebEngineService::resetSettingsParam()
 
 void WebEngineService::changeState()
 {
+    suspend();
+
     if (m_state == State::NORMAL) {
         m_state = State::SECRET;
         m_stateStruct = &m_secretStateStruct;
@@ -1036,6 +1033,11 @@ void WebEngineService::changeState()
         m_state = State::NORMAL;
         m_stateStruct = &m_normalStateStruct;
     }
+
+    if (m_stateStruct->tabs.empty())
+        m_currentWebView = nullptr;
+    else
+        m_currentWebView = m_stateStruct->tabs[m_stateStruct->currentTabId];
 }
 
 } /* end of webengine_service */

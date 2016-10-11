@@ -373,7 +373,7 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->getQuickAccessEditUI()->deleteSelectedMostVisitedItems.connect(
         boost::bind(&QuickAccess::deleteSelectedMostVisitedItems, m_quickAccess.get()));
     m_webPageUI->getQuickAccessEditUI()->closeUI.connect(
-        boost::bind(&SimpleUI::closeTopView, this));
+        boost::bind(&SimpleUI::popTheStack, this));
     m_webPageUI->focusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::setFocus, m_webEngine.get()));
     m_webPageUI->unfocusWebView.connect(boost::bind(&basic_webengine::AbstractWebEngine::clearFocus, m_webEngine.get()));
     m_webPageUI->bookmarkManagerClicked.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
@@ -415,7 +415,7 @@ void SimpleUI::connectWebPageSignals()
 void SimpleUI::connectQuickAccessSignals()
 {
     M_ASSERT(m_quickAccess.get());
-    m_quickAccess->openURL.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2));
+    m_quickAccess->openURL.connect(boost::bind(&SimpleUI::openURL, this, _1, _2));
     m_quickAccess->getMostVisitedItems.connect(boost::bind(&SimpleUI::onMostVisitedClicked, this));
     m_quickAccess->getQuickAccessItems.connect(boost::bind(&SimpleUI::onQuickAccessClicked, this));
     m_quickAccess->switchViewToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
@@ -431,7 +431,7 @@ void SimpleUI::connectQuickAccessSignals()
 void SimpleUI::connectTabsSignals()
 {
     M_ASSERT(m_tabUI.get());
-    m_tabUI->closeTabUIClicked.connect(boost::bind(&SimpleUI::closeTabUI, this));
+    m_tabUI->closeTabUIClicked.connect(boost::bind(&SimpleUI::popTheStack, this));
     m_tabUI->newTabClicked.connect(boost::bind(&SimpleUI::newTabClicked, this));
     m_tabUI->tabClicked.connect(boost::bind(&SimpleUI::tabClicked, this,_1));
     m_tabUI->closeTabsClicked.connect(boost::bind(&SimpleUI::closeTabsClicked, this,_1));
@@ -451,7 +451,7 @@ void SimpleUI::connectTabsSignals()
         &m_storageService->getSettingsStorage(), _1, ""));
     m_tabUI->showPasswordUI.connect(boost::bind(&SimpleUI::showPasswordUI, this));
     m_tabUI->showNoPasswordWarning.connect(boost::bind(&SimpleUI::onFirstSecretMode, this));
-    m_tabUI->getPasswordUI().closeUI.connect(boost::bind(&SimpleUI::closeTopView, this));
+    m_tabUI->getPasswordUI().closeUI.connect(boost::bind(&SimpleUI::popTheStack, this));
     m_tabUI->getPasswordUI().setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString,
         &m_storageService->getSettingsStorage(), _1, _2));
     m_tabUI->getPasswordUI().setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool,
@@ -468,15 +468,15 @@ void SimpleUI::connectHistorySignals()
     M_ASSERT(m_historyUI.get());
     m_historyUI->clearHistoryClicked.connect(boost::bind(&SimpleUI::onClearHistoryAllClicked, this));
     m_historyUI->signalDeleteHistoryItems.connect(boost::bind(&SimpleUI::onDeleteHistoryItems, this, _1));
-    m_historyUI->closeHistoryUIClicked.connect(boost::bind(&SimpleUI::closeHistoryUI, this));
-    m_historyUI->signalHistoryItemClicked.connect(boost::bind(&SimpleUI::onOpenURL, this, _1, _2, false));
+    m_historyUI->closeHistoryUIClicked.connect(boost::bind(&SimpleUI::popTheStack, this));
+    m_historyUI->signalHistoryItemClicked.connect(boost::bind(&SimpleUI::openURL, this, _1, _2, false));
     m_historyUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
 }
 
 void SimpleUI::connectBookmarkFlowSignals()
 {
     M_ASSERT(m_bookmarkFlowUI.get());
-    m_bookmarkFlowUI->closeBookmarkFlowClicked.connect(boost::bind(&SimpleUI::closeBookmarkFlowUI, this));
+    m_bookmarkFlowUI->closeBookmarkFlowClicked.connect(boost::bind(&SimpleUI::popTheStack, this));
     m_bookmarkFlowUI->saveBookmark.connect(boost::bind(&SimpleUI::addBookmark, this, _1));
     m_bookmarkFlowUI->editBookmark.connect(boost::bind(&SimpleUI::editBookmark, this, _1));
     m_bookmarkFlowUI->showSelectFolderUI.connect(boost::bind(&SimpleUI::showBookmarkManagerUI, this,
@@ -486,7 +486,7 @@ void SimpleUI::connectBookmarkFlowSignals()
 void SimpleUI::connectBookmarkManagerSignals()
 {
     M_ASSERT(m_bookmarkManagerUI.get());
-    m_bookmarkManagerUI->closeBookmarkManagerClicked.connect(boost::bind(&SimpleUI::closeBookmarkManagerUI, this));
+    m_bookmarkManagerUI->closeBookmarkManagerClicked.connect(boost::bind(&SimpleUI::popTheStack, this));
     m_bookmarkManagerUI->folderSelected.connect(boost::bind(&BookmarkFlowUI::setFolder, m_bookmarkFlowUI.get(), _1));
     m_bookmarkManagerUI->getWindow.connect(boost::bind(&SimpleUI::getMainWindow, this));
     m_bookmarkManagerUI->bookmarkItemClicked.connect(boost::bind(&SimpleUI::onBookmarkClicked, this, _1));
@@ -514,7 +514,7 @@ void SimpleUI::connectSettingsSignals()
     // SETTINGS OVERALL
     m_settingsManager->connectOpenSignals();
     SPSC.closeSettingsUIClicked.connect(
-        boost::bind(&SimpleUI::closeSettingsUI, this));
+        boost::bind(&SimpleUI::popTheStack, this));
     SPSC.showSettings.connect(
         boost::bind(&SimpleUI::showSettings, this,_1));
     SPSC.getWebEngineSettingsParam.connect(
@@ -716,6 +716,7 @@ void SimpleUI::pushViewToStack(const sAUI& view)
 
 void SimpleUI::popTheStack()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_viewManager.popTheStack();
     enableManualRotation(isManualRotation(m_viewManager.topOfStack()));
 }
@@ -743,7 +744,6 @@ void SimpleUI::switchViewToWebPage()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_webEngine->isSuspended())
         m_webEngine->resume();
-    m_webEngine->connectCurrentWebViewSignals();
     m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), m_webEngine->getURI(), m_webEngine->isLoading());
 }
 
@@ -751,7 +751,7 @@ void SimpleUI::switchToTab(const basic_webengine::TabId& tabId)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_webEngine->switchToTab(tabId);
-    switchViewToWebPage();
+    m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), m_webEngine->getURI(), m_webEngine->isLoading());
 }
 
 void SimpleUI::showQuickAccess()
@@ -765,7 +765,7 @@ void SimpleUI::switchViewToQuickAccess()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
-    m_webEngine->disconnectCurrentWebViewSignals();
+    m_webEngine->suspend();
     popStackTo(m_webPageUI);
 }
 
@@ -821,19 +821,19 @@ bool SimpleUI::checkQuickAccess()
     return checkBookmark();
 }
 
-void SimpleUI::onOpenURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode)
+void SimpleUI::openURL(std::shared_ptr<tizen_browser::services::HistoryItem> historyItem, bool desktopMode)
 {
-    onOpenURL(historyItem->getUrl(), historyItem->getTitle(), desktopMode);
+    openURL(historyItem->getUrl(), historyItem->getTitle(), desktopMode);
 }
 
-void SimpleUI::onOpenURL(const std::string& url)
+void SimpleUI::openURL(const std::string& url)
 {
     // TODO: desktop mode should be checked in WebView or QuickAcces
     // (depends on which view is active)
-    onOpenURL(url, "", m_quickAccess->isDesktopMode());
+    openURL(url, "", m_quickAccess->isDesktopMode());
 }
 
-void SimpleUI::onOpenURL(const std::string& url, const std::string& title, bool desktopMode)
+void SimpleUI::openURL(const std::string& url, const std::string& title, bool desktopMode)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (m_webPageUI) {
@@ -883,18 +883,7 @@ void SimpleUI::onBookmarkClicked(std::shared_ptr<tizen_browser::services::Bookma
     if (bookmarkItem->is_folder())
         m_bookmarkManagerUI->addBookmarkItems(bookmarkItem, m_favoriteService->getAllBookmarkItems(bookmarkItem->getId()));
     else {
-        std::string bookmarkAddress = bookmarkItem->getAddress();
-
-        if (tabsCount() == 0)
-            openNewTab(bookmarkAddress);
-        else {
-            std::string bookmarkTitle = bookmarkItem->getTitle();
-            m_webEngine->setURI(bookmarkAddress);
-            m_webPageUI->switchViewToWebPage(m_webEngine->getLayout(), bookmarkAddress, m_webEngine->isLoading());
-            m_webPageUI->getURIEntry().clearFocus();
-            closeBookmarkManagerUI();
-        }
-        popStackTo(m_webPageUI);
+        openURL(bookmarkItem->getAddress());
     }
 }
 
@@ -1177,8 +1166,6 @@ void SimpleUI::onBackPressed()
         } else {
             m_webEngine->backButtonClicked();
         }
-    } else if (m_viewManager.topOfStack() == m_settingsUI) {
-        closeSettingsUI();
     } else {
         popTheStack();
     }
@@ -1375,28 +1362,12 @@ void SimpleUI::loadFinished()
 void SimpleUI::filterURL(const std::string& url)
 {
     BROWSER_LOGD("[%s:%d] url=%s", __PRETTY_FUNCTION__, __LINE__, url.c_str());
-    //check for special urls (like:  'about:home')
-    //if there will be more addresses may be we should
-    //create some kind of std::man<std::string url, bool *(doSomethingWithUrl)()>
-    //and then just map[url]() ? m_webEngine->setURI(url) : /*do nothing*/;;
-    if(/*url.empty() ||*/ url == HomePageURL){
+
+    if (url == HomePageURL) {
         m_webPageUI->getURIEntry().changeUri("");
-    } else if (!url.empty()){
-
-    //check if url is in favorites
-
-    //check if url is in blocked
-
-    //no filtering
-
-        if (m_webPageUI->stateEquals(WPUState::QUICK_ACCESS))
-            openNewTab(url, "", boost::none, false, basic_webengine::TabOrigin::QUICKACCESS);
-        else
-            m_webEngine->setURI(url);
-
-        if (m_webEngine->isSecretMode() ||
-                m_webPageUI->stateEquals(WPUState::MAIN_ERROR_PAGE))
-            switchViewToWebPage();
+        switchViewToQuickAccess();
+    } else if (!url.empty()) {
+        openURL(url);
     }
     m_webPageUI->getURIEntry().clearFocus();
 }
@@ -1451,13 +1422,6 @@ void SimpleUI::showTabUI()
         m_webEngine->tabsCount() > 0 &&
         m_webEngine->isLoading())
         onGenerateThumb(m_webEngine->currentTabId());
-}
-
-void SimpleUI::closeTabUI()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (m_viewManager.topOfStack() == m_tabUI)
-        popTheStack();
 }
 
 void SimpleUI::refetchTabUIData() {
@@ -1610,25 +1574,12 @@ Evas_Object* SimpleUI::showHistoryUI(Evas_Object* parent, SharedNaviframeWrapper
     return ret;
 }
 
-void SimpleUI::closeHistoryUI()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (m_viewManager.topOfStack() == m_historyUI)
-        popTheStack();
-}
-
 void SimpleUI::showSettings(unsigned s)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_settingsManager->init(m_viewManager.getContent());
     m_settingsUI = m_settingsManager->getView(static_cast<SettingsMainOptions>(s));
     pushViewToStack(m_settingsUI);
-}
-
-void SimpleUI::closeSettingsUI()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    popTheStack();
 }
 
 void SimpleUI::onDefSearchEngineClicked()
@@ -1807,13 +1758,6 @@ void SimpleUI::showBookmarkFlowUI()
     pushViewToStack(m_bookmarkFlowUI);
 }
 
-void SimpleUI::closeBookmarkFlowUI()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (m_viewManager.topOfStack() == m_bookmarkFlowUI)
-        popTheStack();
-}
-
 void SimpleUI::showBookmarkManagerUI(std::shared_ptr<services::BookmarkItem> parent,
     BookmarkManagerState state)
 {
@@ -1858,13 +1802,6 @@ void SimpleUI::redirectedWebPage(const std::string& oldUrl, const std::string& n
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     BROWSER_LOGD("Redirect from %s to %s", oldUrl.c_str(), newUrl.c_str());
     m_historyService->clearURLHistory(oldUrl);
-}
-
-void SimpleUI::closeBookmarkManagerUI()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (m_viewManager.topOfStack() == m_bookmarkManagerUI)
-    popTheStack();
 }
 
 void SimpleUI::settingsDeleteSelectedData(const std::map<int, bool>& options)
@@ -1975,7 +1912,6 @@ void SimpleUI::updateView()
 void SimpleUI::changeEngineState()
 {
     m_webEngine->changeState();
-    m_webEngine->disconnectCurrentWebViewSignals();
     m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
     updateView();
 }
@@ -2008,12 +1944,6 @@ void SimpleUI::showPasswordUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     pushViewToStack(sAUI(&m_tabUI->getPasswordUI()));
-}
-
-void SimpleUI::closeTopView()
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    popTheStack();
 }
 
 void SimpleUI::onFirstSecretMode()
@@ -2088,7 +2018,7 @@ void SimpleUI::settingsOverrideUseragent(const std::string& userAgent)
             NotificationPopup::createNotificationPopup(m_viewManager.getContent());
         popup->show("Open a webpage to perform this operation.");
         popup->dismiss();
-        closeSettingsUI();
+        popTheStack();
         return;
     }
 
@@ -2120,7 +2050,7 @@ void SimpleUI::onOverrideUseragentButton(const std::string& newUA)
     m_webEngine->setUserAgent(newUA);
     popup->show("UserAgent updated..");
     popup->dismiss();
-    closeSettingsUI();
+    popTheStack();
 }
 
 }
