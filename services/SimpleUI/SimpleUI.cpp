@@ -28,6 +28,7 @@
 #include <thread>
 #include <future>
 #include <functional>
+#include <appcore-common.h>
 
 #include "Config.h"
 #include "app_i18n.h"
@@ -720,6 +721,8 @@ void SimpleUI::pushViewToStack(const sAUI& view)
 {
     m_viewManager.pushViewToStack(view);
     enableManualRotation(isManualRotation(view));
+    if (appcore_flush_memory() == -1)
+        BROWSER_LOGW("[%s] appcore_flush_memory error!", __PRETTY_FUNCTION__);
 }
 
 void SimpleUI::popTheStack()
@@ -727,12 +730,16 @@ void SimpleUI::popTheStack()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_viewManager.popTheStack();
     enableManualRotation(isManualRotation(m_viewManager.topOfStack()));
+    if (appcore_flush_memory() == -1)
+        BROWSER_LOGW("[%s] appcore_flush_memory error!", __PRETTY_FUNCTION__);
 }
 
 void SimpleUI::popStackTo(const sAUI& view)
 {
     m_viewManager.popStackTo(view);
     enableManualRotation(isManualRotation(view));
+    if (appcore_flush_memory() == -1)
+        BROWSER_LOGW("[%s] appcore_flush_memory error!", __PRETTY_FUNCTION__);
 }
 
 void SimpleUI::registerHWKeyCallback()
