@@ -29,7 +29,8 @@
 #include "Tools/EflTools.h"
 #include "Tools/SettingsEnums.h"
 
-#include <ewk_chromium.h>
+#include <EWebKit.h>
+#include <EWebKit_internal.h>
 
 namespace tizen_browser{
 namespace base_ui{
