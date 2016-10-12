@@ -122,6 +122,10 @@ private:
     Evas_Object* m_conformant;
     Evas_Object* m_parentWindow;
     std::stack<sAUI> m_viewStack;
+
+    const int BG_COLOR_R = 61;
+    const int BG_COLOR_G = 184;
+    const int BG_COLOR_B = 204;
 };
 
 }//namespace base_ui

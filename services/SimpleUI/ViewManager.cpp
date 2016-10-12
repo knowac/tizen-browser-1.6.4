@@ -46,8 +46,22 @@ void ViewManager::init(Evas_Object* parentWindow)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(parentWindow);
 
+    std::string edjFilePath = EDJE_DIR;
+    edjFilePath.append("SimpleUI/ViewManager.edj");
+
     m_conformant = elm_conformant_add(parentWindow);
+    if (!elm_layout_file_set(m_conformant, edjFilePath.c_str(), "elm/conformant/custom_conformant"))
+        BROWSER_LOGD("[%s:%d] elm_layout_file_set falied !!!",__PRETTY_FUNCTION__, __LINE__);
     evas_object_size_hint_weight_set(m_conformant, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+
+    Evas_Object *bg = elm_bg_add(m_conformant);
+    elm_bg_color_set(bg, BG_COLOR_R, BG_COLOR_G, BG_COLOR_B);
+    evas_object_show(bg);
+    elm_object_part_content_set(m_conformant, "elm.swallow.indicator_bg", bg);
+
+    elm_win_indicator_mode_set(parentWindow, ELM_WIN_INDICATOR_SHOW);
+    elm_win_indicator_opacity_set(parentWindow, ELM_WIN_INDICATOR_TRANSPARENT);
+
     evas_object_show(m_conformant);
     elm_win_resize_object_add(parentWindow, m_conformant);
 
@@ -61,12 +75,8 @@ void ViewManager::init(Evas_Object* parentWindow)
     evas_object_show(m_mainLayout);
     elm_box_pack_end(bx, m_mainLayout);
 
-    Eina_Bool ret = elm_layout_file_set(
-        m_mainLayout,
-        (std::string(EDJE_DIR) + std::string("SimpleUI/ViewManager.edj")).c_str(),
-        "main_layout");
-    if (!ret)
-        BROWSER_LOGD("[%s:%d]  elm_layout_file_set falied !!!",__PRETTY_FUNCTION__, __LINE__);
+    if (!elm_layout_file_set(m_mainLayout, edjFilePath.c_str(), "main_layout"))
+        BROWSER_LOGD("[%s:%d] elm_layout_file_set falied !!!",__PRETTY_FUNCTION__, __LINE__);
 
     elm_object_content_set(m_conformant, bx);
 }
