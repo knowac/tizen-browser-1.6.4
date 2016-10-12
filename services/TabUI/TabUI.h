@@ -56,7 +56,7 @@ public:
 
     //AbstractContextMenu interface implementation
     virtual void showContextMenu() override;
-    PasswordUI& getPasswordUI() { return m_passwordUI; };
+    std::shared_ptr<PasswordUI> getPasswordUI() { return m_passwordUI; };
     void switchToSecretFirstTime();
 
     boost::signals2::signal<void (const tizen_browser::basic_webengine::TabId&)> tabClicked;
@@ -126,7 +126,7 @@ private:
     std::string m_edjFilePath;
 
     State m_state;
-    PasswordUI m_passwordUI;
+    std::shared_ptr<PasswordUI> m_passwordUI;
 
     const unsigned int GENGRID_ITEM_WIDTH = 700;
     const unsigned int GENGRID_ITEM_HEIGHT = 312;

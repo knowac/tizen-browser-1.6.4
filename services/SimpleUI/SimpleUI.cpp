@@ -459,16 +459,16 @@ void SimpleUI::connectTabsSignals()
         &m_storageService->getSettingsStorage(), _1, ""));
     m_tabUI->showPasswordUI.connect(boost::bind(&SimpleUI::showPasswordUI, this));
     m_tabUI->showNoPasswordWarning.connect(boost::bind(&SimpleUI::onFirstSecretMode, this));
-    m_tabUI->getPasswordUI().closeUI.connect(boost::bind(&SimpleUI::popTheStack, this));
-    m_tabUI->getPasswordUI().setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString,
+    m_tabUI->getPasswordUI()->closeUI.connect(boost::bind(&SimpleUI::popTheStack, this));
+    m_tabUI->getPasswordUI()->setDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsString,
         &m_storageService->getSettingsStorage(), _1, _2));
-    m_tabUI->getPasswordUI().setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool,
+    m_tabUI->getPasswordUI()->setDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::setSettingsBool,
         &m_storageService->getSettingsStorage(), _1, _2));
-    m_tabUI->getPasswordUI().getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText,
+    m_tabUI->getPasswordUI()->getDBStringParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsText,
         &m_storageService->getSettingsStorage(), _1, ""));
-    m_tabUI->getPasswordUI().getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool,
+    m_tabUI->getPasswordUI()->getDBBoolParamValue.connect(boost::bind(&storage::SettingsStorage::getSettingsBool,
         &m_storageService->getSettingsStorage(), _1, false));
-    m_tabUI->getPasswordUI().changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
+    m_tabUI->getPasswordUI()->changeEngineState.connect(boost::bind(&SimpleUI::changeEngineState, this));
 }
 
 void SimpleUI::connectHistorySignals()
@@ -1951,7 +1951,7 @@ void SimpleUI::searchWebPage(std::string &text, int flags)
 void SimpleUI::showPasswordUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    pushViewToStack(sAUI(&m_tabUI->getPasswordUI()));
+    pushViewToStack(m_tabUI->getPasswordUI());
 }
 
 void SimpleUI::onFirstSecretMode()

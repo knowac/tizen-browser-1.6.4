@@ -40,6 +40,7 @@ TabUI::TabUI()
     , m_last_pressed_gengrid_item(nullptr)
     , m_item_class(nullptr)
     , m_state(State::NORMAL)
+    , m_passwordUI(std::make_shared<PasswordUI>())
 {
     m_edjFilePath = EDJE_DIR;
     m_edjFilePath.append("TabUI/TabUI.edj");
@@ -96,7 +97,7 @@ void TabUI::init(Evas_Object* parent)
         BROWSER_LOGE("[%s:%d] unknow checkIfParamExistsInDB value!", __PRETTY_FUNCTION__, __LINE__);
     }
 
-    m_passwordUI.init(parent);
+    m_passwordUI->init(parent);
 }
 
 Evas_Object* TabUI::getContent()
@@ -269,7 +270,7 @@ void TabUI::_cm_secret_clicked(void* data, Evas_Object*, void*)
     if (data) {
         TabUI* tabUI = static_cast<TabUI*>(data);
         _cm_dismissed(nullptr, tabUI->m_ctxpopup, nullptr);
-        tabUI->m_passwordUI.setState(PasswordState::SecretModeData);
+        tabUI->m_passwordUI->setState(PasswordState::SecretModeData);
         tabUI->showPasswordUI();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
@@ -330,8 +331,8 @@ void TabUI::_right_button_clicked(void * data, Evas_Object*, void*)
             self->newTabClicked();
             break;
         case State::PASSWORD_DECISION:
-            self->m_passwordUI.setState(PasswordState::CreatePassword);
-            self->m_passwordUI.setAction(PasswordAction::CreatePasswordFirstTime);
+            self->m_passwordUI->setState(PasswordState::CreatePassword);
+            self->m_passwordUI->setAction(PasswordAction::CreatePasswordFirstTime);
             self->showPasswordUI();
             break;
         default:
@@ -359,8 +360,8 @@ void TabUI::_left_button_clicked(void* data, Evas_Object*, void*)
                             self->changeEngineState();
                             self->refetchTabUIData();
                         } else {    // check password validity
-                            self->m_passwordUI.setState(PasswordState::ConfirmPassword);
-                            self->m_passwordUI.setAction(PasswordAction::ConfirmPasswordEnterSecret);
+                            self->m_passwordUI->setState(PasswordState::ConfirmPassword);
+                            self->m_passwordUI->setAction(PasswordAction::ConfirmPasswordEnterSecret);
                             self->showPasswordUI();
                         }
                     } else {
