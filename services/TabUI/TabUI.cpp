@@ -403,7 +403,7 @@ void TabUI::addTabItem(basic_webengine::TabContentPtr hi)
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     TabData *itemData = new TabData();
     itemData->item = hi;
-    itemData->tabUI.reset(this);
+    itemData->tabUI = this;
     Elm_Object_Item* tab = elm_gengrid_item_append(m_gengrid, m_item_class, itemData,
         nullptr, nullptr);
     // Check if item_object was created successfully

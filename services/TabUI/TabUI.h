@@ -77,7 +77,7 @@ private:
     struct TabData
     {
         basic_webengine::TabContentPtr item;
-        std::shared_ptr<tizen_browser::base_ui::TabUI> tabUI;
+        TabUI* tabUI;
     };
 
     enum class State {
