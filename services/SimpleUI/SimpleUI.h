@@ -143,7 +143,7 @@ private:
     void closeTabsClicked(const tizen_browser::basic_webengine::TabId& tabId);
     void tabCreated();
     bool checkIfCreate();
-    void tabClosed(const tizen_browser::basic_webengine::TabId& id);
+    void engineTabClosed(const basic_webengine::TabId& id);
 
     std::shared_ptr<services::HistoryItemVector> getHistory();
     std::shared_ptr<services::HistoryItemVector> getMostVisitedItems();

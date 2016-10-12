@@ -590,7 +590,7 @@ void SimpleUI::connectWebEngineSignals()
     m_webEngine->loadStop.connect(boost::bind(&SimpleUI::loadFinished, this));
     m_webEngine->tabCreated.connect(boost::bind(&SimpleUI::tabCreated, this));
     m_webEngine->checkIfCreate.connect(boost::bind(&SimpleUI::checkIfCreate, this));
-    m_webEngine->tabClosed.connect(boost::bind(&SimpleUI::tabClosed,this,_1));
+    m_webEngine->tabClosed.connect(boost::bind(&SimpleUI::engineTabClosed,this,_1));
     m_webEngine->IMEStateChanged.connect(boost::bind(&SimpleUI::setwvIMEStatus, this, _1));
     m_webEngine->switchToWebPage.connect(boost::bind(&SimpleUI::switchViewToWebPage, this));
     m_webEngine->favIconChanged.connect(boost::bind(&SimpleUI::faviconChanged, this, _1));
@@ -1943,11 +1943,16 @@ void SimpleUI::minimizeBrowser()
     elm_win_lower(main_window);
 }
 
-void SimpleUI::tabClosed(const tizen_browser::basic_webengine::TabId& id)
+void SimpleUI::engineTabClosed(const basic_webengine::TabId& id)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_tabService->removeTab(id);
-    updateView();
+
+    int tabs = m_webEngine->tabsCount();
+    m_webPageUI->setTabsNumber(tabs);
+    if (tabs == 0) {
+        m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
+    }
 }
 
 void SimpleUI::searchWebPage(std::string &text, int flags)
