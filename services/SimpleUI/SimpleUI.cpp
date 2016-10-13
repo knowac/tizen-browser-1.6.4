@@ -954,10 +954,11 @@ void SimpleUI::onNewFolderClicked(int parent)
     InputPopup *inputPopup =
         InputPopup::createPopup(
             m_viewManager.getContent(),
-            "New Folder",
-            "Add New Folder?",
+            _("IDS_BR_SK3_CREATE_FOLDER"),
+            "",
             "New Folder #",
-            _("IDS_BR_OPT_ADD"),
+                //TODO: Missing translation
+            "Create",
             _("IDS_BR_SK_CANCEL_ABB"));
     services::SharedBookmarkItemList badWords = m_favoriteService->getFolders(parent);
     for (auto it = badWords.begin(); it != badWords.end(); ++it)

@@ -779,7 +779,8 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         addFilteredBookmarkItems(BookmarkManagerGenlistFilter::Websites);
         elm_genlist_realized_items_update(m_genlist);
         showNaviframePrevButton(false);
-        m_naviframe->setRightButtonText(_("IDS_TPLATFORM_ACBUTTON_DONE_ABB"));
+        //TODO: Missing translation. In guidelines this should be uppercase
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
         updateDeleteTopContent();
         showToolbars(false);
         evas_object_hide(m_navigatorToolbar);
@@ -807,7 +808,7 @@ void BookmarkManagerUI::changeState(BookmarkManagerState state)
         updateNoBookmarkText();
         m_naviframe->setTitle(_("IDS_BR_MBODY_HISTORY"));
         showNaviframePrevButton(false);
-        m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE"));
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
         updateDeleteTopContent();
         showToolbars(false);
         evas_object_hide(m_navigatorToolbar);

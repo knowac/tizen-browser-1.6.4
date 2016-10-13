@@ -273,8 +273,9 @@ void BookmarkFlowUI::fillGenlist()
         _folder_selector_clicked, this);
 
     //Add QuickAccess checkbox
-    elm_genlist_item_append(m_genlist, m_add_to_qa_item_class, this, nullptr, ELM_GENLIST_ITEM_NONE,
-        _qa_clicked, this);
+    if (!m_state)
+        elm_genlist_item_append(m_genlist, m_add_to_qa_item_class, this, nullptr, ELM_GENLIST_ITEM_NONE,
+            _qa_clicked, this);
 }
 
 void BookmarkFlowUI::updateTopContent()
