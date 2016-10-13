@@ -900,9 +900,6 @@ void WebEngineService::backButtonClicked()
         return;
     }
 
-    if (m_currentWebView->clearTextSelection())
-        return;
-
     if (m_currentWebView->isFullScreen()) {
         m_currentWebView->exitFullScreen();
         return;
