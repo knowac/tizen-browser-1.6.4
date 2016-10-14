@@ -77,12 +77,21 @@ Evas_Object *EditQuickAccessUI::getContent()
     if (!m_naviframe)
         createEditLayout();
 
+    auto layout = elm_layout_add(m_naviframe->getLayout());
+    elm_layout_theme_set(layout, "layout", "application", "default");
+    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+    auto bg = elm_bg_add(layout);
+    elm_bg_color_set(bg, 255, 255, 255);
+    elm_object_part_content_set(layout, "elm.swallow.bg", bg);
+
     if (m_editState == QuickAccessState::Edit) {
         m_naviframe->setTitle(_("IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"));
         m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
         auto signal = requestQuickAccessGengrid();
         if (signal)
-            m_naviframe->setContent(*signal);
+            elm_object_part_content_set(layout, "elm.swallow.content", *signal);
         else
             BROWSER_LOGW("Missing signal value");
     } else if (m_editState == QuickAccessState::DeleteMostVisited) {
@@ -91,12 +100,15 @@ Evas_Object *EditQuickAccessUI::getContent()
         m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE_ABB"));
         auto signal = requestMostVisitedGengrid();
         if (signal)
-            m_naviframe->setContent(*signal);
+            elm_object_part_content_set(layout, "elm.swallow.content", *signal);
         else
             BROWSER_LOGW("Missing signal value");
     } else {
         BROWSER_LOGE("No correct Edit state");
     }
+
+    evas_object_show(layout);
+    m_naviframe->setContent(layout);
     m_naviframe->setRightButtonVisible(true);
     m_naviframe->setRightButtonEnabled(false);
 
