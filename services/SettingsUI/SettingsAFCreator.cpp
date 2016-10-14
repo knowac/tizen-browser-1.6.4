@@ -236,7 +236,6 @@ void SettingsAFCreator::clearFields()
         elm_object_part_text_set(m_cityTownItemCallbackData.entry, "elm.text", "");
         elm_object_part_text_set(m_countryItemCallbackData.entry, "elm.text", "");
         elm_object_part_text_set(m_postCodeItemCallbackData.entry, "elm.text", "");
-        elm_object_part_text_set(m_countryRegionItemCallbackData.entry, "elm.text", "");
         elm_object_part_text_set(m_phoneItemCallbackData.entry, "elm.text", "");
         elm_object_part_text_set(m_emailItemCallbackData.entry, "elm.text", "");
     }
@@ -276,21 +275,21 @@ void SettingsAFCreator::addItems()
 
     // city town
     m_cityTownItemCallbackData.type = profile_composer_title_city_town;
-    createInputLayout(m_box, strdup(_("IDS_BR_BODY_CITY_TOWN_ABB")), &m_cityTownItemCallbackData);
+    createInputLayout(m_box, strdup(_("Town/City/County")), &m_cityTownItemCallbackData);
     elm_box_pack_end(m_box, m_cityTownItemCallbackData.it);
     if (m_item->getCityTown() && strlen(m_item->getCityTown()))
         elm_object_part_text_set(m_cityTownItemCallbackData.entry, "elm.text", m_item->getCityTown());
 
     // country
     m_countryItemCallbackData.type = profile_composer_title_country;
-    createInputLayout(m_box, strdup("Country"), &m_countryItemCallbackData);
+    createInputLayout(m_box, strdup(_("IDS_BR_MBODY_COUNTRY_REGION")), &m_countryItemCallbackData);
     elm_box_pack_end(m_box, m_countryItemCallbackData.it);
     if (m_item->getCountry() && strlen(m_item->getCountry()))
         elm_object_part_text_set(m_countryItemCallbackData.entry, "elm.text", m_item->getCountry());
 
     // post code
     m_postCodeItemCallbackData.type = profile_composer_title_post_code;
-    createInputLayout(m_box, strdup(_("IDS_BR_BODY_POSTCODE_ABB")), &m_postCodeItemCallbackData);
+    createInputLayout(m_box, strdup(_("Post code")), &m_postCodeItemCallbackData);
     elm_box_pack_end(m_box, m_postCodeItemCallbackData.it);
     Elm_Entry_Filter_Limit_Size m_entryLimitSize;
     Elm_Entry_Filter_Accept_Set m_entry_accept_set;
@@ -304,12 +303,6 @@ void SettingsAFCreator::addItems()
     elm_entry_input_panel_layout_set(m_postCodeItemCallbackData.entry, ELM_INPUT_PANEL_LAYOUT_NUMBERONLY);
     elm_entry_prediction_allow_set(m_postCodeItemCallbackData.entry, EINA_FALSE);
 
-    // country region
-    m_countryRegionItemCallbackData.type = profile_composer_title_country_region;
-    createInputLayout(m_box, strdup(_("IDS_BR_MBODY_COUNTRY_REGION")), &m_countryRegionItemCallbackData);
-    elm_box_pack_end(m_box, m_countryRegionItemCallbackData.it);
-    if (m_item->getStateProvince() && strlen(m_item->getStateProvince()))
-        elm_object_part_text_set(m_countryRegionItemCallbackData.entry, "elm.text", m_item->getStateProvince());
 
     // phone
     m_phoneItemCallbackData.type = profile_composer_title_phone;
@@ -342,7 +335,6 @@ void SettingsAFCreator::addItems()
     genlistCallbackVector.push_back(&m_cityTownItemCallbackData);
     genlistCallbackVector.push_back(&m_countryItemCallbackData);
     genlistCallbackVector.push_back(&m_postCodeItemCallbackData);
-    genlistCallbackVector.push_back(&m_countryRegionItemCallbackData);
     genlistCallbackVector.push_back(&m_phoneItemCallbackData);
     genlistCallbackVector.push_back(&m_emailItemCallbackData);
 }
@@ -416,8 +408,6 @@ Eina_Bool SettingsAFCreator::applyEntryData(void)
     m_item->setCountry(country);
     const char *post_code = elm_entry_entry_get(m_postCodeItemCallbackData.entry);
     m_item->setPostCode(post_code);
-    const char *region = elm_entry_entry_get(m_countryRegionItemCallbackData.entry);
-    m_item->setStateProvince(region);
     const char *phone = elm_entry_entry_get(m_phoneItemCallbackData.entry);
     m_item->setPhoneNumber(phone);
     const char *email = elm_entry_entry_get(m_emailItemCallbackData.entry);
@@ -542,8 +532,6 @@ void SettingsAFCreator::__entry_next_key_cb(void* data, Evas_Object*, void*)
     } else if (type == profile_composer_title_country) {
         entry = self->m_postCodeItemCallbackData.entry;
     } else if (type == profile_composer_title_post_code) {
-        entry = self->m_countryRegionItemCallbackData.entry;
-    } else if (type == profile_composer_title_country_region) {
         entry = self->m_phoneItemCallbackData.entry;
     } else if (type == profile_composer_title_phone) {
         entry = self->m_emailItemCallbackData.entry;

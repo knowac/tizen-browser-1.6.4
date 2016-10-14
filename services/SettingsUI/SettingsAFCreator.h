@@ -97,7 +97,6 @@ protected:
     genlistCallbackData m_cityTownItemCallbackData;
     genlistCallbackData m_countryItemCallbackData;
     genlistCallbackData m_postCodeItemCallbackData;
-    genlistCallbackData m_countryRegionItemCallbackData;
     genlistCallbackData m_phoneItemCallbackData;
     genlistCallbackData m_emailItemCallbackData;
 
