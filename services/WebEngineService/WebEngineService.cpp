@@ -607,12 +607,12 @@ bool WebEngineService::closeTab(TabId id) {
             closingTabId),
         m_stateStruct->mostRecentTab.end());
 
-    if (closingTabId == m_stateStruct->currentTabId) {
-        if (m_currentWebView)
-            m_currentWebView.reset();
-    }
     if (m_stateStruct->tabs.size() == 0) {
         m_stateStruct->currentTabId = TabId::NONE;
+        if (m_currentWebView) {
+            disconnectSignals(m_currentWebView);
+            m_currentWebView.reset();
+        }
     }
     else if (closingTabId == m_stateStruct->currentTabId && m_stateStruct->mostRecentTab.size()){
         res = switchToTab(m_stateStruct->mostRecentTab.back());
