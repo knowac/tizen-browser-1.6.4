@@ -671,8 +671,11 @@ void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* mani
         const char* icon_src(ewk_manifest_icons_src_get(manifest, 0));
         int orientation_type = ewk_manifest_orientation_type_get(manifest);
         int display_mode = ewk_manifest_web_display_mode_get(manifest);
-        long theme_color = ewk_manifest_theme_color_get(manifest);
-        long background_color = ewk_manifest_background_color_get(manifest);
+        // TODO Due to build break and change in ewk API for now theme_color,
+        // and background_color have hardcoded value. Sample new api usage is in below lines:
+        // int rt, gt, bt, at, rb, gb, bb, ab;
+        long theme_color = 0; //ewk_manifest_theme_color_get(manifest, rt, gt, bt, at);
+        long background_color = 0; //ewk_manifest_background_color_get(manifest, rb, gb, bb, ab);
         size_t icon_count = ewk_manifest_icons_count_get(manifest);
 
         std::string str_short_name = "";
