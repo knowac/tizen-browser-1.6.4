@@ -245,9 +245,6 @@ private:
     void _redirectedWebPage(const std::string& oldUrl, const std::string& newUrl);
     void _setCertificatePem(const std::string& uri, const std::string& pem);
     void _setWrongCertificatePem(const std::string& uri, const std::string& pem);
-#if PWA
-    void _iconDownload(std::string download_uri);
-#endif
 
     int _getRotation();
     void setWebViewSettings(std::shared_ptr<WebView> webView);

@@ -157,9 +157,6 @@ void WebEngineService::connectSignals(std::shared_ptr<WebView> webView)
     webView->setCertificatePem.connect(boost::bind(&WebEngineService::_setCertificatePem, this, _1, _2));
     webView->setWrongCertificatePem.connect(boost::bind(&WebEngineService::_setWrongCertificatePem, this, _1, _2));
     webView->fullscreenModeSet.connect([this](auto state){fullscreenModeSet(state);});
-#if PWA
-    webView->iconDownload.connect(boost::bind(&WebEngineService::_iconDownload, this, _1));
-#endif
     webView->getRotation.connect(boost::bind(&WebEngineService::_getRotation, this));
     webView->rotatePrepared.connect([this](){rotatePrepared();});
     webView->unsecureConnection.connect(boost::bind(&WebEngineService::_unsecureConnection, this));
@@ -184,9 +181,6 @@ void WebEngineService::disconnectSignals(std::shared_ptr<WebView> webView)
     webView->IMEStateChanged.disconnect(boost::bind(&WebEngineService::_IMEStateChanged, this, _1));
     webView->redirectedWebPage.disconnect(boost::bind(&WebEngineService::_redirectedWebPage, this, _1, _2));
     webView->fullscreenModeSet.disconnect_all_slots();
-#if PWA
-    webView->iconDownload.disconnect(boost::bind(&WebEngineService::_iconDownload, this));
-#endif
     webView->getRotation.disconnect(boost::bind(&WebEngineService::_getRotation, this));
     webView->rotatePrepared.disconnect_all_slots();
     webView->unsecureConnection.disconnect(boost::bind(&WebEngineService::_unsecureConnection, this));
@@ -235,12 +229,6 @@ void WebEngineService::requestManifest()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_currentWebView->requestManifest();
-}
-
-void WebEngineService::_iconDownload(std::string download_uri)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    m_downloadControl->launch_download_app(download_uri.c_str());
 }
 #endif
 

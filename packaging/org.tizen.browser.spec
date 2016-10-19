@@ -34,6 +34,7 @@ BuildRequires:  pkgconfig(libtzplatform-config)
 %if "%{?profile}" == "mobile"
 BuildRequires:  pkgconfig(capi-system-device)
 BuildRequires:  pkgconfig(capi-system-system-settings)
+BuildRequires:  pkgconfig(libsoup-2.4)
 %endif
 BuildRequires:  browser-provider-devel
 BuildRequires:  pkgconfig(efl-extension)

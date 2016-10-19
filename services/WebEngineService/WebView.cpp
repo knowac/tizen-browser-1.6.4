@@ -50,6 +50,12 @@
 #include <device/haptic.h>
 #include <Ecore.h>
 
+#if PWA
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <tzplatform_config.h>
+#endif
+
 #define certificate_crt_path CERTS_DIR
 #define APPLICATION_NAME_FOR_USER_AGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.69 safari/537.36 "
 
@@ -70,14 +76,17 @@ namespace webengine_service {
 
 const std::string WebView::COOKIES_PATH = "cookies";
 #if PWA
-std::string WebView::m_pwaData = "";
+std::string WebView::s_pwaData = "";
+std::string WebView::s_name = "";
+std::string WebView::s_start_url = "";
+std::string WebView::s_icon = "";
+#define DOWNLOAD_PATH tzplatform_getenv(TZ_USER_DOWNLOADS)
 #endif
 
 struct SnapshotItemData {
     WebView * web_view;
     tizen_browser::tools::SnapshotType snapshot_type;
 };
-
 
 WebView::WebView(Evas_Object * obj, TabId tabId, const std::string& title, bool incognitoMode)
     : m_parent(obj)
@@ -660,85 +669,77 @@ void WebView::requestManifest(void)
     ewk_view_request_manifest(m_ewkView, dataSetManifest, this);
 }
 
-void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void* /*data*/)
+void WebView::dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void* data)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    if (view) {
+    if (view && data) {
+        WebView * self = reinterpret_cast<WebView *>(data);
+
+        uint8_t* theme_r = nullptr; uint8_t* theme_g = nullptr;
+        uint8_t* theme_b = nullptr; uint8_t* theme_a = nullptr;
+        uint8_t* bg_r = nullptr; uint8_t* bg_g = nullptr;
+        uint8_t* bg_b = nullptr; uint8_t* bg_a = nullptr;
+
         const char* short_name(ewk_manifest_short_name_get(manifest));
         const char* name(ewk_manifest_name_get(manifest));
         const char* start_url(ewk_manifest_start_url_get(manifest));
         const char* icon_src(ewk_manifest_icons_src_get(manifest, 0));
         int orientation_type = ewk_manifest_orientation_type_get(manifest);
         int display_mode = ewk_manifest_web_display_mode_get(manifest);
-        // TODO Due to build break and change in ewk API for now theme_color,
-        // and background_color have hardcoded value. Sample new api usage is in below lines:
-        // int rt, gt, bt, at, rb, gb, bb, ab;
-        long theme_color = 0; //ewk_manifest_theme_color_get(manifest, rt, gt, bt, at);
-        long background_color = 0; //ewk_manifest_background_color_get(manifest, rb, gb, bb, ab);
+        long theme_color = ewk_manifest_theme_color_get(manifest, theme_r, theme_g, theme_b, theme_a);
+        long background_color = ewk_manifest_background_color_get(manifest, bg_r, bg_g, bg_b, bg_a);
         size_t icon_count = ewk_manifest_icons_count_get(manifest);
 
         std::string str_short_name = "";
-        std::string str_name = "";
-        std::string str_start_url = "";
         std::string str_icon_src = "";
 
-        if (short_name != NULL) {
+        if (short_name)
             str_short_name = short_name;
-        }
-        if (name != NULL) {
-            str_name = name;
-        }
-        if (start_url != NULL) {
-            str_start_url = start_url;
-        }
-        if (icon_src != NULL) {
+        if (name)
+            s_name = name;
+        if (start_url)
+            s_start_url = start_url;
+        if (icon_src)
             str_icon_src = icon_src;
-        }
 
         std::string retVal("browser_shortcut:://");
         retVal.append("pwa_shortName:"); retVal.append(str_short_name.c_str()); retVal.append(",");
-        retVal.append("pwa_name:"); retVal.append(str_name.c_str()); retVal.append(",");
-        retVal.append("pwa_uri:"); retVal.append(str_start_url.c_str()); retVal.append(",");
+        retVal.append("pwa_name:"); retVal.append(s_name.c_str()); retVal.append(",");
+        retVal.append("pwa_uri:"); retVal.append(s_start_url.c_str()); retVal.append(",");
         retVal.append("pwa_orientation:"); retVal.append(std::to_string(orientation_type)); retVal.append(",");
         retVal.append("pwa_displayMode:"); retVal.append(std::to_string(display_mode)); retVal.append(",");
         retVal.append("pwa_themeColor:"); retVal.append(std::to_string(theme_color)); retVal.append(",");
+        retVal.append("theme_r:"); retVal.append(std::to_string((int)theme_r)); retVal.append(",");
+        retVal.append("theme_g:"); retVal.append(std::to_string((int)theme_g)); retVal.append(",");
+        retVal.append("theme_b:"); retVal.append(std::to_string((int)theme_b)); retVal.append(",");
+        retVal.append("theme_a:"); retVal.append(std::to_string((int)theme_a)); retVal.append(",");
         retVal.append("pwa_backgroundColor:"); retVal.append(std::to_string(background_color)); retVal.append(",");
+        retVal.append("bg_r:"); retVal.append(std::to_string((int)bg_r)); retVal.append(",");
+        retVal.append("bg_g:"); retVal.append(std::to_string((int)bg_g)); retVal.append(",");
+        retVal.append("bg_b:"); retVal.append(std::to_string((int)bg_b)); retVal.append(",");
+        retVal.append("bg_a:"); retVal.append(std::to_string((int)bg_a)); retVal.append(",");
         retVal.append("icon_count:"); retVal.append(std::to_string(icon_count)); retVal.append(",");
         retVal.append("icon_src:"); retVal.append(str_icon_src.c_str()); retVal.append(",");
 
         BROWSER_LOGD("[%s:%d] retVal : %s", __PRETTY_FUNCTION__, __LINE__, retVal.c_str());
-        m_pwaData = retVal;
-        //self->iconDownload(icon_src);
+        s_pwaData = retVal;
 
-/*
-        size_t len = strlen(icon_src.c_str());
-        char array[100] = {0,};
-        for(int i = 0; i < (int)len; i++) {
-            array[i] = icon_src[i];
-        }
-        int key = 0;
-        std::string result = "";
-
-        for(int i = len-1; i >= 0; i--) {
-            if(array[i] == '/') {
-                key = i;
-                break;
-            }
-        }
-        for(int j = key+1; j < (int)len; j++) {
-            result = result + array[j];
-        }
-        BROWSER_LOGD("[%s:%d] result : %s", __PRETTY_FUNCTION__, __LINE__, result.c_str());
-        std::string icon = "/opt/usr/home/owner/content/Downloads/" + result;
-*/
-        if (shortcut_add_to_home(name, LAUNCH_BY_URI, start_url, NULL, 0, result_cb, NULL) != SHORTCUT_ERROR_NONE) {
-            BROWSER_LOGE("[%s:%d] Fail to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
-        } else {
-            BROWSER_LOGE("[%s:%d] Success to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
-        }
+        size_t len = strlen(icon_src);
+        auto result = str_icon_src.substr(str_icon_src.find_last_of("/"), len);
+        s_icon = DOWNLOAD_PATH + result;
+        self->request_file_download(icon_src, s_icon, __download_result_cb, NULL);
         BROWSER_LOGD("[%s:%d] dataSetManifest callback function end!", __PRETTY_FUNCTION__, __LINE__);
     }
+}
+
+void WebView::makeShortcut(const std::string& name, const std::string& pwaData, const std::string& icon)
+{
+    if (shortcut_add_to_home(name.c_str(),LAUNCH_BY_URI,pwaData.c_str(),
+            icon.c_str(),0,result_cb,nullptr) != SHORTCUT_ERROR_NONE)
+        BROWSER_LOGE("[%s:%d] Fail to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
+    else
+        BROWSER_LOGE("[%s:%d] Success to add to homescreen", __PRETTY_FUNCTION__, __LINE__);
 }
 
 int WebView::result_cb(int ret, void *data) {
@@ -749,6 +750,53 @@ int WebView::result_cb(int ret, void *data) {
         BROWSER_LOGW("[%s] result_cb_data = nullptr", __PRETTY_FUNCTION__);
     }
     return 0;
+}
+
+void WebView::request_file_download(const char *uri, const std::string& file_path, download_finish_callback cb, void *data)
+{
+    BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
+    BROWSER_LOGD("uri = [%s], file_path = [%s]", uri, file_path.c_str());
+
+    SoupSession *soup_session = nullptr;
+    SoupMessage *soup_msg = nullptr;
+
+    soup_session = soup_session_async_new();
+    g_object_set(soup_session, SOUP_SESSION_TIMEOUT, 15, nullptr);
+
+    soup_msg = soup_message_new("GET", uri);
+    download_request *request = new(std::nothrow) download_request(strdup(file_path.c_str()), cb, data);
+    soup_session_queue_message(soup_session, soup_msg, __file_download_finished_cb, static_cast<void*>(request));
+
+    g_object_unref(soup_session);
+}
+
+void WebView::__file_download_finished_cb(SoupSession *session, SoupMessage *msg, gpointer data)
+{
+    BROWSER_LOGD("[%s:%d] session : %s", __PRETTY_FUNCTION__, __LINE__, session);
+
+    if (data) {
+        download_request *request = static_cast<download_request*>(data);
+        SoupBuffer *body = soup_message_body_flatten(msg->response_body);
+        int fd = 0;
+        if (body->data && (body->length > 0) && ((fd = open(request->file_path.c_str(), O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0)) {
+            unsigned int write_len = write(fd, body->data, body->length);
+            close(fd);
+            if (write_len == body->length)
+                request->cb(request->file_path.c_str(), request->data);
+            else
+                unlink(request->file_path.c_str());
+        }
+        g_object_unref(msg);
+        soup_buffer_free(body);
+        delete request;
+    }
+    makeShortcut(s_name, s_pwaData, s_icon);
+}
+
+void WebView::__download_result_cb(const std::string& file_path, void *data)
+{
+    BROWSER_LOGD("[%s:%d] file_path = [%s], data = [%s]", file_path.c_str(), data);
+    BROWSER_LOGD("[%s:%d] complete !", __PRETTY_FUNCTION__, __LINE__);
 }
 #endif
 

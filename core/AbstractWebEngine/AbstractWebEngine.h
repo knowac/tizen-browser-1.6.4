@@ -547,10 +547,6 @@ public:
      */
     boost::signals2::signal<void(bool)> fullscreenModeSet;
 
-#if PWA
-    boost::signals2::signal<void (std::string)> iconDownload;
-#endif
-
     /**
      * Register H/W back key callback for the current webview
      */

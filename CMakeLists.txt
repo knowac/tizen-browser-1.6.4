@@ -78,6 +78,7 @@ if(TIZEN_BUILD)
         efl-extension
         libssl
         shortcut
+        libsoup-2.4
     )
 
    if (${PROFILE} MATCHES "mobile")

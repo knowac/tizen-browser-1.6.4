@@ -37,6 +37,11 @@
 #include <app.h>
 #include "AbstractRotatable.h"
 
+#if PWA
+#include <glib.h>
+#include <libsoup/soup.h>
+#endif
+
 typedef enum _context_menu_type {
     TEXT_ONLY = 0,
     INPUT_FIELD,
@@ -65,6 +70,8 @@ namespace tizen_browser {
 namespace basic_webengine {
 namespace webengine_service {
 
+using download_finish_callback = void (*)(const std::string& file_path, void *data);
+
 class WebView
         : public tizen_browser::interfaces::AbstractRotatable
 {
@@ -77,9 +84,6 @@ public:
 
     void setURI(const std::string &);
     std::string getURI(void);
-#if PWA
-    void requestManifest(void);
-#endif
     std::string getTitle(void);
 
     std::string getUserAgent(void);
@@ -100,6 +104,31 @@ public:
 
     bool isLoading();
     bool isLoadError() const;
+
+#if PWA
+    void requestManifest(void);
+    void request_file_download(const char *uri, const std::string& file_path, download_finish_callback cb, void *data);
+
+    struct download_request
+    {
+    public:
+        download_request(char* file_path_ = nullptr, download_finish_callback cb_ = nullptr, void* data_ = nullptr)
+    : file_path(file_path_),
+      cb(cb_),
+      data(data_)
+    {}
+
+        ~download_request() {}
+
+        std::string file_path;
+        download_finish_callback cb;
+        void *data;
+
+    private:
+        download_request& operator=(const download_request&);
+        download_request(const download_request&);
+    };
+#endif
 
     std::map<std::string, std::vector<std::string> > parse_uri(const char *uriToParse);
 
@@ -278,9 +307,6 @@ public:
     boost::signals2::signal<void (const std::string&, const std::string&)> redirectedWebPage;
     boost::signals2::signal<void()> unsecureConnection;
     boost::signals2::signal<void(bool)> fullscreenModeSet;
-#if PWA
-    boost::signals2::signal<void (std::string)> iconDownload;
-#endif
 
 protected:
     std::string getRedirectedURL() {return m_redirectedURL;};
@@ -297,6 +323,9 @@ private:
 #if PWA
     static void dataSetManifest(Evas_Object* view, Ewk_View_Request_Manifest* manifest, void*);
     static int result_cb(int ret, void *data);
+    static void makeShortcut(const std::string& name, const std::string& pwaData, const std::string& icon);
+    static void __file_download_finished_cb(SoupSession *session, SoupMessage *msg, gpointer data);
+    static void __download_result_cb(const std::string& file_path, void *data);
 #endif
 
     context_menu_type _get_menu_type(Ewk_Context_Menu *menu);
@@ -378,7 +407,11 @@ private:
 
     static const std::string COOKIES_PATH;
 #if PWA
-    static std::string m_pwaData;
+    static std::string s_pwaData;
+    static std::string s_name;
+    static std::string s_start_url;
+    static std::string s_icon;
+    static const std::string DOWNLOAD_PATH;
 #endif
 
     int m_status_code;
