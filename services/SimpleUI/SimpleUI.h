@@ -372,7 +372,6 @@ private:
     bool m_manualRotation;
     int m_current_angle;
     int m_temp_angle;
-    bool m_isSessionRestored;
     std::function<void()> m_functionViewPrepare;
     std::future<void> m_futureView;
     bool m_alreadyOpenedExecURL;

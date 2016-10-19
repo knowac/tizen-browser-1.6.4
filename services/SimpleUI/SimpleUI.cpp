@@ -136,10 +136,6 @@ void SimpleUI::resume()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_functionViewPrepare();
-    if (!m_isSessionRestored) {
-        switchViewToQuickAccess();
-        m_isSessionRestored = true;
-    }
 #if DUMMY_BUTTON
     m_webPageUI->createDummyButton();
 #endif
@@ -212,10 +208,11 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
         }
 #if PWA
             // Progressive web app
-            if (!strncmp(url.c_str(), "browser_shortcut:", strlen("browser_shortcut:"))) {
+            if (!strncmp(url.c_str(), "browser_shortcut::", strlen("browser_shortcut::"))) {
                 BROWSER_LOGD("Progressive web app");
                 m_pwa.preparePWAParameters(url);
                 url = m_pwa.getPWAinfo().uri;
+                BROWSER_LOGD("Display mode: %d", m_pwa.getPWAinfo().displayMode);
                 m_webPageUI->setDisplayMode(
                     static_cast<WebPageUI::WebDisplayMode>(
                         m_pwa.getPWAinfo().displayMode));
@@ -228,6 +225,7 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
 #endif
             if (url.empty()) {
                 BROWSER_LOGD("[%s]: restore last session", __func__);
+                switchViewToQuickAccess();
                 restoreLastSession();
             }
             m_initialised = true;
@@ -254,7 +252,6 @@ void SimpleUI::restoreLastSession()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    m_isSessionRestored = false;
     auto vec(m_tabService->getAllTabs());
     for (const auto& i : *vec) {
         openNewTab(
@@ -263,7 +260,6 @@ void SimpleUI::restoreLastSession()
             boost::optional<int>(i.getId().get()),
             false,
             i.getOrigin());
-        m_isSessionRestored = true;
     }
 }
 
