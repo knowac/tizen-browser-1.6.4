@@ -375,6 +375,8 @@ void SimpleUI::connectWebPageSignals()
         boost::bind(&QuickAccess::getQuickAccessState, m_quickAccess.get()));
     m_webPageUI->getQuickAccessEditUI()->editingFinished.connect(
         boost::bind(&QuickAccess::editingFinished, m_quickAccess.get()));
+    m_webPageUI->getQuickAccessEditUI()->editingFinished.connect(
+        boost::bind(&WebPageUI::editingFinished, m_webPageUI.get()));
     m_webPageUI->getQuickAccessEditUI()->deleteSelectedMostVisitedItems.connect(
         boost::bind(&QuickAccess::deleteSelectedMostVisitedItems, m_quickAccess.get()));
     m_webPageUI->getQuickAccessEditUI()->closeUI.connect(

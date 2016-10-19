@@ -44,15 +44,50 @@ void EditQuickAccessUI::showUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
-    m_naviframe->show();
-    if (m_editState == QuickAccessState::Edit)
+
+    auto signal = requestQuickAccessState();
+    if (signal)
+        m_editState = *signal;
+    else
+        BROWSER_LOGW("Missing signal value");
+
+    if (m_editState == QuickAccessState::Edit) {
+        m_naviframe->setTitle(_("IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"));
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
         m_naviframe->setRightButtonEnabled(true);
+        auto signal = requestQuickAccessGengrid();
+        if (signal) {
+            elm_object_part_content_set(m_layout, "elm.swallow.content", *signal);
+            evas_object_show(*signal);
+        } else {
+            BROWSER_LOGW("Missing signal value");
+        }
+    } else if (m_editState == QuickAccessState::DeleteMostVisited) {
+        //TODO: add translation IDS_BR_HEADER_SELECT_ITEMS_ABB2
+        m_naviframe->setTitle("Select items");
+        m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE_ABB"));
+        m_naviframe->setRightButtonEnabled(false);
+        auto signal = requestMostVisitedGengrid();
+        if (signal) {
+            elm_object_part_content_set(m_layout, "elm.swallow.content", *signal);
+            evas_object_show(*signal);
+        } else {
+            BROWSER_LOGW("Missing signal value");
+        }
+    } else {
+        BROWSER_LOGE("No correct Edit state");
+    }
+
+    m_naviframe->setRightButtonVisible(true);
+    evas_object_show(m_layout);
+    m_naviframe->show();
 }
 
 void EditQuickAccessUI::hideUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_naviframe->getLayout());
+    evas_object_hide(elm_object_part_content_unset(m_layout, "elm.swallow.content"));
     m_naviframe->hide();
 }
 
@@ -68,49 +103,8 @@ Evas_Object *EditQuickAccessUI::getContent()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_parent);
 
-    auto signal = requestQuickAccessState();
-    if (signal)
-        m_editState = *signal;
-    else
-        BROWSER_LOGW("Missing signal value");
-
     if (!m_naviframe)
         createEditLayout();
-
-    auto layout = elm_layout_add(m_naviframe->getLayout());
-    elm_layout_theme_set(layout, "layout", "application", "default");
-    evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-    auto bg = elm_bg_add(layout);
-    elm_bg_color_set(bg, 255, 255, 255);
-    elm_object_part_content_set(layout, "elm.swallow.bg", bg);
-
-    if (m_editState == QuickAccessState::Edit) {
-        m_naviframe->setTitle(_("IDS_BR_OPT_EDIT_QUICK_ACCESS_ABB"));
-        m_naviframe->setRightButtonText(_("IDS_BR_SK_DONE"));
-        auto signal = requestQuickAccessGengrid();
-        if (signal)
-            elm_object_part_content_set(layout, "elm.swallow.content", *signal);
-        else
-            BROWSER_LOGW("Missing signal value");
-    } else if (m_editState == QuickAccessState::DeleteMostVisited) {
-        //TODO: add translation IDS_BR_HEADER_SELECT_ITEMS_ABB2
-        m_naviframe->setTitle("Select items");
-        m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE_ABB"));
-        auto signal = requestMostVisitedGengrid();
-        if (signal)
-            elm_object_part_content_set(layout, "elm.swallow.content", *signal);
-        else
-            BROWSER_LOGW("Missing signal value");
-    } else {
-        BROWSER_LOGE("No correct Edit state");
-    }
-
-    evas_object_show(layout);
-    m_naviframe->setContent(layout);
-    m_naviframe->setRightButtonVisible(true);
-    m_naviframe->setRightButtonEnabled(false);
 
     return m_naviframe->getLayout();
 }
@@ -165,6 +159,17 @@ void EditQuickAccessUI::createEditLayout()
     m_naviframe->setLeftButtonVisible(true);
 
     m_naviframe->addRightButton(_done_clicked, this);
+
+    m_layout = elm_layout_add(m_naviframe->getLayout());
+    elm_layout_theme_set(m_layout, "layout", "application", "default");
+    evas_object_size_hint_weight_set(m_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(m_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+    auto bg = elm_bg_add(m_layout);
+    elm_bg_color_set(bg, 255, 255, 255);
+    elm_object_part_content_set(m_layout, "elm.swallow.bg", bg);
+
+    m_naviframe->setContent(m_layout);
 }
 
 }   // namespace tizen_browser

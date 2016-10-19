@@ -111,6 +111,7 @@ public:
     void switchViewToQuickAccess(Evas_Object* content);
     URIEntry& getURIEntry() const { return *m_URIEntry.get(); }
     std::shared_ptr<EditQuickAccessUI> getQuickAccessEditUI() { return m_editQuickAccessUI; }
+    void editingFinished() { m_statesMgr->set(WPUState::QUICK_ACCESS); }
     void setMostVisitedSelectedItemsCountInEditMode(int count);
     void setTabsNumber(int tabs);
     void setBackButtonEnabled(bool enabled) { m_back->setEnabled(enabled); }

@@ -105,7 +105,6 @@ private:
     void showScrollerPage(int page);
 
     void addToQuickAccessTile();
-    void setIndexPage(const uintptr_t page) const;
     bool isOrientationLandscape() const;
     static void _quickAccess_tile_realized(void * data, Evas_Object * obj, void * event_info);
     static void _layout_resize_cb(void *data, Evas *e, Evas_Object *obj, void *event_info);
@@ -124,8 +123,6 @@ private:
     static void _thumbQuickAccessClicked(void * data, Evas_Object * obj, void * event_info);
     static void _thumbMostVisitedClicked(void * data, Evas_Object * obj, void * event_info);
     static void _check_state_changed(void *data, Evas_Object *obj, void *);
-    void setEmptyView(bool empty);
-    void showNoMostVisitedLabel();
     static void setButtonColor(Evas_Object* button, int r, int b, int g, int a);
 
     static void _mostVisited_clicked(void * data, Evas_Object * obj, void * event_info);
@@ -139,25 +136,20 @@ private:
     Evas_Object *m_box;
     Evas_Object *m_quickAccessView;
     Evas_Object *m_mostVisitedView;
-    Evas_Object *m_mostVisitedButton;
     Evas_Object *m_quickAccessGengrid;
     Evas_Object *m_mostVisitedGengrid;
-    bool m_after_history_thumb;
     std::vector<Evas_Object *> m_tiles;
-    Eina_List* m_parentFocusChain;
 
     int m_currPage;
     Elm_Gengrid_Item_Class * m_quickAccess_item_class;
     Elm_Gengrid_Item_Class * m_mostVisited_item_class;
+    Elm_Gengrid_Item_Class * m_quickAccess_tile_class;
     std::string edjFilePath;
     bool m_desktopMode;
     QuickAccessState m_state;
 
-    Evas_Object* m_index;
     Evas_Object* m_verticalScroller;
-    Elm_Gengrid_Item_Class * m_quickAccess_tile_class;
     std::list<std::shared_ptr<services::HistoryItem>> m_mv_delete_list;
-    bool m_landscapeView;
     static const int MOST_VISITED_PAGE = 1;
     static const int QUICKACCESS_PAGE = 0;
     static const int QUICKACCESS_ITEM_WIDTH = 150;

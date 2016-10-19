@@ -433,6 +433,7 @@ void WebPageUI::_cm_edit_qa_clicked(void* data, Evas_Object*, void* )
     if (data != nullptr) {
         WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
+        webPageUI->m_statesMgr->set(WPUState::EDIT_MODE);
         webPageUI->quickAccessEdit();
     } else
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
@@ -444,6 +445,7 @@ void WebPageUI::_cm_delete_mv_clicked(void *data, Evas_Object *, void *)
     if (data) {
         WebPageUI* webPageUI = static_cast<WebPageUI*>(data);
         _cm_dismissed(nullptr, webPageUI->m_ctxpopup, nullptr);
+        webPageUI->m_statesMgr->set(WPUState::EDIT_MODE);
         webPageUI->deleteMostVisited();
     } else {
         BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);

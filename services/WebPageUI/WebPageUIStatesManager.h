@@ -27,6 +27,7 @@ namespace base_ui {
 
 enum class WPUState {
     QUICK_ACCESS,
+    EDIT_MODE,
     // displaying web page content
     MAIN_WEB_PAGE,
     MAIN_ERROR_PAGE,

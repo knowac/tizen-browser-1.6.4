@@ -58,6 +58,7 @@ private:
     void createEditLayout();
     SharedNaviframeWrapper m_naviframe;
     Evas_Object *m_parent;
+    Evas_Object *m_layout;
     std::shared_ptr<QuickAccess> m_quickAccess;
     QuickAccessState m_editState;
 };
