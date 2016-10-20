@@ -94,10 +94,9 @@ UrlHistoryPtr WebPageUI::getUrlHistoryList()
     return m_urlHistoryList;
 }
 
-void WebPageUI::showUI()
+void WebPageUI::updateEngineStateUI()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-
     auto state = getEngineState();
     if (state) {
         switch (*state) {
@@ -116,8 +115,15 @@ void WebPageUI::showUI()
     } else {
         BROWSER_LOGE("[%s:%d] Wrong state value!", __PRETTY_FUNCTION__, __LINE__);
     }
+}
 
+void WebPageUI::showUI()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     M_ASSERT(m_mainLayout);
+
+    updateEngineStateUI();
+
     evas_object_show(m_mainLayout);
 
     evas_object_show(elm_object_part_content_get(m_mainLayout, "web_view"));

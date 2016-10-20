@@ -81,6 +81,7 @@ SimpleUI::SimpleUI()
     , m_wvIMEStatus(false)
 #if PWA
     , m_pwa()
+    , m_alreadyOpenedPWA(false)
 #endif
     , m_manualRotation(false)
     , m_current_angle(0)
@@ -188,6 +189,30 @@ void SimpleUI::prepareServices()
     initUIServices();
     initModelServices();
 }
+#if PWA
+std::string SimpleUI::preparePWA(const std::string& url)
+{
+    std::string startUrl;
+    if (!strncmp(url.c_str(), "browser_shortcut::", strlen("browser_shortcut::"))) {
+        BROWSER_LOGD("Progressive web app");
+        m_pwa.preparePWAParameters(url);
+        startUrl = m_pwa.getPWAinfo().uri;
+        if (startUrl.empty())
+            return std::string();
+        BROWSER_LOGD("Display mode: %d", m_pwa.getPWAinfo().displayMode);
+        m_webPageUI->setDisplayMode(
+            static_cast<WebPageUI::WebDisplayMode>(
+                m_pwa.getPWAinfo().displayMode));
+
+        if (m_pwa.getPWAinfo().orientation ==  WebPageUI::portrait_primary)
+            rotationType(rotationLock::portrait);
+        else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
+            rotationType(rotationLock::landscape);
+        return startUrl;
+    }
+    return std::string();
+}
+#endif
 
 int SimpleUI::exec(const std::string& _url, const std::string& _caller)
 {
@@ -200,29 +225,13 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             if (m_window.get()) {
                 prepareServices();
 
-            //Push first view to stack.
-            pushViewToStack(m_webPageUI);
+                //Push first view to stack.
+                pushViewToStack(m_webPageUI);
 
-            // Register H/W back key callback
-            m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
-        }
-#if PWA
-            // Progressive web app
-            if (!strncmp(url.c_str(), "browser_shortcut::", strlen("browser_shortcut::"))) {
-                BROWSER_LOGD("Progressive web app");
-                m_pwa.preparePWAParameters(url);
-                url = m_pwa.getPWAinfo().uri;
-                BROWSER_LOGD("Display mode: %d", m_pwa.getPWAinfo().displayMode);
-                m_webPageUI->setDisplayMode(
-                    static_cast<WebPageUI::WebDisplayMode>(
-                        m_pwa.getPWAinfo().displayMode));
-
-                if (m_pwa.getPWAinfo().orientation ==  WebPageUI::portrait_primary)
-                    rotationType(rotationLock::portrait);
-                else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
-                    rotationType(rotationLock::landscape);
+                // Register H/W back key callback
+                m_platformInputManager->registerHWKeyCallback(m_viewManager.getContent());
             }
-#endif
+
             if (url.empty()) {
                 BROWSER_LOGD("[%s]: restore last session", __func__);
                 switchViewToQuickAccess();
@@ -230,10 +239,29 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             }
             m_initialised = true;
         }
+        std::string pwaUrl = std::string();
+#if PWA
+        // Progressive web app
+        pwaUrl = preparePWA(url);
 
-        if (!url.empty() && !m_alreadyOpenedExecURL) {
+        if ((!pwaUrl.empty() && m_webEngine->getState() != basic_webengine::State::SECRET) ||
+            (pwaUrl.empty() && m_webEngine->getState() == basic_webengine::State::SECRET))
+            changeEngineState();
+
+        m_webPageUI->updateEngineStateUI();
+#endif
+
+        if (!pwaUrl.empty() || (!url.empty() && !m_alreadyOpenedExecURL)) {
             BROWSER_LOGD("[%s]: open new tab", __func__);
-            openNewTab(url);
+            auto taburl = pwaUrl.empty() ? url : pwaUrl;
+#if PWA
+            // Allow for only one instance of PWA
+            if (m_alreadyOpenedPWA)
+                m_webEngine->closeTab();
+            m_alreadyOpenedPWA = !pwaUrl.empty();
+#endif
+
+            openNewTab(taburl);
             m_alreadyOpenedExecURL = true;
         }
     };
@@ -1870,6 +1898,8 @@ void SimpleUI::onDeleteSelectedDataButton(const PopupButtons& button, const std:
 
 void SimpleUI::tabLimitPopupButtonClicked(PopupButtons button)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     if (button == CLOSE_TAB) {
         BROWSER_LOGD("[%s]: CLOSE TAB", __func__);
         closeTab();
@@ -1878,12 +1908,16 @@ void SimpleUI::tabLimitPopupButtonClicked(PopupButtons button)
 
 void SimpleUI::tabCreated()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     int tabs = m_webEngine->tabsCount();
     m_webPageUI->setTabsNumber(tabs);
 }
 
 bool SimpleUI::checkIfCreate()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     int tabs = m_webEngine->tabsCount();
 
     if (tabs >= m_tabLimit) {
@@ -1903,6 +1937,8 @@ bool SimpleUI::checkIfCreate()
 
 void SimpleUI::updateView()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     int tabs = m_webEngine->tabsCount();
     BROWSER_LOGD("[%s] Opened tabs: %d", __func__, tabs);
     if (m_viewManager.topOfStack() == m_webPageUI) {
@@ -1917,9 +1953,15 @@ void SimpleUI::updateView()
 
 void SimpleUI::changeEngineState()
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     m_webEngine->changeState();
-    m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
+#if PWA
+    if (!m_alreadyOpenedPWA)
+#endif
+        m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
     updateView();
+
 }
 
 void SimpleUI::windowCreated()

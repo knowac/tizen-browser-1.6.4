@@ -85,8 +85,8 @@ class BROWSER_EXPORT SimpleUI : public AbstractMainWindow<Evas_Object>
 public:
     SimpleUI(/*Evas_Object *window*/);
     virtual ~SimpleUI();
-    virtual int exec(const std::string& _url, const std::string& _caller);
-    virtual std::string getName();
+    int exec(const std::string& _url, const std::string& _caller) final override;
+    std::string getName() final override;
     void suspend();
     void resume();
     void destroyUI();
@@ -100,6 +100,9 @@ public:
 private:
     // setup functions
     void prepareServices();
+#if PWA
+    std::string preparePWA(const std::string& url);
+#endif
     void loadUIServices();
     void connectUISignals();
     void loadModelServices();
@@ -366,6 +369,7 @@ private:
     Evas_Object *main_window;
 #if PWA
     ProgressiveWebApp m_pwa;
+    bool m_alreadyOpenedPWA;
 #endif
     SharedNaviframeWrapper m_QAEditNaviframe;
     Evas_Object *m_conformant;

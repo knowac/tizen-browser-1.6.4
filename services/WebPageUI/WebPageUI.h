@@ -84,6 +84,7 @@ public:
     UrlHistoryPtr getUrlHistoryList();
     virtual void showUI();
     virtual void hideUI();
+    void updateEngineStateUI();
 #if DUMMY_BUTTON
     void createDummyButton();
 #endif
