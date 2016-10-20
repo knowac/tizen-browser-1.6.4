@@ -1047,8 +1047,20 @@ void SimpleUI::addQuickAccessItem(const string &urlArg, const string &titleArg)
     else if (!title.compare(0, tools::PROTOCOL_FTP.length(), tools::PROTOCOL_FTP))
         title = title.substr(tools::PROTOCOL_FTP.length(), std::string::npos);
 
-    //TODO: add support for reorder, color and images
-    m_storageService->getQuickAccessStorage().addQuickAccessItem(url, title, 0, 0, false);
+    //TODO: add support for reorder and color
+    if (m_webPageUI->stateEquals(WPUState::MAIN_WEB_PAGE)) {
+        tools::BrowserImagePtr favicon = m_webEngine->getFavicon();
+        if (favicon) {
+            m_storageService->getQuickAccessStorage().addQuickAccessItem(
+                url, title, 0, 0, true, favicon, favicon->getWidth(), favicon->getHeight());
+        } else {
+            m_storageService->getQuickAccessStorage().addQuickAccessItem(
+                url, title, 0, 0, false, nullptr, 0, 0);
+        }
+    } else {
+        m_storageService->getQuickAccessStorage().addQuickAccessItem(
+            url, title, 0, 0, false, nullptr, 0, 0);
+    }
 
     if (showQA)
         showQuickAccess();

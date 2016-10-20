@@ -291,7 +291,7 @@ void QuickAccess::setMostVisitedItems(std::shared_ptr<services::HistoryItemVecto
 void QuickAccess::addQuickAccessItem(services::SharedQuickAccessItem qa)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    QuickAccessItemData *itemData = new QuickAccessItemData();        // deleted in _grid_quickaccess_del
+    QuickAccessItemData *itemData = new QuickAccessItemData();
     itemData->item = qa;
     itemData->quickAccess = this;
     elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccess_item_class, itemData, _thumbQuickAccessClicked, itemData);
@@ -396,7 +396,7 @@ Evas_Object * QuickAccess::_grid_quickaccess_content_get(void *data, Evas_Object
             elm_object_style_set(button, "roundedrect");
             elm_object_part_text_set(button, "button_text", itemData->item->getTitle().c_str());
 
-            if (itemData->item->getFavicon()) {
+            if (itemData->item->has_favicon()) {
                 // Favicon
                 Evas_Object * thumb = itemData->item->getFavicon()->getEvasImage(obj);
                 elm_object_part_content_set(button, "button_image", thumb);

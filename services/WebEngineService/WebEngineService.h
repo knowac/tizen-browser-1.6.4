@@ -176,7 +176,7 @@ public:
     /**
      * @brief Get favicon of current page loaded
      */
-    std::shared_ptr<tizen_browser::tools::BrowserImage> getFavicon();
+    tools::BrowserImagePtr getFavicon();
 
     /**
      * @brief back or exit when back key is pressed

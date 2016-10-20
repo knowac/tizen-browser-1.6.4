@@ -53,12 +53,14 @@ QuickAccessItem::QuickAccessItem(
 
 void QuickAccessItem::setFavicon(tools::BrowserImagePtr favicon)
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_has_favicon = true;
     m_favicon = favicon;
 }
 
 tools::BrowserImagePtr QuickAccessItem::getFavicon() const
 {
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     return m_favicon;
 }
 

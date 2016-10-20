@@ -29,7 +29,15 @@ public:
 
     QuickAccessStorage();
     void init();
-    void addQuickAccessItem(const std::string &url, const std::string &title, int color, int order, bool hasFavicon);
+    void addQuickAccessItem(
+        const std::string &url,
+        const std::string &title,
+        int color,
+        int order,
+        bool hasFavicon,
+        tools::BrowserImagePtr favicon,
+        int widht,
+        int height);
     void deleteQuickAccessItem(unsigned int id);
     unsigned int getQuickAccessCount();
     bool quickAccessItemExist(const std::string &url);

@@ -34,7 +34,6 @@ public:
         int color = 0,
         int order = 0,
         bool hasFavicon = false
-        // TODO: favicon
         );
 
     void setId(int id) { m_id = id; }
@@ -63,9 +62,8 @@ private:
     std::string m_title;
     int m_color;
     int m_order;
-    std::shared_ptr<tools::BrowserImage> m_favicon;
     bool m_has_favicon;
-
+    tools::BrowserImagePtr m_favicon;
 };
 
 using SharedQuickAccessItem = std::shared_ptr<QuickAccessItem>;

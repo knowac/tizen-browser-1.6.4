@@ -683,7 +683,7 @@ bool WebEngineService::hasFocus() const
 }
 
 
-std::shared_ptr<tizen_browser::tools::BrowserImage> WebEngineService::getFavicon()
+tools::BrowserImagePtr WebEngineService::getFavicon()
 {
     M_ASSERT(m_currentWebView);
     if (m_currentWebView) {

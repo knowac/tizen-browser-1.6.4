@@ -18,6 +18,7 @@
 #include <BrowserAssert.h>
 #include <boost/any.hpp>
 #include <boost/format.hpp>
+#include "EflTools.h"
 
 #include "Field.h"
 #include "BrowserLogger.h"
@@ -26,6 +27,7 @@
 #include "Config.h"
 #include "StorageExceptionInitialization.h"
 #include "SQLTransactionScope.h"
+#include "BrowserImage.h"
 
 
 #include "QuickAccessStorage.h"
@@ -40,6 +42,8 @@ const std::string COL_COLOR = "COLOR";
 const std::string COL_ORDER = "QA_ORDER";
 const std::string COL_HAS_FAVICON = "HAS_FAVICON";
 const std::string COL_FAVICON = "FAVICON";
+const std::string COL_WIDTH = "WIDTH";
+const std::string COL_HEIGHT = "HEIGHT";
 
 const std::string CREATE_TABLE_QUICKACCESS
         = "CREATE TABLE " + TABLE_QUICKACCESS
@@ -48,7 +52,10 @@ const std::string CREATE_TABLE_QUICKACCESS
         +   COL_TITLE + " TEXT, "
         +   COL_COLOR + " INTEGER, "
         +   COL_ORDER + " INTEGER NOT NULL, "
-        +   COL_HAS_FAVICON + " INTEGER "
+        +   COL_HAS_FAVICON + " INTEGER, "
+        +   COL_FAVICON + " BLOB, "
+        +   COL_WIDTH + " INTEGER, "
+        +   COL_HEIGHT + " INTEGER "
         + " );";
 // ------ (end) Database QUICKACCESS ------
 }
@@ -70,8 +77,8 @@ void QuickAccessStorage::init()
     if (m_isInitialized)
         return;
 
-    std::string resourceDbDir(boost::any_cast<std::string> (tizen_browser::config::Config::getInstance().get("resourcedb/dir")));
-    std::string quickaccessDb(boost::any_cast<std::string> (tizen_browser::config::Config::getInstance().get("DB_QUICKACCESS")));
+    std::string resourceDbDir(boost::any_cast<std::string> (config::Config::getInstance().get("resourcedb/dir")));
+    std::string quickaccessDb(boost::any_cast<std::string> (config::Config::getInstance().get("DB_QUICKACCESS")));
     DB_QUICKACCESS = resourceDbDir + quickaccessDb;
     BROWSER_LOGD("[%s:%d] DB_QUICKACCESS=%s", __PRETTY_FUNCTION__, __LINE__, DB_QUICKACCESS.c_str());
     try {
@@ -82,12 +89,23 @@ void QuickAccessStorage::init()
     m_isInitialized = true;
 }
 
-void QuickAccessStorage::addQuickAccessItem(const std::string &url, const std::string &title, int color, int order, bool hasFavicon)
+void QuickAccessStorage::addQuickAccessItem(
+    const std::string &url,
+    const std::string &title,
+    int color,
+    int order,
+    bool hasFavicon,
+    tools::BrowserImagePtr favicon,
+    int width,
+    int height)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     int hasFaviconInt = hasFavicon ? 1 : 0; // Convert to int bacause of SQLite doesn't have bool type.
-    boost::format addQuickAccessItemQueryString("INSERT OR REPLACE INTO %1% (%2%, %3%, %4%, %5%, %6%) VALUES (?, ?, ?, ?, ?);");
-    addQuickAccessItemQueryString % TABLE_QUICKACCESS % COL_URL % COL_TITLE % COL_COLOR % COL_ORDER % COL_HAS_FAVICON;
+    boost::format addQuickAccessItemQueryString(
+        "INSERT OR REPLACE INTO %1% (%2%, %3%, %4%, %5%, %6%, %7%, %8%, %9%) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+    addQuickAccessItemQueryString % TABLE_QUICKACCESS % COL_URL % COL_TITLE % COL_COLOR % COL_ORDER %
+        COL_HAS_FAVICON % COL_FAVICON % COL_WIDTH % COL_HEIGHT;
     try {
         storage::SQLTransactionScope scope(storage::DriverManager::getDatabase(DB_QUICKACCESS));
         std::shared_ptr<storage::SQLDatabase> db = scope.database();
@@ -97,6 +115,10 @@ void QuickAccessStorage::addQuickAccessItem(const std::string &url, const std::s
         addQuickAccessItemQuery.bindInt(3, color);
         addQuickAccessItemQuery.bindInt(4, order);
         addQuickAccessItemQuery.bindInt(5, hasFaviconInt);
+        if (hasFavicon)
+            addQuickAccessItemQuery.bindBlob(6, tools::EflTools::getBlobPNG(favicon));
+        addQuickAccessItemQuery.bindInt(7, width);
+        addQuickAccessItemQuery.bindInt(8, height);
         addQuickAccessItemQuery.exec();
     } catch (storage::StorageException &e) {
         BROWSER_LOGD("[%s:%d] SQLException (%d): %s ", __PRETTY_FUNCTION__, __LINE__, e.getErrorCode(), e.getMessage());
@@ -159,8 +181,9 @@ services::SharedQuickAccessItemVector QuickAccessStorage::getQuickAccessList()
     services::SharedQuickAccessItemVector QAList;
     int QACount = getQuickAccessCount();
     if (QACount > 0) {
-        boost::format getQuickAccessListString("SELECT %1%, %2%, %3%, %4%, %5%, %6% FROM %7% ;");
-        getQuickAccessListString % COL_ID % COL_URL % COL_TITLE % COL_COLOR % COL_ORDER % COL_HAS_FAVICON % TABLE_QUICKACCESS;
+        boost::format getQuickAccessListString("SELECT %1%, %2%, %3%, %4%, %5%, %6%, %7%, %8%, %9% FROM %10% ;");
+        getQuickAccessListString % COL_ID % COL_URL % COL_TITLE % COL_COLOR % COL_ORDER %
+            COL_HAS_FAVICON % COL_FAVICON % COL_WIDTH % COL_HEIGHT % TABLE_QUICKACCESS;
         try {
             storage::SQLTransactionScope scope(storage::DriverManager::getDatabase(DB_QUICKACCESS));
             std::shared_ptr<storage::SQLDatabase> db = scope.database();
@@ -175,6 +198,17 @@ services::SharedQuickAccessItemVector QuickAccessStorage::getQuickAccessList()
                     getQuickAccesListQuery.getInt(3),
                     getQuickAccesListQuery.getInt(4),
                     static_cast<bool>(getQuickAccesListQuery.getInt(5)));
+
+                if (static_cast<bool>(getQuickAccesListQuery.getInt(5))) {
+                    tools::BrowserImagePtr favicon = std::make_shared<tools::BrowserImage>(
+                        getQuickAccesListQuery.getInt(7),
+                        getQuickAccesListQuery.getInt(8),
+                        getQuickAccesListQuery.getBlob(6)->getLength());
+                    favicon->setData(const_cast<void *>(getQuickAccesListQuery.getBlob(6)->getData()),
+                        false, tools::ImageType::ImageTypePNG);
+                    QuickAccesItem->setFavicon(favicon);
+                }
+
                 QAList.push_back(QuickAccesItem);
                 getQuickAccesListQuery.next();
             }
