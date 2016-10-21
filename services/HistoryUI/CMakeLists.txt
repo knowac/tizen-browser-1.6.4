@@ -29,6 +29,7 @@ install(TARGETS ${PROJECT_NAME}
 include(EDCCompile)
 set(edcFiles
     History_mob.edc
+    HistoryDaysList_mob.edc
 )
 
 foreach(edec ${edcFiles})
