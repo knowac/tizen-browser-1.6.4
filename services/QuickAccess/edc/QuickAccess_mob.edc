@@ -1018,6 +1018,28 @@ group { name: "elm/button/base/roundedrect";
     }
 }
 
+group { name: "elm/button/base/roundedrectADD";
+        inherit: "elm/button/base/roundedrect";
+    images {
+        image: "internet_ic_add.png" COMP;
+    }
+    parts {
+        part { name: "center_label";
+            type: IMAGE;
+            scale: 1;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+                align: 0.5 0.5;
+                color_class: "ATO003";
+                min: 100 100;
+                max: 100 100;
+                image.normal: "internet_ic_add.png";
+                rel1 { relative: 0.0 0.0; to: "button_icon"; }
+                rel2 { relative: 1.0 1.0; to: "button_icon"; }
+            }
+        }
+    }
+}
 
 }
 

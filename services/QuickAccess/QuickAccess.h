@@ -117,6 +117,7 @@ private:
     void deleteQuickAccessSelectedItem(Elm_Widget_Item *item);
 
     static Evas_Object * _grid_quickaccess_content_get(void *data, Evas_Object *obj, const char *part);
+    static Evas_Object * _grid_quickaccessADD_content_get(void *data, Evas_Object *obj, const char *part);
     static void _grid_quickaccess_del(void *data, Evas_Object *obj);
     static void __quckAccess_del_clicked(void *data, Evas_Object *, void *);
     static char* _grid_mostVisited_text_get(void *data, Evas_Object *obj, const char *part);
@@ -125,7 +126,7 @@ private:
     static void _thumbQuickAccessClicked(void * data, Evas_Object * obj, void * event_info);
     static void _thumbMostVisitedClicked(void * data, Evas_Object * obj, void * event_info);
     static void _check_state_changed(void *data, Evas_Object *obj, void *);
-    static void setButtonColor(Evas_Object* button, int r, int b, int g, int a);
+    static void setButtonColor(Evas_Object* button, int r, int g, int b, int a);
 
     static void _mostVisited_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _quickAccess_clicked(void * data, Evas_Object * obj, void * event_info);

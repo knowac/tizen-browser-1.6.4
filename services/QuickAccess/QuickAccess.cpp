@@ -100,9 +100,9 @@ void QuickAccess::createItemClasses()
     }
     if (!m_quickAccess_tile_class) {
         m_quickAccess_tile_class = elm_gengrid_item_class_new();
-        m_quickAccess_tile_class->item_style = "quickAccessAdd";
+        m_quickAccess_tile_class->item_style = "quickAccess";
         m_quickAccess_tile_class->func.text_get = nullptr;
-        m_quickAccess_tile_class->func.content_get = nullptr;
+        m_quickAccess_tile_class->func.content_get = _grid_quickaccessADD_content_get;
         m_quickAccess_tile_class->func.state_get = nullptr;
         m_quickAccess_tile_class->func.del = nullptr;
     }
@@ -426,6 +426,24 @@ Evas_Object * QuickAccess::_grid_quickaccess_content_get(void *data, Evas_Object
     return nullptr;
 }
 
+Evas_Object *QuickAccess::_grid_quickaccessADD_content_get(void *data, Evas_Object *obj, const char *part)
+{
+    BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__, part);
+    if (data) {
+        if (!strcmp(part, "elm.swallow.icon")) {
+            Evas_Object *button = elm_button_add(obj);
+            elm_object_style_set(button, "roundedrectADD");
+            elm_object_part_text_set(button, "button_text", "Add");
+            elm_layout_signal_emit(button, "show,bg,rectangle", "event");
+            setButtonColor(button, 150, 180, 255, 255);
+            return button;
+        }
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+    }
+    return nullptr;
+}
+
 void QuickAccess::_grid_quickaccess_del(void* data, Evas_Object*)
 {
     BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
@@ -638,14 +656,14 @@ void QuickAccess::hideUI()
     }
 }
 
-void QuickAccess::setButtonColor(Evas_Object* button, int r, int b, int g, int a)
+void QuickAccess::setButtonColor(Evas_Object* button, int r, int g, int b, int a)
 {
     // setting color of inner rect
     Edje_Message_Int_Set* msg = (Edje_Message_Int_Set *) malloc(sizeof(*msg) + 3 * sizeof(int));
     msg->count = 4;
     msg->val[0] = r;
-    msg->val[1] = b;
-    msg->val[2] = g;
+    msg->val[1] = g;
+    msg->val[2] = b;
     msg->val[3] = a;
     edje_object_message_send(elm_layout_edje_get(button), EDJE_MESSAGE_INT_SET, 0, msg);
     free(msg);
