@@ -258,6 +258,8 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
             // Allow for only one instance of PWA
             if (m_alreadyOpenedPWA)
                 m_webEngine->closeTab();
+            if (!pwaUrl.empty())
+                popStackTo(m_webPageUI);
             m_alreadyOpenedPWA = !pwaUrl.empty();
 #endif
 
