@@ -106,6 +106,7 @@ private:
     void showScrollerPage(int page);
 
     void addToQuickAccessTile();
+    void setIndexPage(const void *page) const;
     bool isOrientationLandscape() const;
     static void _quickAccess_tile_realized(void * data, Evas_Object * obj, void * event_info);
     static void _layout_resize_cb(void *data, Evas *e, Evas_Object *obj, void *event_info);
@@ -141,6 +142,7 @@ private:
     Evas_Object *m_mostVisitedView;
     Evas_Object *m_quickAccessGengrid;
     Evas_Object *m_mostVisitedGengrid;
+    Evas_Object* m_index;
     std::vector<Evas_Object *> m_tiles;
 
     int m_currPage;
@@ -153,8 +155,8 @@ private:
 
     Evas_Object* m_verticalScroller;
     std::list<std::shared_ptr<services::HistoryItem>> m_mv_delete_list;
-    static const int MOST_VISITED_PAGE = 1;
-    static const int QUICKACCESS_PAGE = 0;
+    static const int MOST_VISITED_PAGE;
+    static const int QUICKACCESS_PAGE;
     static const int QUICKACCESS_ITEM_WIDTH = 150;
     static const int QUICKACCESS_ITEM_HEIGHT = 204;
     static const int QUICKACCESS_ITEM_WIDTH_LANDSCAPE = 150;

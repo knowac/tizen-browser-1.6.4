@@ -31,6 +31,9 @@ namespace base_ui{
 
 EXPORT_SERVICE(QuickAccess, "org.tizen.browser.quickaccess")
 
+const int QuickAccess::MOST_VISITED_PAGE = 1;
+const int QuickAccess::QUICKACCESS_PAGE = 0;
+
 QuickAccess::QuickAccess()
     : m_parent(nullptr)
     , m_layout(nullptr)
@@ -39,6 +42,8 @@ QuickAccess::QuickAccess()
     , m_quickAccessView(nullptr)
     , m_mostVisitedView(nullptr)
     , m_quickAccessGengrid(nullptr)
+    , m_mostVisitedGengrid(nullptr)
+    , m_index(nullptr)
     , m_currPage(QuickAccess::QUICKACCESS_PAGE)
     , m_quickAccess_item_class(nullptr)
     , m_mostVisited_item_class(nullptr)
@@ -124,6 +129,18 @@ void QuickAccess::createQuickAccessLayout(Evas_Object* parent)
     evas_object_show(m_layout);
 
     evas_object_event_callback_add(m_layout, EVAS_CALLBACK_RESIZE, _layout_resize_cb, this);
+
+    m_index = elm_index_add(m_layout);
+    evas_object_size_hint_weight_set(m_index, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(m_index, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_object_style_set(m_index, "pagecontrol");
+    elm_index_horizontal_set(m_index, EINA_TRUE);
+    elm_index_autohide_disabled_set(m_index, EINA_TRUE);
+    elm_object_part_content_set(m_layout, "index", m_index);
+
+    elm_index_item_append(m_index, "1", nullptr, &QuickAccess::QUICKACCESS_PAGE);
+    elm_index_item_append(m_index, "2", nullptr, &QuickAccess::MOST_VISITED_PAGE);
+    elm_index_level_go(m_index, 0);
 
     m_horizontalScroller = elm_scroller_add(m_layout);
     elm_scroller_page_scroll_limit_set(m_horizontalScroller, 1, 0);
@@ -317,6 +334,13 @@ void QuickAccess::addToQuickAccessTile()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     elm_gengrid_item_append(m_quickAccessGengrid, m_quickAccess_tile_class, this, _addToQuickAccess_clicked, this);
+}
+
+void QuickAccess::setIndexPage(const void *page) const
+{
+    Elm_Object_Item* it = elm_index_item_find(m_index, page);
+    if (it)
+        elm_index_item_selected_set(it, EINA_TRUE);
 }
 
 bool QuickAccess::isOrientationLandscape() const
@@ -564,7 +588,8 @@ void QuickAccess::showMostVisited()
     m_currPage = QuickAccess::MOST_VISITED_PAGE;
 
     elm_object_translatable_part_text_set(m_layout, "screen_title", "Most visited websites");  //TODO: translate
-    elm_scroller_page_show(m_horizontalScroller, MOST_VISITED_PAGE, 0);
+    elm_scroller_page_show(m_horizontalScroller, QuickAccess::MOST_VISITED_PAGE, 0);
+    setIndexPage(&QuickAccess::MOST_VISITED_PAGE);
 
     m_mv_delete_list.clear();
 }
@@ -581,7 +606,8 @@ void QuickAccess::showQuickAccess()
     m_currPage = QuickAccess::QUICKACCESS_PAGE;
 
     elm_object_translatable_part_text_set(m_layout, "screen_title", "Quick access");  //TODO: translate
-    elm_scroller_page_show(m_horizontalScroller, QUICKACCESS_PAGE, 0);
+    elm_scroller_page_show(m_horizontalScroller, QuickAccess::QUICKACCESS_PAGE, 0);
+    setIndexPage(&QuickAccess::QUICKACCESS_PAGE);
 }
 
 void QuickAccess::editQuickAccess()
