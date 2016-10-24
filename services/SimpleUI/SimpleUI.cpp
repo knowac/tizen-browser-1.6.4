@@ -214,13 +214,20 @@ std::string SimpleUI::preparePWA(const std::string& url)
 }
 #endif
 
-int SimpleUI::exec(const std::string& _url, const std::string& _caller)
+int SimpleUI::exec(const std::string& _url, const std::string& _caller, const std::string& _operation)
 {
-    BROWSER_LOGD("[%s] _url=%s, _caller=%s, initialised=%d", __func__, _url.c_str(), _caller.c_str(), m_initialised);
+    BROWSER_LOGD(
+        "[%s] _url=%s, _caller=%s, _operation=%s, initialised=%d",
+        __func__,
+        _url.c_str(),
+        _caller.c_str(),
+        _operation.c_str(),
+        m_initialised);
     std::string url = _url;
+    std::string operation = _operation;
     m_caller = _caller;
     m_alreadyOpenedExecURL = false;
-    m_functionViewPrepare = [url, this]() mutable {
+    m_functionViewPrepare = [url, operation, this]() mutable {
         if (!m_initialised) {
             if (m_window.get()) {
                 prepareServices();
@@ -253,7 +260,12 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller)
 
         if (!pwaUrl.empty() || (!url.empty() && !m_alreadyOpenedExecURL)) {
             BROWSER_LOGD("[%s]: open new tab", __func__);
-            auto taburl = pwaUrl.empty() ? url : pwaUrl;
+            std::string newUrl = url;
+            if (!operation.compare(APP_CONTROL_OPERATION_SEARCH)) {
+                newUrl = m_webPageUI->getURIEntry().rewriteURI(url);
+                popStackTo(m_webPageUI);
+            }
+            auto taburl = pwaUrl.empty() ? newUrl : pwaUrl;
 #if PWA
             // Allow for only one instance of PWA
             if (m_alreadyOpenedPWA)

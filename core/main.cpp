@@ -159,14 +159,14 @@ static void app_control(app_control_h app_control, void* app_data){
 
     if ((operation && !strcmp(operation, APP_CONTROL_OPERATION_SEARCH )) &&
     ((app_control_get_extra_data(app_control, "http://tizen.org/appcontrol/data/keyword", &search_keyword) == APP_CONTROL_ERROR_NONE) ||
-    (app_control_get_extra_data(app_control, APP_CONTROL_DATA_TEXT, &search_keyword) == APP_CONTROL_ERROR_NONE))) { 
+    (app_control_get_extra_data(app_control, APP_CONTROL_DATA_TEXT, &search_keyword) == APP_CONTROL_ERROR_NONE))) {
         BROWSER_LOGD("APP_CONTROL_OPERATION_SEARCH");
         if (search_keyword) {
             uri=std::string(search_keyword);
             free(search_keyword);
         }
     }
-
+    std::string oper(operation);
     BROWSER_LOGD("[%s] uri=%s", __func__, uri.c_str());
     free(request_uri);
     free(request_mime_type);
@@ -174,7 +174,7 @@ static void app_control(app_control_h app_control, void* app_data){
     free(operation);
 
     auto bd = static_cast<BrowserDataPtr*>(app_data);
-    (*bd)->exec(uri, caller);
+    (*bd)->exec(uri, caller, oper);
     evas_object_show((*bd)->getMainWindow().get());
     elm_win_activate((*bd)->getMainWindow().get());
 

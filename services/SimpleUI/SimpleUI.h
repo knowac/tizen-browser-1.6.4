@@ -85,8 +85,11 @@ class BROWSER_EXPORT SimpleUI : public AbstractMainWindow<Evas_Object>
 public:
     SimpleUI(/*Evas_Object *window*/);
     virtual ~SimpleUI();
-    int exec(const std::string& _url, const std::string& _caller) final override;
-    std::string getName() final override;
+    virtual int exec(
+        const std::string& _url,
+        const std::string& _caller,
+        const std::string& _operation) final override;
+    virtual std::string getName() final override;
     void suspend();
     void resume();
     void destroyUI();
