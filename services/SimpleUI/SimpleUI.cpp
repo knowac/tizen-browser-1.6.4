@@ -2034,7 +2034,8 @@ void SimpleUI::engineTabClosed(const basic_webengine::TabId& id)
     m_webPageUI->setTabsNumber(tabs);
     if (tabs == 0) {
         m_webPageUI->switchViewToQuickAccess(m_quickAccess->getContent());
-    }
+    } else
+        switchViewToWebPage();
 }
 
 void SimpleUI::searchWebPage(std::string &text, int flags)
