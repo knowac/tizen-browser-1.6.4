@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <Elementary.h>
 #include <boost/concept_check.hpp>
 #include <vector>
 #include <AbstractMainWindow.h>
@@ -188,6 +187,12 @@ void QuickAccess::createQuickAccessView(Evas_Object * parent)
     evas_object_smart_callback_add(m_quickAccessGengrid, "realized", _quickAccess_tile_realized, this);
 
     evas_object_show(m_quickAccessGengrid);
+}
+
+void QuickAccess::deleteQuickAccessSelectedItem(Elm_Widget_Item *item)
+{
+    elm_object_item_del(item);
+    elm_gengrid_realized_items_update(m_quickAccessGengrid);
 }
 
 Evas_Object* QuickAccess::createQuickAccessGengrid(Evas_Object *parent)
@@ -431,12 +436,15 @@ void QuickAccess::_grid_quickaccess_del(void* data, Evas_Object*)
 
 void QuickAccess::__quckAccess_del_clicked(void *data, Evas_Object */*obj*/, void *)
 {
-    BROWSER_LOGD("[%s:%d] part=%s", __PRETTY_FUNCTION__, __LINE__);
-    auto itemData = static_cast<QuickAccessItemData*>(data);
-    itemData->quickAccess->deleteQuickAccessItem(itemData->item);
-
-    elm_object_item_del(elm_gengrid_selected_item_get(itemData->quickAccess->m_quickAccessGengrid));
-    elm_gengrid_realized_items_update(itemData->quickAccess->m_quickAccessGengrid);
+    BROWSER_LOGD("[%s:%d]", __PRETTY_FUNCTION__, __LINE__);
+    if (data) {
+        auto itemData = static_cast<QuickAccessItemData*>(data);
+        itemData->quickAccess->deleteQuickAccessItem(itemData->item);
+        itemData->quickAccess->deleteQuickAccessSelectedItem(
+            elm_gengrid_selected_item_get(itemData->quickAccess->m_quickAccessGengrid));
+    } else {
+        BROWSER_LOGW("[%s] data = nullptr", __PRETTY_FUNCTION__);
+    }
 }
 
 char *QuickAccess::_grid_mostVisited_text_get(void *data, Evas_Object *, const char *part)

@@ -17,6 +17,7 @@
 #ifndef QUICKACCESS_H
 #define QUICKACCESS_H
 
+#include <Elementary.h>
 #include <Evas.h>
 #include <boost/signals2/signal.hpp>
 #include <cstdint>
@@ -113,6 +114,7 @@ private:
     void createQuickAccessLayout(Evas_Object *parent);
     void createMostVisitedView(Evas_Object *parent);
     void createQuickAccessView(Evas_Object *parent);
+    void deleteQuickAccessSelectedItem(Elm_Widget_Item *item);
 
     static Evas_Object * _grid_quickaccess_content_get(void *data, Evas_Object *obj, const char *part);
     static void _grid_quickaccess_del(void *data, Evas_Object *obj);
