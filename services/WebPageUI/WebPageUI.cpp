@@ -238,6 +238,9 @@ void WebPageUI::switchViewToWebPage(Evas_Object* content, const std::string uri,
     }
     setMainContent(content);
     elm_object_signal_emit(m_mainLayout, "shiftright_uri", "ui");
+#if DUMMY_BUTTON
+    elm_object_signal_emit(m_mainLayout, "show,dummy_button", "");
+#endif
     updateURIBar(uri, loading);
 }
 
@@ -258,6 +261,9 @@ void WebPageUI::switchViewToQuickAccess(Evas_Object* content)
     m_statesMgr->set(WPUState::QUICK_ACCESS);
     setMainContent(content);
     setQuickAccessView();
+#if DUMMY_BUTTON
+    elm_object_signal_emit(m_mainLayout, "hide,dummy_button", "");
+#endif
 }
 
 void WebPageUI::setMostVisitedSelectedItemsCountInEditMode(int count)

@@ -344,6 +344,10 @@ collections { base_scale: 2.6;
                     rel1 { relative: 0.0 0.0; to: "web_view"; }
                     rel2 { relative: 1.0 1.0; to: "web_view"; }
                 }
+                description { "hidden";
+                    inherit: "default";
+                    visible: 0;
+                }
             }
 #endif
             part { name: "progressbar_bg";
@@ -414,6 +418,18 @@ collections { base_scale: 2.6;
                     action: STATE_SET "default" 0.0;
                     target: "bottom_toolbar";
                 }
+#if DUMMY_BUTTON
+                program { name: "show,dummy_button";
+                    signal: "show,dummy_button";
+                    action: STATE_SET "default" 0.0;
+                    target: "web_view_dummy_button";
+                }
+                program { name: "hide,dummy_button";
+                    signal: "hide,dummy_button";
+                    action: STATE_SET "hidden" 0.0;
+                    target: "web_view_dummy_button";
+                }
+#endif
             }
 
             #include "WebPageUIUrlHistoryList.edc"
