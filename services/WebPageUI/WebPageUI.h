@@ -48,10 +48,15 @@ public:
 
 #if PWA
     typedef enum OrientationType {
-        portrait_primary = 0,
-        portrait_secondary,
-        landscape_primary,
-        landscape_secondary,
+        WebScreenOrientationLockDefault = 0, // Equivalent to unlock.
+        WebScreenOrientationLockPortraitPrimary,
+        WebScreenOrientationLockPortraitSecondary,
+        WebScreenOrientationLockLandscapePrimary,
+        WebScreenOrientationLockLandscapeSecondary,
+        WebScreenOrientationLockAny,
+        WebScreenOrientationLockLandscape,
+        WebScreenOrientationLockPortrait,
+        WebScreenOrientationLockNatural,
     } orientationType;
 
     typedef enum WebDisplayMode {

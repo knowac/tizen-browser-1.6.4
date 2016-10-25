@@ -871,7 +871,7 @@ void WebPageUI::setDisplayMode(WebPageUI::WebDisplayMode mode)
     if (mode == WebDisplayMode::WebDisplayModeFullscreen)
         elm_object_signal_emit(m_mainLayout, "webview_fullscreen", "ui");
     else if (mode == WebDisplayMode::WebDisplayModeStandalone)
-        BROWSER_LOGD("Not implemented");
+        elm_object_signal_emit(m_mainLayout, "webview_fullscreen", "ui");
     else if (mode == WebDisplayMode::WebDisplayModeMinimalUi)
         BROWSER_LOGD("Not implemented");
     else if (mode == WebDisplayMode::WebDisplayModeBrowser)

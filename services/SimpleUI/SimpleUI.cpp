@@ -204,9 +204,9 @@ std::string SimpleUI::preparePWA(const std::string& url)
             static_cast<WebPageUI::WebDisplayMode>(
                 m_pwa.getPWAinfo().displayMode));
 
-        if (m_pwa.getPWAinfo().orientation ==  WebPageUI::portrait_primary)
+        if (m_pwa.getPWAinfo().orientation ==  WebPageUI::WebScreenOrientationLockPortrait)
             rotationType(rotationLock::portrait);
-        else if (m_pwa.getPWAinfo().orientation == WebPageUI::landscape_primary)
+        else if (m_pwa.getPWAinfo().orientation == WebPageUI::WebScreenOrientationLockLandscape)
             rotationType(rotationLock::landscape);
         return startUrl;
     }
