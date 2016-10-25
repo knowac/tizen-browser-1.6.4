@@ -122,8 +122,7 @@ void WebView::init(bool desktopMode, TabOrigin origin)
 
     m_ewkContext = ewk_view_context_get(m_ewkView);
     if (m_ewkContext)
-        m_private ? ewk_cookie_manager_accept_policy_set(ewk_context_cookie_manager_get(m_ewkContext), EWK_COOKIE_ACCEPT_POLICY_NEVER) :
-                    ewk_cookie_manager_accept_policy_set(ewk_context_cookie_manager_get(m_ewkContext), EWK_COOKIE_ACCEPT_POLICY_ALWAYS);
+        ewk_cookie_manager_accept_policy_set(ewk_context_cookie_manager_get(m_ewkContext), EWK_COOKIE_ACCEPT_POLICY_ALWAYS);
 
     evas_object_data_set(m_ewkView, "_container", this);
     BROWSER_LOGD("[%s:%d] self=%p", __PRETTY_FUNCTION__, __LINE__, this);
