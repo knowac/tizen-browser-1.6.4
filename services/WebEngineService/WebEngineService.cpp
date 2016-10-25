@@ -519,6 +519,9 @@ TabId WebEngineService::addTab(
     WebViewPtr p = std::make_shared<WebView>(m_guiParent, newTabId, title, m_state == State::SECRET);
     p->init(desktopMode, origin);
 
+    if (m_state == State::SECRET)
+        initializeDownloadControl(p->getContext());
+
     m_stateStruct->tabs[newTabId] = p;
 
     setWebViewSettings(p);

@@ -219,6 +219,8 @@ public:
 
     TabOrigin getOrigin() { return m_origin; }
 
+    Ewk_Context* getContext() { return m_ewkContext; }
+
     /**
      * @brief Searches for word in the current page.
      *
