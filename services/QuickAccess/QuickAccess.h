@@ -104,6 +104,7 @@ private:
     Evas_Object* createQuickAccessGengrid(Evas_Object *parent);
     Evas_Object* createMostVisitedGengrid(Evas_Object *parent);
     void showScrollerPage(int page);
+    void setPageTitle();
 
     void addToQuickAccessTile();
     void setIndexPage(const void *page) const;
@@ -129,8 +130,6 @@ private:
     static void _check_state_changed(void *data, Evas_Object *obj, void *);
     static void setButtonColor(Evas_Object* button, int r, int g, int b, int a);
 
-    static void _mostVisited_clicked(void * data, Evas_Object * obj, void * event_info);
-    static void _quickAccess_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _addToQuickAccess_clicked(void * data, Evas_Object * obj, void * event_info);
     static void _horizontalScroller_scroll(void* data, Evas_Object* scroller, void* event_info);
 

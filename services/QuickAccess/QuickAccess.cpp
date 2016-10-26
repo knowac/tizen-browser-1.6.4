@@ -150,7 +150,8 @@ void QuickAccess::createQuickAccessLayout(Evas_Object* parent)
     elm_scroller_policy_set(m_horizontalScroller, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_OFF);
     elm_scroller_bounce_set(m_horizontalScroller, EINA_FALSE, EINA_FALSE);
     elm_object_part_content_set(m_layout, "view", m_horizontalScroller);
-    evas_object_smart_callback_add(m_horizontalScroller, "scroll", _horizontalScroller_scroll, this);
+    evas_object_smart_callback_add(m_horizontalScroller, "scroll,anim,stop",
+        _horizontalScroller_scroll, this);
 
     createBox(m_horizontalScroller);
 }
@@ -241,26 +242,6 @@ Evas_Object *QuickAccess::createMostVisitedGengrid(Evas_Object *parent)
     return mostVisitedGengrid;
 }
 
-void QuickAccess::_mostVisited_clicked(void * data, Evas_Object *, void *)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (data) {
-        auto self = reinterpret_cast<QuickAccess *>(data);
-        self->showMostVisited();
-        elm_scroller_page_show(self->m_horizontalScroller, MOST_VISITED_PAGE, 0);
-    }
-}
-
-void QuickAccess::_quickAccess_clicked(void * data, Evas_Object *, void *)
-{
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    if (data) {
-        auto self = reinterpret_cast<QuickAccess *>(data);
-        self->showQuickAccess();
-        elm_scroller_page_show(self->m_horizontalScroller, QUICKACCESS_PAGE, 0);
-    }
-}
-
 void QuickAccess::_addToQuickAccess_clicked(void * data, Evas_Object *, void *)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -270,17 +251,29 @@ void QuickAccess::_addToQuickAccess_clicked(void * data, Evas_Object *, void *)
     }
 }
 
+void QuickAccess::setPageTitle()
+{
+    BROWSER_LOGD("[%s:%d] currPage: %d", __PRETTY_FUNCTION__, __LINE__, m_currPage);
+    if (m_currPage == MOST_VISITED_PAGE) {
+        elm_object_translatable_part_text_set(m_layout, "screen_title", "Most visited websites");  //TODO: translate
+        setIndexPage(&MOST_VISITED_PAGE);
+    } else {
+        elm_object_translatable_part_text_set(m_layout, "screen_title", "Quick access");  //TODO: translate
+        setIndexPage(&QUICKACCESS_PAGE);
+    }
+}
+
 void QuickAccess::_horizontalScroller_scroll(void* data, Evas_Object* /*scroller*/, void* /*event_info*/)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     if (data) {
         auto self = static_cast<QuickAccess*>(data);
         int page_no;
-
         elm_scroller_current_page_get(self->m_horizontalScroller, &page_no, NULL);
-        if (self->m_currPage != page_no) {
-            self->showScrollerPage(page_no);
-        }
+        self->m_currPage = page_no;
+        self->setPageTitle();
+    } else {
+        BROWSER_LOGW("[%s:%d] data is null!", __PRETTY_FUNCTION__, __LINE__);
     }
 }
 
@@ -586,10 +579,7 @@ void QuickAccess::showMostVisited()
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
     m_currPage = QuickAccess::MOST_VISITED_PAGE;
-
-    elm_object_translatable_part_text_set(m_layout, "screen_title", "Most visited websites");  //TODO: translate
-    elm_scroller_page_show(m_horizontalScroller, QuickAccess::MOST_VISITED_PAGE, 0);
-    setIndexPage(&QuickAccess::MOST_VISITED_PAGE);
+    elm_scroller_page_show(m_horizontalScroller, MOST_VISITED_PAGE, 0);
 
     m_mv_delete_list.clear();
 }
@@ -604,10 +594,7 @@ void QuickAccess::showQuickAccess()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     m_currPage = QuickAccess::QUICKACCESS_PAGE;
-
-    elm_object_translatable_part_text_set(m_layout, "screen_title", "Quick access");  //TODO: translate
-    elm_scroller_page_show(m_horizontalScroller, QuickAccess::QUICKACCESS_PAGE, 0);
-    setIndexPage(&QuickAccess::QUICKACCESS_PAGE);
+    elm_scroller_page_show(m_horizontalScroller, QUICKACCESS_PAGE, 0);
 }
 
 void QuickAccess::editQuickAccess()
@@ -661,15 +648,16 @@ void QuickAccess::showScrollerPage(int page)
 
 void QuickAccess::showUI()
 {
-    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    BROWSER_LOGD("[%s:%d] currPage: %d", __PRETTY_FUNCTION__, __LINE__, m_currPage);
     getQuickAccessItems();
     getMostVisitedItems();
     elm_object_part_content_set(m_mostVisitedView, "elm.swallow.content", m_mostVisitedGengrid);
     elm_object_part_content_set(m_quickAccessView, "elm.swallow.content", m_quickAccessGengrid);
     evas_object_show(m_mostVisitedGengrid);
     evas_object_show(m_quickAccessGengrid);
-    showScrollerPage(m_currPage);
     orientationChanged();
+    showScrollerPage(m_currPage);
+    setPageTitle();
 }
 
 void QuickAccess::hideUI()
