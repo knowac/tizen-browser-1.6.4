@@ -71,6 +71,8 @@
 #include <functional>
 #include <future>
 
+#define CONNECT_COUNT 2
+
 namespace tizen_browser{
 namespace base_ui{
 
@@ -105,6 +107,7 @@ private:
     void prepareServices();
 #if PWA
     std::string preparePWA(const std::string& url);
+    void countCheckUrl();
 #endif
     void loadUIServices();
     void connectUISignals();
@@ -206,6 +209,10 @@ private:
     void onMenuButtonPressed();
     void handleConfirmationRequest(basic_webengine::WebConfirmationPtr webConfirmation);
     void setwvIMEStatus(bool status);
+#if PWA
+    void pwaPopupRequest();
+    void pwaPopupButtonClicked(const PopupButtons& button);
+#endif
 
     sharedAction m_showBookmarkManagerUI;
 

@@ -65,6 +65,9 @@ public:
     void cleanMostVisitedHistoryItems();
     std::shared_ptr<HistoryItemVector> getHistoryItemsByKeyword(const std::string & keyword, int maxItems);
     std::shared_ptr<HistoryItemVector> getHistoryItemsByURL(const std::string & url, int maxItems);
+#if PWA
+    int getHistoryCnt(const int& id);
+#endif
 
     /**
      * @brief Searches for history items matching given pattern.

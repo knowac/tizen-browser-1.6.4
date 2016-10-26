@@ -172,6 +172,7 @@ public:
     boost::signals2::signal<basic_webengine::State ()> getEngineState;
 #if PWA
     boost::signals2::signal<void ()> pwaRequestManifest;
+    boost::signals2::signal<void ()> getCountCheckSignal;
 #endif
 
 private:

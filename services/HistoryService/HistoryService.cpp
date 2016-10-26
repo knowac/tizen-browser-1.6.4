@@ -151,6 +151,18 @@ std::shared_ptr<HistoryItemVector> HistoryService::getHistoryOlder()
     return getHistoryItems(BP_HISTORY_DATE_OLDER);
 }
 
+#if PWA
+int HistoryService::getHistoryCnt(const int& id)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    int freq, retVal = 0;
+
+    if (!bp_history_adaptor_get_frequency(id, &freq))
+        retVal = freq;
+    return retVal;
+}
+#endif
+
 std::shared_ptr<HistoryItemVector> HistoryService::getMostVisitedHistoryItems()
 {
     std::shared_ptr<HistoryItemVector> ret_history_list(new HistoryItemVector);

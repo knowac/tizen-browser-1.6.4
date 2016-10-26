@@ -213,6 +213,10 @@ void WebPageUI::loadFinished()
 #if DUMMY_BUTTON
     elm_object_focus_set(m_dummy_button, EINA_TRUE);
 #endif
+
+#if PWA
+    getCountCheckSignal();
+#endif
 }
 
 void WebPageUI::setMainContent(Evas_Object* content)

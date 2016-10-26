@@ -284,6 +284,23 @@ int SimpleUI::exec(const std::string& _url, const std::string& _caller, const st
     return 0;
 }
 
+#if PWA
+void SimpleUI::countCheckUrl()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    int id, ret = 0;
+    id = m_historyService->getHistoryId(m_webEngine->getURI());
+
+    if (id)
+        ret = m_historyService->getHistoryCnt(id);
+
+    if (ret == CONNECT_COUNT)
+        pwaPopupRequest();
+    else
+        BROWSER_LOGD("[%s:%d] url count : %d", __PRETTY_FUNCTION__, __LINE__, ret);
+}
+#endif
+
 void SimpleUI::faviconChanged(tools::BrowserImagePtr favicon)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -455,10 +472,10 @@ void SimpleUI::connectWebPageSignals()
     m_webPageUI->addToQuickAccess.connect(boost::bind(&SimpleUI::addQuickAccessItem, this, _1, _2));
     m_webPageUI->getTitle.connect(boost::bind(&basic_webengine::AbstractWebEngine::getTitle, m_webEngine.get()));
     m_webPageUI->getEngineState.connect(boost::bind(&basic_webengine::AbstractWebEngine::getState, m_webEngine.get()));
-    // WPA
     m_webPageUI->requestCurrentPageForWebPageUI.connect(boost::bind(&SimpleUI::requestSettingsCurrentPage, this));
 #if PWA
     m_webPageUI->pwaRequestManifest.connect(boost::bind(&basic_webengine::AbstractWebEngine::requestManifest, m_webEngine.get()));
+    m_webPageUI->getCountCheckSignal.connect(boost::bind(&SimpleUI::countCheckUrl, this));
 #endif
     m_webPageUI->isMostVisited.connect(boost::bind(&QuickAccess::isMostVisitedActive, m_quickAccess.get()));
 }
@@ -1575,6 +1592,38 @@ int SimpleUI::tabsCount()
 {
     return m_webEngine->tabsCount();
 }
+
+#if PWA
+void SimpleUI::pwaPopupRequest()
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    TextPopup* popup = TextPopup::createPopup(m_viewManager.getContent());
+    popup->addButton(OK);
+    popup->addButton(CANCEL);
+    popup->buttonClicked.connect(boost::bind(&SimpleUI::pwaPopupButtonClicked, this, _1));
+    popup->setTitle(m_webEngine->getTitle());
+    popup->setMessage(_("IDS_BR_OPT_ADD_TO_HOME_SCREEN_ABB"));
+    popup->popupShown.connect(boost::bind(&SimpleUI::showPopup, this, _1));
+    popup->popupDismissed.connect(boost::bind(&SimpleUI::dismissPopup, this, _1));
+    popup->show();
+}
+
+void SimpleUI::pwaPopupButtonClicked(const PopupButtons& button)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    switch (button) {
+        case OK:
+            BROWSER_LOGD("[%s:%d] pwaPopup create !", __PRETTY_FUNCTION__, __LINE__);
+            m_webEngine->requestManifest();
+            break;
+        case CANCEL:
+            BROWSER_LOGD("[%s:%d] pwaPopup deny !", __PRETTY_FUNCTION__, __LINE__);
+            break;
+        default:
+            BROWSER_LOGW("[%s:%d] Unknown button type!", __PRETTY_FUNCTION__, __LINE__);
+    }
+}
+#endif
 
 void SimpleUI::handleConfirmationRequest(basic_webengine::WebConfirmationPtr webConfirmation)
 {
