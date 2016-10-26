@@ -53,6 +53,7 @@
 #include "Tools/GeneralTools.h"
 #include "Tools/SnapshotType.h"
 #include "SettingsPrettySignalConnector.h"
+#include "net_connection.h"
 
 namespace tizen_browser{
 namespace base_ui{
@@ -1408,7 +1409,29 @@ void SimpleUI::downloadStarted(int status)
             popup->show(_("IDS_BR_HEADER_UNABLE_TO_DOWNLOAD_ABB"), false);
             break;
         case DOWNLOAD_STARTING_DOWNLOAD:
-            popup->show(_("IDS_BR_POP_STARTING_DOWNLOAD_ING"), false);
+        	connection_type_e connection_type;
+        	connection_h handle;
+
+        	if (connection_create(&handle) < 0) {
+        		BROWSER_LOGD("Fail to create network handle");
+        	}
+        	if (connection_get_type(handle, &connection_type) < 0) {
+        		BROWSER_LOGD("Fail to get download type");
+        		if (connection_destroy(handle) < 0) {
+        			BROWSER_LOGD("Fail to get download type");
+        		}
+        	}
+
+        	if (connection_type == CONNECTION_TYPE_BT){
+                popup->show(_("IDS_BR_POP_STARTING_DOWNLOAD_ING"), _("Unable to use tethering."), false);
+        	}
+        	else{
+        		popup->show(_("IDS_BR_POP_STARTING_DOWNLOAD_ING"), false);
+        	}
+
+        	if (connection_destroy(handle) < 0) {
+        		BROWSER_LOGD("Fail to destroy network handle");
+        	}
             break;
         case DOWNLOAD_SAVEDPAGES:
             popup->show(_("IDS_BR_OPT_SAVEDPAGES"), false);

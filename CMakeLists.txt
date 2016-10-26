@@ -91,6 +91,7 @@ if(TIZEN_BUILD)
         notification
         appsvc
         shortcut
+        capi-network-connection
     )
     endif (${PROFILE} MATCHES "mobile")
 
