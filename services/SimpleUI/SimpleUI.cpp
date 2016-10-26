@@ -1045,7 +1045,7 @@ void SimpleUI::addQuickAccessItem(const string &urlArg, const string &titleArg)
     std::string url = urlArg;
     std::string title = titleArg;
 
-    if (url.compare(0, tools::PROTOCOL_HTTP.length(), tools::PROTOCOL_HTTP))
+    if (!url.compare(0, tools::PROTOCOL_HTTP.length(), tools::PROTOCOL_HTTP))
         url = std::string(tools::PROTOCOL_HTTP) + url;
 
     if (titleArg.empty()) {
