@@ -114,15 +114,37 @@ bool SettingsAdvanced::populateList(Evas_Object* genlist)
     m_naviframe->setTitle(_(Translations::SettingsAdvancedTitle.c_str()));
 
     m_genlistItems[SettingsAdvancedOptions::ENABLE_JS] =
-        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS], _enable_js_cb);
+        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::ENABLE_JS], _check_cb);
     m_genlistItems[SettingsAdvancedOptions::BLOCK_POPUPS] =
-        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS], _block_popups_cb);
+        appendGenlist(genlist, m_setting_check_on_of_item_class, &m_buttonsMap[SettingsAdvancedOptions::BLOCK_POPUPS], _check_cb);
     m_genlistItems[SettingsAdvancedOptions::SAVE_CONTENT] =
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsAdvancedOptions::SAVE_CONTENT], _save_content_cb);
-
+    evas_object_smart_callback_add(genlist, "realized", _realized_cb, this);
     changeGenlistStorage();
 
     return true;
+}
+
+void SettingsAdvanced::_realized_cb(void* data, Evas_Object*, void* event_info)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto ev = static_cast<Elm_Object_Item*>(event_info);
+    auto item = static_cast<ItemData*>(elm_object_item_data_get(ev));
+    auto sp = static_cast<SettingsAdvanced*>(data);
+    auto check = sp->m_checkboxes[item->id];
+    switch (item->id) {
+        case SettingsAdvancedOptions::ENABLE_JS:
+            evas_object_smart_callback_del(check, "changed", _enable_js_cb);
+            evas_object_smart_callback_add(check, "changed", _enable_js_cb, nullptr);
+            break;
+        case SettingsAdvancedOptions::BLOCK_POPUPS:
+            evas_object_smart_callback_del(check, "changed", _block_popups_cb);
+            evas_object_smart_callback_add(check, "changed", _block_popups_cb, nullptr);
+            break;
+        default:
+            break;
+    }
 }
 
 Evas_Object* SettingsAdvanced::createOnOffCheckBox(Evas_Object* obj, ItemData* itd)
@@ -131,7 +153,8 @@ Evas_Object* SettingsAdvanced::createOnOffCheckBox(Evas_Object* obj, ItemData* i
     auto check = elm_check_add(obj);
     elm_object_style_set(check, "on&off");
     elm_check_state_set(check, getOriginalState(itd->id));
-    evas_object_smart_callback_add(check, "changed", grid_item_check_changed, itd);
+    evas_object_propagate_events_set(check, EINA_FALSE);
+
     return check;
 }
 
@@ -155,7 +178,7 @@ Eina_Bool SettingsAdvanced::getOriginalState(int id)
     return (sig && *sig) ? EINA_TRUE : EINA_FALSE;
 }
 
-void SettingsAdvanced::_enable_js_cb(void *, Evas_Object* obj, void*)
+void SettingsAdvanced::_check_cb(void*, Evas_Object* obj, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     auto el = elm_genlist_selected_item_get(obj);
@@ -163,6 +186,14 @@ void SettingsAdvanced::_enable_js_cb(void *, Evas_Object* obj, void*)
     auto value = !elm_check_state_get(check);
 
     elm_check_state_set(check, value);
+    evas_object_smart_callback_call(check, "changed", nullptr);
+}
+
+void SettingsAdvanced::_enable_js_cb(void *, Evas_Object* obj, void*)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+    auto value = elm_check_state_get(obj);
+
     SPSC.setWebEngineSettingsParam(
         basic_webengine::WebEngineSettings::ENABLE_JAVASCRIPT,
         static_cast<bool>(value));
@@ -171,11 +202,8 @@ void SettingsAdvanced::_enable_js_cb(void *, Evas_Object* obj, void*)
 void SettingsAdvanced::_block_popups_cb(void *, Evas_Object* obj, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
-    auto el = elm_genlist_selected_item_get(obj);
-    auto check = elm_object_item_part_content_get(el, "elm.swallow.end");
-    auto value = !elm_check_state_get(check);
+    auto value = elm_check_state_get(obj);
 
-    elm_check_state_set(check, value);
     SPSC.setWebEngineSettingsParam(
         basic_webengine::WebEngineSettings::SCRIPTS_CAN_OPEN_PAGES,
         static_cast<bool>(value));

@@ -114,16 +114,36 @@ bool SettingsMain::populateList(Evas_Object* genlist)
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::ADVANCED], _advanced_cb);
     m_genlistItems[SettingsMainOptions::USER_AGENT] =
         appendGenlist(genlist, m_setting_item_class, &m_buttonsMap[SettingsMainOptions::USER_AGENT], _user_agent_cb);
+    evas_object_smart_callback_add(genlist, "realized", _realized_cb, this);
+
     return true;
 }
 
-Evas_Object* SettingsMain::createOnOffCheckBox(Evas_Object* obj, ItemData* itd)
+void SettingsMain::_realized_cb(void* data, Evas_Object*, void* event_info)
+{
+    BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
+    auto ev = static_cast<Elm_Object_Item*>(event_info);
+    auto item = static_cast<ItemData*>(elm_object_item_data_get(ev));
+    auto sp = static_cast<SettingsMain*>(data);
+    auto check = sp->m_checkboxes[item->id];
+    switch (item->id) {
+        case SettingsMainOptions::ZOOM:
+            evas_object_smart_callback_del(check, "changed", grid_item_check_changed);
+            evas_object_smart_callback_add(check, "changed", grid_item_check_changed, nullptr);
+            break;
+        default:
+            break;
+    }
+}
+
+Evas_Object* SettingsMain::createOnOffCheckBox(Evas_Object* obj, ItemData*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
     auto check = elm_check_add(obj);
     elm_object_style_set(check, "on&off");
     elm_check_state_set(check, getOriginalZoomState());
-    evas_object_smart_callback_add(check, "changed", grid_item_check_changed, itd);
+    evas_object_propagate_events_set(check, EINA_FALSE);
     return check;
 }
 
@@ -162,14 +182,13 @@ void SettingsMain::_search_engine_cb(void*, Evas_Object*, void*)
 void SettingsMain::_zoom_cb(void *, Evas_Object* obj, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
+
     auto el = elm_genlist_selected_item_get(obj);
     auto check = elm_object_item_part_content_get(el, "elm.swallow.end");
     auto value = !elm_check_state_get(check);
 
     elm_check_state_set(check, value);
-    SPSC.setWebEngineSettingsParam(
-        basic_webengine::WebEngineSettings::PAGE_OVERVIEW,
-        static_cast<bool>(value));
+    evas_object_smart_callback_call(check, "changed", nullptr);
 }
 
 void SettingsMain::_advanced_cb(void*, Evas_Object*, void*)
@@ -200,9 +219,8 @@ void SettingsMain::grid_item_check_changed(void*, Evas_Object* obj, void*)
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
 
-    auto value = !elm_check_state_get(obj);
+    auto value = elm_check_state_get(obj);
 
-    elm_check_state_set(obj, value);
     SPSC.setWebEngineSettingsParam(
         basic_webengine::WebEngineSettings::PAGE_OVERVIEW,
         static_cast<bool>(value));

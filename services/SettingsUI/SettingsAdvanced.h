@@ -53,11 +53,13 @@ class SettingsAdvanced
 public:
     SettingsAdvanced(Evas_Object* parent);
     virtual ~SettingsAdvanced();
-    virtual bool populateList(Evas_Object* genlist) override;
-    virtual void updateButtonMap() override;
-    Evas_Object* createOnOffCheckBox(Evas_Object* obj, ItemData*);
+    bool populateList(Evas_Object* genlist) override;
+    void updateButtonMap() override;
+    Evas_Object* createOnOffCheckBox(Evas_Object* obj, ItemData*) override;
     Eina_Bool getOriginalState(int id);
     void changeGenlistStorage();
+    static void _realized_cb(void* data, Evas_Object*, void* event_info);
+    static void _check_cb(void* data, Evas_Object* obj, void* event_info);
     static void _enable_js_cb(void *data, Evas_Object*obj , void* event_info);
     static void _block_popups_cb(void *data, Evas_Object*obj , void* event_info);
     static void _save_content_cb(void *data, Evas_Object*obj , void* event_info);

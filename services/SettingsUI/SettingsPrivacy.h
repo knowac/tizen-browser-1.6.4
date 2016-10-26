@@ -45,11 +45,13 @@ public:
     SettingsPrivacy(){};
     SettingsPrivacy(Evas_Object* parent);
     virtual ~SettingsPrivacy();
-    virtual bool populateList(Evas_Object* genlist);
-    virtual void updateButtonMap();
+    bool populateList(Evas_Object* genlist) override;
+    void updateButtonMap() override;
     static void _cookies_cb(void *data, Evas_Object*obj , void* event_info);
     static void _signin_cb(void *data, Evas_Object*obj , void* event_info);
     static void _del_per_data_cb(void *data, Evas_Object*obj , void* event_info);
+    static void _realized_cb(void* data, Evas_Object* obj, void* event_info);
+    static void _check_cb(void* data, Evas_Object* obj, void* event_info);
 };
 
 }
