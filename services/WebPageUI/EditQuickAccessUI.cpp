@@ -63,8 +63,7 @@ void EditQuickAccessUI::showUI()
             BROWSER_LOGW("Missing signal value");
         }
     } else if (m_editState == QuickAccessState::DeleteMostVisited) {
-        //TODO: add translation IDS_BR_HEADER_SELECT_ITEMS_ABB2
-        m_naviframe->setTitle("Select items");
+        m_naviframe->setTitle(_("IDS_BR_HEADER_SELECT_ITEMS_ABB2"));
         m_naviframe->setRightButtonText(_("IDS_BR_SK_DELETE_ABB"));
         m_naviframe->setRightButtonEnabled(false);
         auto signal = requestMostVisitedGengrid();
@@ -121,8 +120,7 @@ void EditQuickAccessUI::setMVSelectedItems(int count)
     if (count)
         m_naviframe->setTitle((boost::format(_("IDS_BR_HEADER_PD_SELECTED_ABB")) % count).str());
     else
-        //TODO: Add translation
-        m_naviframe->setTitle("Select items");
+        m_naviframe->setTitle(_("IDS_BR_HEADER_SELECT_ITEMS_ABB2"));
     m_naviframe->setRightButtonEnabled(count);
 }
 

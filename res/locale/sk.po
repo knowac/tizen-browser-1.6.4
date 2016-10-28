@@ -2026,6 +2026,12 @@ msgstr "Vypnúť Tajný režim"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Zapnúť Tajný režim"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Zobraziť heslo"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Zadajte aktuálne heslo pre Tajný režim."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Zabezpečenie pre Tajný režim"
 
@@ -2142,4 +2148,31 @@ msgstr "História"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Záložky"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Uložiť obsah do"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Vyberte položky"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Heslo musí byť zložené z aspoň %d znakov vrátane aspoň 1 písmena."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Zadali ste nesprávne heslo. Skúste to znova."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Žiadne karty"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Zmeniť heslo"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Webové stránky zobrazené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať v histórii prehliadača ani v histórii vyhľadávania.\n\nZáložky a webové stránky uložené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať.\n\nSvoje údaje v aplikácii Tajný režim môžete tiež chrániť heslom."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Webové stránky zobrazené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať v histórii prehliadača ani v histórii vyhľadávania.\n\nZáložky a webové stránky uložené pri zapnutej funkcii Tajný režim sa po jej vypnutí nebudú zobrazovať."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Hotovo"
 

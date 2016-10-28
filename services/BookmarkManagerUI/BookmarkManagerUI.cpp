@@ -919,8 +919,7 @@ void BookmarkManagerUI::updateDeleteTopContent()
     if (m_selected_count)
         m_naviframe->setTitle((boost::format(_("IDS_BR_HEADER_PD_SELECTED_ABB")) % m_selected_count).str());
     else
-        //TODO: Add translation
-        m_naviframe->setTitle("Select items");
+        m_naviframe->setTitle(_("IDS_BR_HEADER_SELECT_ITEMS_ABB2"));
     m_naviframe->setRightButtonEnabled(m_selected_count);
 }
 

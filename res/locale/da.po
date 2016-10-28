@@ -2026,6 +2026,12 @@ msgstr "Deaktiver Hemmelig tilstand"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Aktiver Hemmelig tilstand"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Vis adgangskode"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Indtast din nuværende adgangskode til Hemmelig tilstand."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Hemmelig tilstand-sikkerhed"
 
@@ -2142,4 +2148,31 @@ msgstr "Oversigt"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Bogmærker"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Gem indhold i"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Vælg elementer"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Din adgangskode skal indeholde mindst %d tegn, og heraf skal der være mindst 1 bogstav."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Der er indtastet en forkert adgangskode. Prøv igen."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Ingen faner"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Skift adgangskode"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Websider, du har set, mens Hemmelig tilstand har været aktiveret, vises ikke i din browser- eller søgeoversigt, når Hemmelig tilstand er deaktiveret.\n\nBogmærker og websider, du gemmer, mens Hemmelig tilstand er aktiveret, vises ikke, når tilstanden er deaktiveret.\n\nDu kan også beskytte dine Hemmelig tilstand-data med en adgangskode."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Websider, du har set, mens Hemmelig tilstand har været aktiveret, vises ikke i din browser- eller søgeoversigt, når Hemmelig tilstand er deaktiveret.\n\nBogmærker og websider, du gemmer, mens Hemmelig tilstand er aktiveret, vises ikke, når tilstanden er deaktiveret."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Udført"
 

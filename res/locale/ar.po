@@ -2026,6 +2026,12 @@ msgstr "إيقاف تشغيل الوضع السري"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "تشغيل الوضع السري"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "إظهار كلمة المرور"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "أدخل كلمة مرور الوضع السري الحالية."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "حماية الوضع السري"
 
@@ -2142,4 +2148,31 @@ msgstr "المحفوظات"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "الإشارات المرجعية"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "حفظ المحتويات في"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "تحديد عناصر"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على %d من الرموز على الأقل، على أن تتضمن حرفاً واحداً على الأقل."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "تم إدخال كلمة مرور غير صحيحة. حاول مرة أخرى."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "لا توجد علامات تبويب"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "تغيير كلمة المرور"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "لن تظهر أي صفحات ويب تم عرضها عندما كان الوضع السري قيد التفعيل، في متصفّحك أو محفوظات البحث، عندما يكون هذا الوضع غير مفعّل.\n\nولن يتم عرض أي إشارات مرجعية وصفحات ويب تم حفظها عندما كان الوضع السري قيد التفعيل، في حال كان هذا الأخير غير مفعّل.\n\nيمكنك أيضاً حماية بيانات الوضع السري بكلمة مرور."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "لن تظهر أي صفحات ويب تم عرضها عندما كان الوضع السري قيد التفعيل، في متصفّحك أو محفوظات البحث، عندما يكون هذا الوضع غير مفعّل.\n\nولن يتم عرض أي إشارات مرجعية أو صفحات ويب تم حفظها عندما كان الوضع السري قيد التفعيل، في حال كان هذا الأخير غير مفعّل."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "تم"
 

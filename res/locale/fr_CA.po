@@ -2026,6 +2026,12 @@ msgstr "Désactiver le mode Secret"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Activer le mode Secret"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Afficher le mot de passe"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Entrez votre mot de passe actuel du mode Secret."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Sécurité du mode Secret"
 
@@ -2142,4 +2148,31 @@ msgstr "Historique"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Favoris"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Enregistrement contenu dans"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Sélectionner des éléments"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Votre mot de passe doit contenir au moins %d caractères, parmi lesquels au moins 1 lettre."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Un mot de passe erroné a été saisi. Réessayez."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Aucun onglet"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Modification du mot de passe"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Les pages Web affichées pendant que le mode Secret est activé ne s'afficheront pas dans votre navigateur ou votre historique de recherche lorsque ce mode sera désactivé.\n\nLes favoris et les pages Web enregistrés pendant que le mode Secret est activé ne s'afficheront pas lorsque ce mode sera désactivé.\n\nVous pouvez également protéger vos données en mode Secret avec un mot de passe."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Les pages Web affichées pendant que le mode Secret est activé ne s'afficheront pas dans votre navigateur ou votre historique de recherche lorsque ce mode sera désactivé.\n\nLes favoris et les pages Web enregistrés pendant que le mode Secret est activé ne s'afficheront pas lorsque ce mode sera désactivé."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Terminé"
 

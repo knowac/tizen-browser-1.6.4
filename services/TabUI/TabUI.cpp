@@ -133,7 +133,7 @@ void TabUI::createTabUILayout()
 
 void TabUI::createTopContent()
 {
-    m_naviframe->setTitle("Tabs"); //TODO: _("IDS_BR_HEADER_TABS_ABB2") when it works
+    m_naviframe->setTitle(_("IDS_BR_SK_TABS"));
     m_naviframe->addPrevButton(_close_clicked, this);
     m_naviframe->setPrevButtonVisible(true);
 }
@@ -151,8 +151,7 @@ void TabUI::createBottomContent()
     //TODO: Missing translation
     m_naviframe->addButtonToBottomBar("Enable Secret", _left_button_clicked, this);
     m_naviframe->setEnableButtonInBottomBar(0, true);
-    //TODO: _("IDS_BR_OPT_NEW_TAB") when it works
-    m_naviframe->addButtonToBottomBar("New tab", _right_button_clicked, this);
+    m_naviframe->addButtonToBottomBar(_("IDS_BR_BUTTON_NEW_TAB_ABB2"), _right_button_clicked, this);
     m_naviframe->setEnableButtonInBottomBar(1, true);
 }
 
@@ -167,7 +166,7 @@ void TabUI::createEmptyLayout()
 
     //TODO: Add translations
     if (m_state != State::PASSWORD_DECISION)
-        elm_object_translatable_part_text_set(m_empty_layout, "elm.text", "No tabs");
+        elm_object_translatable_part_text_set(m_empty_layout, "elm.text", _("IDS_BR_BODY_NO_TABS"));
     //TODO: _("IDS_BR_BODY_AFTER_YOU_VIEW_WEBPAGES_THEY_WILL_BE_SHOWN_HERE") when it works
     if (m_state == State::SECRET || m_state == State::PASSWORD_DECISION)
         elm_object_translatable_part_text_set(m_empty_layout, "elm.help.text",
@@ -177,7 +176,7 @@ void TabUI::createEmptyLayout()
             "is enabled will not be shown while it is disabled.");
     else
         elm_object_translatable_part_text_set(m_empty_layout, "elm.help.text",
-            "After you view webpages, they will be shown here.");
+            _("IDS_BR_BODY_AFTER_YOU_VIEW_WEBPAGES_THEY_WILL_BE_SHOWN_HERE"));
 
     elm_layout_signal_emit(m_empty_layout, "text,disabled", "");
     elm_layout_signal_emit(m_empty_layout, "align.center", "elm");
@@ -255,7 +254,7 @@ void TabUI::showContextMenu()
     if (window) {
         createContextMenu(*window);
 
-        elm_ctxpopup_item_append(m_ctxpopup, "Secret mode security", nullptr, _cm_secret_clicked, this);
+        elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"), nullptr, _cm_secret_clicked, this);
         if (elm_gengrid_items_count(m_gengrid) != 0)
             elm_ctxpopup_item_append(m_ctxpopup, _("IDS_BR_OPT_CLOSE_ALL"), nullptr, _cm_close_clicked, this);
         alignContextMenu(*window);
@@ -438,7 +437,7 @@ void TabUI::setStateButtons()
             break;
         case State::SECRET:
             m_naviframe->setBottomButtonText(0, "Disable Secret");
-            m_naviframe->setBottomButtonText(1, "New tab");
+            m_naviframe->setBottomButtonText(1, _("IDS_BR_BUTTON_NEW_TAB_ABB2"));
             break;
         case State::PASSWORD_DECISION:
             m_naviframe->setBottomButtonText(0, "Do not use password");

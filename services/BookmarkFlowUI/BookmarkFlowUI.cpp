@@ -201,7 +201,7 @@ void BookmarkFlowUI::createTopContent()
     m_cancel_button = elm_button_add(m_layout);
     elm_object_part_content_set(m_layout, "title_left_btn", m_cancel_button);
     elm_object_style_set(m_cancel_button, "naviframe/title_left");
-    elm_object_text_set(m_cancel_button, _("IDS_TPLATFORM_ACBUTTON_CANCEL_ABB"));
+    elm_object_text_set(m_cancel_button, _("IDS_BR_SK_CANCEL"));
     evas_object_smart_callback_add(m_cancel_button, "clicked", _cancel_clicked, this);
     evas_object_size_hint_weight_set(m_cancel_button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_cancel_button, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -211,7 +211,7 @@ void BookmarkFlowUI::createTopContent()
     m_done_button = elm_button_add(m_layout);
     elm_object_part_content_set(m_layout, "title_right_btn", m_done_button);
     elm_object_style_set(m_done_button, "naviframe/title_right");
-    elm_object_text_set(m_done_button, _("IDS_TPLATFORM_ACBUTTON_DONE_ABB"));
+    elm_object_text_set(m_done_button, _("IDS_BR_BUTTON2_DONE"));
     evas_object_smart_callback_add(m_done_button, "clicked", _done_clicked, this);
     evas_object_size_hint_weight_set(m_done_button, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_done_button, EVAS_HINT_FILL, EVAS_HINT_FILL);

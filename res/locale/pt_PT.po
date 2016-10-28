@@ -2026,6 +2026,12 @@ msgstr "Desligar Modo secreto"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Ligar Modo secreto"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Mostrar palavra-passe"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Introduza a sua palavra-passe actual do Modo secreto."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Segurança do Modo secreto"
 
@@ -2142,4 +2148,31 @@ msgstr "Histórico"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Favoritos"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Guardar conteúdo em"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Seleccionar itens"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "A sua palavra-passe tem de ter pelo menos %d caracteres, incluindo pelo menos 1 letra."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Foi introduzida uma palavra-passe incorrecta. Tente novamente."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Sem separadores"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Alterar palavra-passe"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "As páginas Web visualizadas quando o Modo secreto está activado não serão mostradas no seu browser ou histórico de procuras quando o Modo secreto está desactivado.\n\nNenhum dos favoritos e das páginas Web guardados quando o Modo secreto está activado será mostrado quando este está desactivado.\n\nTambém pode proteger os seus dados do Modo secreto com uma palavra-passe."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "As páginas Web visualizadas quando o Modo secreto está activado não serão mostradas no seu browser ou histórico de procuras quando o Modo secreto está desactivado.\n\nNenhum dos favoritos e das páginas Web guardados quando o Modo secreto está activado será mostrado quando este está desactivado."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Concluir"
 

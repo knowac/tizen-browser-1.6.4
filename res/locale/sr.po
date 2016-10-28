@@ -2026,6 +2026,12 @@ msgstr "Isključi Tajni režim"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Uključi Tajni režim"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Prikaži lozinku"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Unesite svoju trenutnu lozinku za Tajni režim."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Zaštita Tajnog režima"
 
@@ -2142,4 +2148,31 @@ msgstr "Istorija"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Obeleživači"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Sačuvajte sadržaj u"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Izaberi stavke"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Lozinka mora da sadrži najmanje %d karaktera i barem 1 slovo."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Uneo/la si netačnu lozinku. Pokušaj ponovo."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Nema kartica"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Promeni lozinku"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Sve veb stranice koje ste prikazivali dok je Tajni režim bio omogućen neće se pojavljivati u pretraživaču niti u istoriji pretrage dok je Tajni režim onemogućen.\n\nSvi obeleživači i sve veb stranice koje ste sačuvali dok je Tajni režim bio omogućen neće se prikazivati dok je on onemogućen.\n\nMožete da zaštitite podatke Tajnog režima i pomoću lozinke."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Sve veb stranice koje ste prikazivali dok je Tajni režim bio omogućen neće se pojavljivati u pretraživaču niti u istoriji pretrage dok je Tajni režim onemogućen.\n\nSvi obeleživači i sve veb stranice koje ste sačuvali dok je Tajni režim bio omogućen neće se prikazivati dok je on onemogućen."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Kraj"
 

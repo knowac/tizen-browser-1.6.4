@@ -717,7 +717,7 @@ void WebPageUI::createActions()
     m_forward = sharedAction(new Action(_("IDS_BR_SK_NEXT")));
     m_forward->setIcon("toolbar_next");
 
-    m_addTab = sharedAction(new Action("New tab"));
+    m_addTab = sharedAction(new Action(_("IDS_BR_BUTTON_NEW_TAB_ABB2")));
     m_addTab->setIcon("add_tab");
 
     m_homePage = sharedAction(new Action("Home"));

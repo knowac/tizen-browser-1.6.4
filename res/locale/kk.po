@@ -2026,6 +2026,12 @@ msgstr "Құпия режимді өшіру"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Құпия режимді қосу"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Құпиясөзді көрсету"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Ағымдағы құпия режимі құпиясөзін енгізіңіз."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Құпия режимінің қауіпсіздігі"
 
@@ -2142,4 +2148,31 @@ msgstr "Журнал"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Бетбелгілер"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Мазмұнды сақтау орны"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Элементтер таңдау"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Құпиясөз кем дегенде %d таңбадан тұрып, кем дегенде құрамында 1 әріп болуы керек."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Қате құпия сөз енгізілді. Әрекетті қайталап көріңіз."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Жиекбелгілер жоқ"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Құпиясөзді өзгерту"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Құпия режим қосулы кезде кірген кез келген веб-беттер “Құпия” режим өшірілгенде браузер немесе іздеу журналында пайда болмайды.\n\nҚұпия режим қосулы кезде сақталған кез келген бетбелгілер мен веб-беттер режим өшірілгенде көрсетілмейді.\n\nСондай-ақ, “Құпия” режим деректерін құпиясөз арқылы қорғай аласыз."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Құпия режим қосулы кезде кірген кез келген веб-беттер “Құпия” режим өшірілгенде браузер немесе іздеу журналында көрсетілмейді.\n\nҚұпия режим қосулы кезде сақталған кез келген бетбелгілер мен веб-беттер режим өшірілгенде көрсетілмейді."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Дайын"
 

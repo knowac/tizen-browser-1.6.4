@@ -2026,6 +2026,12 @@ msgstr "Gizli rejimi söndür"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Gizli rejimi yandır"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Parolu göstər"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Cari gizli rejim parolunu daxil et."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Gizli rejimin təhlükəsizliyi"
 
@@ -2142,4 +2148,31 @@ msgstr "Tarixçə"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Əlfəcinlər"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Məzmunu saxla"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Elementləri seç"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Sizin parolunuz ən azı 1 hərf olan ən az %d simvoldan ibarət olmalıdır."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Yanlış parol daxil edilmişdir. Yenidən cəhd edin."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Tab yoxdur"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Parolu dəyiş"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Gizli rejim aktiv olan zaman daxil olunan bütün vebsəhifələr Gizli rejim qeyri-aktiv olduqda brauzer və ya axtarış tarixçəsində peyda olmayacaq.\n\nGizli rejim aktiv olan zaman saxlanan bütün əlfəcinlər və vebsəhifələr o, qeyri-aktiv olanda görünməyəcək.\n\nSiz eyni zamanda Gizli rejim məlumatını parolla qoruya bilərsiniz."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Gizli rejim aktiv olan zaman daxil olunan bütün vebsəhifələr Gizli rejim qeyri-aktiv olduqda brauzer və ya axtarış tarixçəsində peyda olmayacaq.\n\nGizli rejim aktiv olan zaman saxlanan bütün əlfəcinlər və vebsəhifələr o, qeyri-aktiv olanda görünməyəcək."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Hazırdır"
 

@@ -245,7 +245,7 @@ void PasswordUI::changeState(PasswordState state)
         elm_genlist_item_append(m_genlist, m_checkbox_item_class, checkboxData.get(), nullptr,
             ELM_GENLIST_ITEM_NONE, _show_password_clicked, checkboxData.get());
     } else {
-        m_naviframe->setTitle("Secret mode security");
+        m_naviframe->setTitle(_("IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"));
         //Add UsePassword check_on_off
         auto checkOnOffData = std::make_shared<PasswordUIData>();
         m_genlistItemData.push_back(checkOnOffData);

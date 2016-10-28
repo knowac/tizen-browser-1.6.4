@@ -2026,6 +2026,12 @@ msgstr "Wyłącz tryb chroniony"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Włącz tryb chroniony"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Pokaż hasło"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Wprowadź bieżące hasło trybu chronionego."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Bezpieczeństwo tr. chronionego"
 
@@ -2142,4 +2148,31 @@ msgstr "Historia"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Zakładki"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Zapisywanie zawartości do"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Wybór elementów"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Hasło musi składać się z co najmniej %d znaków, w tym z co najmniej 1 litery."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Wprowadzono nieprawidłowe hasło. Spróbuj ponownie."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Brak kart"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Zmień hasło"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Żadne strony WWW wyświetlane przy włączonym trybie chronionym nie będą widoczne w historii przeglądania ani w historii wyszukiwania po jego wyłączeniu.\n\nŻadne zakładki ani strony WWW zapisane przy włączonym trybie chronionym nie będą widoczne po jego wyłączeniu.\n\nMożesz także zabezpieczyć dane trybu chronionego za pomocą hasła."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Żadne strony WWW wyświetlane przy włączonym trybie chronionym nie będą widoczne w historii przeglądania ani w historii wyszukiwania po jego wyłączeniu.\n\nŻadne zakładki ani strony WWW zapisane przy włączonym trybie chronionym nie będą widoczne po jego wyłączeniu."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Gotowe"
 

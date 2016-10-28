@@ -2026,6 +2026,12 @@ msgstr "Desactivar modo Secreto"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Activar modo Secreto"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Mostrar contrasinal"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Introduce o contrasinal do modo Secreto actual."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Seguridade do modo Secreto"
 
@@ -2142,4 +2148,31 @@ msgstr "Historial"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Favoritos"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Gardar contido en"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Seleccionar elementos"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "O teu contrasinal debe conter polo menos %d carácteres, incluída polo menos 1 letra."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Introduciuse un contrasinal incorrecto. Téntao de novo."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Ningunha pestana"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Cambiar contrasinal"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Todas as páxinas web visualizadas co modo Secreto activado non aparecerán no historial do navegador nin de buscas co modo Secreto desactivado.\n\nTodos os favoritos e páxinas web gardados co modo Secreto activado non se amosarán mentres estea desactivado.\n\nTamén podes protexer os datos do modo Secreto cun contrasinal."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Todas as páxinas web visualizadas co modo Secreto activado non aparecerán no historial do navegador nin de buscas co modo Secreto desactivado.\n\nTodos os favoritos e páxinas web gardados co modo Secreto activado non se amosarán mentres estea desactivado."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Feito"
 

@@ -2026,6 +2026,12 @@ msgstr "關閉無痕模式"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "開啟無痕模式"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "顯示密碼"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "請輸入您目前的無痕模式密碼。"
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "無痕模式安全性"
 
@@ -2142,4 +2148,31 @@ msgstr "歷程記錄"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "書籤"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "將內容儲存至"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "選擇項目"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "您的密碼至少必須包含 %d 個字元，其中至少有 1 個字母。"
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "輸入了錯誤的密碼。請重試。"
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "無標籤"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "變更密碼"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "無痕模式停用時，在無痕模式啟用時檢視的任何網頁將不會顯示於網頁瀏覽器或搜尋歷程記錄中。\n\n無痕模式停用時，將不會顯示任何在無痕模式啟用時儲存的捷徑與網頁。\n\n您也可以設定密碼來保護無痕模式資料。"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "無痕模式停用時，在無痕模式啟用時檢視的任何網頁將不會顯示於網頁瀏覽器或搜尋歷程記錄中。\n\n無痕模式停用時，將不會顯示任何在無痕模式啟用時儲存的捷徑與網頁。"
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "完成"
 

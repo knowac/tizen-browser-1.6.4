@@ -209,7 +209,7 @@ msgid "IDS_BR_SK_UNTICK_ABB"
 msgstr "取消勾选"
 
 msgid "IDS_BR_SK_TABS"
-msgstr "分类栏"
+msgstr "页面"
 
 msgid "IDS_BR_SK_MENU"
 msgstr "功能表"
@@ -2026,6 +2026,12 @@ msgstr "关闭保密模式"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "打开保密模式"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "显示混合密码"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "请输入您当前的私密模式混合密码。"
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "保密模式安全性"
 
@@ -2142,4 +2148,31 @@ msgstr "历史记录"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "书签"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "保存内容至"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "选择项目"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "您的混合密码必须包含至少 %d 个字符，其中包括至少 1 个字母。"
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "已输入不正确的密码。请重试。"
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "无分页"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "更改混合密码"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "保密模式启用期间查看的网页在保密模式禁用时不会出现在浏览器或搜索历史记录中。\n\n保密模式启用期间保存的书签和网页在保密模式禁用时不会显示。\n\n您还可以使用密码保护保密模式数据。"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "保密模式启用期间查看的网页在保密模式禁用时不会出现在浏览器或搜索历史记录中。\n\n保密模式启用期间保存的书签和网页在保密模式禁用时不会显示。"
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "完成"
 

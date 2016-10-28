@@ -2026,6 +2026,12 @@ msgstr "Desativar o Modo secreto"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Ativar o Modo secreto"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Exibir senha"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Insira sua senha atual do Modo secreto."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Segurança do Modo secreto"
 
@@ -2142,4 +2148,31 @@ msgstr "Histórico"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Marcadores"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Salvar conteúdo para"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Selecionar itens"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Sua senha deve conter pelo menos %d caracteres, incluindo ao menos 1 letra."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Uma senha incorreta foi inserida. Tente novamente."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Sem abas"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Alterar senha"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Qualquer página da web visualizada enquanto o Modo secreto estiver ativado não será exibida no navegador ou no histórico de pesquisa enquanto o Modo secreto estiver desativado.\n\nQuaisquer favoritos e páginas da web salvos enquanto o Modo secreto estiver ativado não serão exibidos enquanto ele estiver desativado.\n\nVocê também pode proteger os dados do Modo secreto com uma senha."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Qualquer página da web visualizada enquanto o Modo secreto estiver ativado não será exibida no navegador ou no histórico de pesquisa enquanto o Modo secreto estiver desativado.\n\nQuaisquer favoritos e páginas da web salvos enquanto o Modo secreto estiver ativado não serão exibidos enquanto ele estiver desativado."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Concluído"
 

@@ -1238,7 +1238,7 @@ msgid "IDS_BR_BODY_DOUBLE_TAP_TO_OPEN_THE_LIST_T_TTS"
 msgstr "सूची खोलने के लिए दो बार टैप करें।"
 
 msgid "IDS_BR_BODY_DOUBLE_TAP_TO_OPEN_THE_FOLDER_T_TTS"
-msgstr "फ़ोल्डर खोलने के लिए दोहरा टैप करें।"
+msgstr "फोल्डर खोलने के लिए दोहरा टैप करें।"
 
 msgid "IDS_BR_BODY_DOUBLE_TAP_TO_OPEN_KEYBOARD_T_TTS"
 msgstr "कीबोर्ड खोलने के लिए दोहरा टैप करें।"
@@ -2026,6 +2026,12 @@ msgstr "गुप्त मोड बंद करें"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "गुप्त मोड चालू करें"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "पासवर्ड दिखाएँ"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "अपना वर्तमान गुप्त मोड पासवर्ड प्रविष्ट करें।"
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "गुप्त मोड सुरक्षा"
 
@@ -2142,4 +2148,31 @@ msgstr "इतिहास"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "बुकमार्क्स"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "इसमें सामग्री सुरक्षित करें"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "मदें चुनें"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "आपके पासवर्ड में कम से कम एक 1 अक्षर सहित कम से कम %d वर्ण होने चाहिए।"
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "एक गलत पासवर्ड प्रविष्ट किया गया है। फिर से प्रयास करें।"
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "कोई टैब नहीं"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "पासवर्ड बदलें"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "गुप्त मोड सक्षम होने पर देखे गए कोई भी वेबपेजेस गुप्त मोड अक्षम होने के दौरान आपके ब्राउजर या खोज इतिहास में प्रकट नहीं होंगे।\n\nगुप्त मोड सक्षम होने पर सुरक्षित किए गए कोई भी बुकमार्क्स और वेबपेजेस इसके अक्षम होने पर दिखाई नहीं देंगे।\n\nआप किसी पासवर्ड से अपना गुप्त मोड डाटा सुरक्षित भी कर सकते हैं।"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "गुप्त मोड सक्षम होने पर देखे गए कोई भी वेबपेजेस गुप्त मोड अक्षम होने के दौरान आपके ब्राउजर या खोज इतिहास में प्रकट नहीं होंगे।\n\nगुप्त मोड सक्षम होने पर सुरक्षित किए गए कोई भी बुकमार्क्स और वेबपेजेस इसके अक्षम होने पर दिखाई नहीं देंगे।"
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "पूर्ण"
 

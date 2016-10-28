@@ -2026,6 +2026,12 @@ msgstr "Lülita salarežiim välja"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Lülita salarežiim sisse"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Kuva parool"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Sisestage oma praegune salarežiimi parool."
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Salarežiimi turvalisus"
 
@@ -2142,4 +2148,31 @@ msgstr "Ajalugu"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Järjehoidjad"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Sisu salvestamise koht"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Üksuste valimine"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Teie parool peab sisaldama vähemalt %d tähemärki, seejuures vähemalt 1 tähte."
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Sisestatud on vale parool. Proovige uuesti."
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Vahekaarte pole"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Parooli muutmine"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Mitte ükski veebileht, mida kuvatakse aktiivse salarežiimi ajal, et ilmu teie brauseri ega otsingu ajaloos, kui salarežiim on inaktiveeritud.\n\nMitte ühtegi aktiivse salarežiimi ajal salvestatud järjehoidjat ega veebilehte ei kuvata, kui see on inaktiveeritud.\n\nLisaks saate kaitsta oma salarežiimi parooliga."
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Mitte ükski veebileht, mida kuvatakse aktiivse salarežiimi ajal, et ilmu teie brauseri ega otsingu ajaloos, kui salarežiim on inaktiveeritud.\n\nMitte ühtegi aktiivse salarežiimi ajal salvestatud järjehoidjat ega veebilehte ei kuvata, kui see on inaktiveeritud."
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Valmis"
 

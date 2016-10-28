@@ -2026,6 +2026,12 @@ msgstr "Անջատել Գաղտնի ռեժիմը"
 msgid "IDS_BR_OPT_TURN_ON_SECRET_MODE_ABB"
 msgstr "Միացնել Գաղտնի ռեժիմը"
 
+msgid "IDS_BR_OPT_SHOW_PASSWORD_ABB2"
+msgstr "Ցույց տալ գաղտնաբառը"
+
+msgid "IDS_BR_BODY_ENTER_YOUR_CURRENT_SECRET_MODE_PASSWORD"
+msgstr "Մուտքագրեք Ձեր Գաղտնի ռեժիմի ընթացիկ գաղտնաբառը:"
+
 msgid "IDS_BR_OPT_SECRET_MODE_SECURITY_ABB"
 msgstr "Գաղտնի ռեժիմի անվտանգություն"
 
@@ -2142,4 +2148,31 @@ msgstr "Պատմություն"
 
 msgid "IDS_BR_TAB2_BOOKMARKS"
 msgstr "Էջանիշեր"
+
+msgid "IDS_BR_HEADER_SAVE_CONTENT_TO_ABB"
+msgstr "Պահպանել բովանդակությունը"
+
+msgid "IDS_BR_HEADER_SELECT_ITEMS_ABB2"
+msgstr "Ընտրել տարրեր"
+
+msgid "IDS_BR_BODY_YOUR_PASSWORD_MUST_CONTAIN_AT_LEAST_PD_CHARACTERS_INCLUDING_AT_LEAST_1_LETTER"
+msgstr "Ձեր գաղտնաբառը պետք է պարունակի առնվազն %d նիշ, ներառյալ առնվազն 1 տառ:"
+
+msgid "IDS_BR_BODY_AN_INCORRECT_PASSWORD_HAS_BEEN_ENTERED_TRY_AGAIN"
+msgstr "Սխալ գաղտնաբառ է մուտքագրվել: Նորից փորձեք:"
+
+msgid "IDS_BR_BODY_NO_TABS"
+msgstr "Ներդիրներ չկան"
+
+msgid "IDS_BR_TMBODY_CHANGE_PASSWORD"
+msgstr "Փոխել գաղտնաբառը"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_BROWSER_OR_SEARCH_HISTORY_WHILE_SECRET_MSG"
+msgstr "Գաղտնի ռեժիմի ընձեռված ժամանակ դիտված կայքէջերը չեն երևա Ձեր զննարկչում կամ որոնումների պատմությունում, քանի դեռ Գաղտնի ռեժիմը կասեցված է:\n\nԳաղտնի ռեժիմի ընձեռված ժամանակ պահպանված էջանիշերը և կայքէջերը չեն ցուցադրվի, քանի դեռ այն կասեցված է:\n\nԳաղտնի ռեժիմի տվյալները կարող եք պաշտպանել նաև գաղտնաբառով:"
+
+msgid "IDS_BR_BODY_ANY_WEBPAGES_VIEWED_WHILE_SECRET_MODE_IS_ENABLED_WILL_NOT_APPEAR_IN_YOUR_MSG"
+msgstr "Գաղտնի ռեժիմի ընձեռված ժամանակ դիտված կայքէջերը չեն երևա Ձեր զննարկչում կամ որոնումների պատմությունում, քանի դեռ Գաղտնի ռեժիմը կասեցված է:\n\nԳաղտնի ռեժիմի ընձեռված ժամանակ պահպանված էջանիշերը և կայքէջերը չեն ցուցադրվի, քանի դեռ այն կասեցված է:"
+
+msgid "IDS_BR_BUTTON2_DONE"
+msgstr "Արված է"
 
