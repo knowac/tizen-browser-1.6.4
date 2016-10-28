@@ -44,7 +44,9 @@
 #include "DetailPopup.h"
 #include "UrlHistoryList/UrlHistoryList.h"
 #include "NotificationPopup.h"
+#if PROFILE_MOBILE
 #include "ContentPopup_mob.h"
+#endif
 #include "Tools/GeneralTools.h"
 #include "Tools/SnapshotType.h"
 
@@ -573,11 +575,11 @@ void SimpleUI::connectModelSignals()
     m_webEngine->createTabId.connect(boost::bind(&SimpleUI::onCreateTabId, this));
     m_webEngine->snapshotCaptured.connect(boost::bind(&SimpleUI::onSnapshotCaptured, this, _1, _2));
     m_webEngine->redirectedWebPage.connect(boost::bind(&SimpleUI::redirectedWebPage, this, _1, _2));
-    m_webEngine->rotatePrepared.connect(boost::bind(&SimpleUI::rotatePrepared, this));
     m_webEngine->switchToQuickAccess.connect(boost::bind(&SimpleUI::switchViewToQuickAccess, this));
     m_webEngine->setCertificatePem.connect(boost::bind(&services::CertificateContents::saveCertificateInfo, m_certificateContents, _1, _2));
     m_webEngine->setWrongCertificatePem.connect(boost::bind(&services::CertificateContents::saveWrongCertificateInfo, m_certificateContents, _1, _2));
 #if PROFILE_MOBILE
+    m_webEngine->rotatePrepared.connect(boost::bind(&SimpleUI::rotatePrepared, this));
     m_webEngine->uriChanged.connect(boost::bind(&SimpleUI::webEngineURLChanged, this, _1));
     m_webEngine->confirmationRequest.connect(boost::bind(&SimpleUI::handleConfirmationRequest, this, _1));
     m_webEngine->getRotation.connect(boost::bind(&SimpleUI::getRotation, this));
@@ -1126,7 +1128,7 @@ void SimpleUI::enableManualRotation(bool enable)
     elm_win_wm_rotation_manual_rotation_done_set(main_window,
         m_manualRotation ? EINA_TRUE : EINA_FALSE);
 }
-
+#if PROFILE_MOBILE
 void SimpleUI::rotatePrepared()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);
@@ -1136,7 +1138,7 @@ void SimpleUI::rotatePrepared()
         m_moreMenuUI->resetContent();
     }
 }
-
+#endif
 void SimpleUI::onRotation()
 {
     BROWSER_LOGD("[%s:%d] ", __PRETTY_FUNCTION__, __LINE__);

@@ -62,7 +62,9 @@
 #include "Action.h"
 #include "InputPopup.h"
 #include "SimplePopup.h"
+#if PROFILE_MOBILE
 #include "ContentPopup_mob.h"
+#endif
 #include "WebConfirmation.h"
 #include "ViewManager.h"
 #include "MenuButton.h"
